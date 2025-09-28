@@ -1,6 +1,5 @@
-/* style.css - integrated BlackTea POS + selector styles */
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,Helvetica,sans-serif;background:#f6f7fb;color:#222;padding:12px}
+body{font-family:Inter,Arial,Helvetica,sans-serif;background:#f6f7fb;color:#222;padding:12px}
 .app{max-width:980px;margin:0 auto}
 header{padding:8px 0}
 h1{font-size:18px}
@@ -10,53 +9,75 @@ h2,h3,h4{margin:8px 0}
 .table-info{display:flex;flex-direction:column}
 .table-name{font-weight:700}
 .table-meta{font-size:13px;color:#666;margin-top:4px}
+.category-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.category-btn{padding:6px 10px;border-radius:8px;border:1px solid #ddd;background:#fff;cursor:pointer;font-size:14px}
+.category-btn.active{background:#2b6ef6;color:#fff;border-color:#2b6ef6}
 
-/* Buttons */
-.btn{padding:8px 12px;border-radius:8px;border:0;cursor:pointer;font-weight:700}
-.btn-primary{background:#2563eb;color:#fff}
-.btn-secondary{background:#e5e7eb;color:#000}
-.btn-light{background:transparent;border:1px solid transparent;padding:6px 8px;border-radius:6px;cursor:pointer}
-.wide{flex:1}
-
-/* Overlay selector */
-.overlay.hidden{display:none}
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.35);display:flex;align-items:flex-start;justify-content:center;padding:20px;z-index:2000}
-.selector-dialog{width:100%;max-width:1100px;background:transparent;display:flex;gap:16px}
-.selector-sidebar{width:140px;background:#fff;border-radius:8px;padding:8px;box-shadow:0 6px 18px rgba(15,23,42,0.06);display:flex;flex-direction:column;gap:8px}
-.selector-tab{padding:12px;border:0;background:#fff;border-radius:6px;cursor:pointer;text-align:left;font-weight:700}
-.selector-tab.active{background:#2563eb;color:#fff;box-shadow:0 8px 22px rgba(37,99,235,0.15)}
-
-/* selector main */
-.selector-main{flex:1;display:flex;flex-direction:column;gap:12px}
-.selector-floor{display:none}
-.selector-floor.active{display:block}
-
-/* area card */
-.area-card{background:#fff;border:1px solid #e6e9ef;border-radius:12px;padding:16px;box-shadow:0 8px 20px rgba(15,23,42,0.04)}
-.area-title{color:#2563eb;font-weight:800;margin-bottom:12px;text-align:center}
-.areas-row{display:flex;gap:12px}
-
-/* tables inside areas */
-.area-tables{display:flex;flex-direction:column;gap:12px;align-items:center}
-.area-tables .table-btn{min-width:72px;height:48px;border-radius:8px;border:0;background:#f0f0f0;color:#111;font-weight:700;cursor:pointer;box-shadow:0 6px 14px rgba(10,10,10,0.06);transition:transform .12s ease,box-shadow .12s ease}
-.area-tables .table-btn:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(10,10,10,0.09)}
-.area-tables .table-btn.selected{background:#2563eb;color:#fff;box-shadow:0 14px 40px rgba(37,99,235,0.16)}
-
-/* outdoor row */
-.area-card.outdoor .area-tables{flex-direction:row;justify-content:center;gap:24px}
-
-/* upper grid */
-.upper-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;justify-items:center;align-items:center;padding:8px}
-
-/* footer inside selector */
-.selector-footer{display:flex;justify-content:flex-end;gap:12px;padding-top:6px}
-.selector-footer .btn{padding:12px 18px}
-
-/* responsive */
-@media (max-width:720px){
-  .selector-dialog{flex-direction:column;max-width:520px;padding:8px}
-  .selector-sidebar{width:100%;flex-direction:row;gap:8px}
-  .selector-tab{flex:1;text-align:center}
-  .areas-row{flex-direction:column}
-  .area-tables{flex-direction:row;flex-wrap:wrap;justify-content:center}
+/* Danh sách món: hiển thị 6 dòng rồi cuộn */
+.menu-list{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  margin-top:8px;
+  max-height:280px;   /* ~ 6 món */
+  overflow-y:auto;
+  padding-right:4px;
 }
+.menu-row{background:#fff;border:1px solid #e6e9ef;padding:6px 8px;border-radius:6px;display:flex;justify-content:space-between;align-items:center}
+.menu-left{display:flex;flex-direction:column}
+.menu-name{font-weight:700;font-size:15px}
+.menu-price{font-size:13px;color:#666;margin-top:2px}
+.qty-controls{display:flex;align-items:center;gap:8px}
+.qty-controls button{padding:6px 8px;border-radius:6px;border:0;cursor:pointer}
+
+/* Hóa đơn: hiển thị 6 dòng rồi cuộn */
+.cart-list{
+  list-style:none;
+  max-height:280px;   /* ~ 6 món */
+  overflow-y:auto;
+  margin-top:8px;
+  padding-left:0;
+}
+.cart-list li{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed #eee;font-size:14px}
+
+/* Thanh cố định cuối màn hình: Tổng tiền + Nút */
+.cart-summary{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  background:#fff;
+  border-top:1px solid #ddd;
+  padding:10px 12px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  z-index:100;
+}
+
+.cart-total{
+  font-weight:700;
+  font-size:16px;
+}
+
+.cart-actions{
+  display:flex;
+  gap:8px;
+  justify-content:flex-end;
+}
+
+/* Các nút & chung */
+.settings-line{width:100%;text-align:left;padding:12px;border-radius:8px}
+.btn{padding:8px 12px;border-radius:8px;border:0;cursor:pointer;font-weight:600}
+.btn-primary{background:#2b6ef6;color:#fff}
+.btn-secondary{background:#dfe7fb;color:#222}
+.btn-light{background:transparent;border:1px solid transparent;padding:6px 8px;border-radius:6px;cursor:pointer}
+.btn-action{background:#cfe0ff;color:#0b2b5a}
+.btn-action.primary{background:#2b6ef6;color:#fff}
+input,select{padding:8px;border:1px solid #ccc;border-radius:6px}
+.small{font-size:13px;color:#666}
+.history-day{background:#fff;border:1px solid #e6e9ef;padding:8px;border-radius:8px;margin-bottom:8px}
+.history-item{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed #eee}
+.history-total{font-weight:800;text-align:right;margin-top:6px}
+.payment-table{width:100%;border-collapse:collapse;margin-top:8px}
+.payment-table td, .payment-table th{padding:6px;border-bottom:1px dashed #eee;font-size:14px}

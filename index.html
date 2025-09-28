@@ -1,4 +1,5 @@
 <!doctype html>
+
 <html lang="vi">
 <head>
   <meta charset="utf-8" />
@@ -16,77 +17,212 @@
       </div>
     </header>
 
-    <main id="table-screen">
-      <div style="margin-bottom:10px; display:flex; gap:12px; align-items:center;">
-        <button id="takeaway-btn" class="btn btn-primary wide">Khách mang đi</button>
-        <button id="dinein-btn" class="btn btn-primary wide">Khách tại bàn</button>
-        <input id="new-table-name" placeholder="Nhập tên bàn (VD: VIP 1)" style="margin-left:8px; padding:8px; border-radius:6px; border:1px solid #ccc" />
-        <button id="add-table-btn" class="btn btn-secondary">+ Thêm bàn</button>
+```
+<!-- Màn hình danh sách bàn -->
+<main id="table-screen">
+  <div style="margin-bottom:12px;display:flex;gap:8px">
+    <button id="takeaway-btn" class="btn btn-primary">Khách mang đi</button>
+    <button id="dinein-btn" class="btn btn-secondary">Khách tại quán</button>
+  </div>
+  <h2>Bàn đang phục vụ</h2>
+  <div id="tables" class="table-grid"></div>
+</main>
+
+<!-- Màn hình order -->
+<main id="menu-screen" style="display:none">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+    <button class="btn btn-light" onclick="backToTables()">← Quay lại</button>
+    <h2 id="table-title" style="margin:0"></h2>
+  </div>
+
+  <div id="category-bar" class="category-bar"></div>
+  <div id="menu-list" class="menu-list" style="display:none"></div>
+
+  <section class="cart-section">
+    <h3>Hóa đơn</h3>
+    <ul id="cart-list" class="cart-list"></ul>
+    <div class="cart-summary">
+      <div style="font-weight:700">Tổng: <span id="total">0</span> VND</div>
+      <div class="cart-actions" id="primary-actions" style="display:none">
+        <button id="cancel-order-btn" class="btn btn-action">Hủy đơn</button>
+        <button id="save-btn" class="btn btn-action primary">Lưu đơn</button>
       </div>
-      <h2>Bàn đang phục vụ</h2>
-      <div id="tables" class="table-grid"></div>
-    </main>
-
-    <!-- Menu / payment / settings from original app (kept but truncated in this demo index) -->
-    <!-- ... other screens are still loaded in app.js and toggled by JS ... -->
-
-    <!-- Overlay chọn bàn (table selector) -->
-    <div id="table-selector-overlay" class="overlay hidden" aria-hidden="true">
-      <div class="selector-dialog">
-        <aside class="selector-sidebar">
-          <button class="selector-tab active" data-floor="ground">Tầng trệt</button>
-          <button class="selector-tab" data-floor="upper">Tầng lầu</button>
-        </aside>
-
-        <section class="selector-main">
-          <div id="selector-ground" class="selector-floor active">
-            <div class="area-card outdoor">
-              <h3 class="area-title">Ngoài trời</h3>
-              <div class="area-tables" id="outdoor-list"></div>
-            </div>
-
-            <div class="areas-row">
-              <div class="area-card" id="card-tuong">
-                <h3 class="area-title">Tường</h3>
-                <div class="area-tables" id="tuong-list"></div>
-              </div>
-              <div class="area-card" id="card-giua">
-                <h3 class="area-title">Giữa</h3>
-                <div class="area-tables" id="giua-list"></div>
-              </div>
-              <div class="area-card" id="card-nem">
-                <h3 class="area-title">Nệm</h3>
-                <div class="area-tables" id="nem-list"></div>
-              </div>
-            </div>
-            <div class="area-card" id="card-them" style="display:none">
-              <h3 class="area-title">Bàn thềm</h3>
-              <div class="area-tables" id="them-list"></div>
-            </div>
-          </div>
-
-          <div id="selector-upper" class="selector-floor">
-            <h3 class="area-title center">Tầng lầu</h3>
-            <div class="upper-grid" id="upper-list"></div>
-          </div>
-
-          <div class="selector-footer">
-            <button class="btn btn-secondary" id="cancel-select">Huỷ bàn</button>
-            <button class="btn btn-primary" id="confirm-select">Chọn bàn</button>
-          </div>
-        </section>
+      <div class="cart-actions" id="table-actions" style="display:none">
+        <button id="addmore-btn" class="btn btn-action">+ Thêm món</button>
+        <button id="pay-btn" class="btn btn-action primary">Thanh toán</button>
       </div>
     </div>
+  </section>
+</main>
 
+<!-- Màn hình thanh toán -->
+<main id="payment-screen" style="display:none">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <h2>Thanh toán - <span id="pay-table-name"></span></h2>
+    <button class="btn btn-light" onclick="closePayment()">← Quay lại</button>
+  </div>
+  <div id="pay-bill" style="margin-top:8px"></div>
+  <div style="margin-top:8px">
+    <label>Chiết khấu: <input id="discount-input" placeholder="0 hoặc 5%" /></label>
+  </div>
+  <div style="margin-top:8px;font-weight:700">Tổng sau chiết khấu: <span id="pay-final-total">0</span> VND</div>
+  <div style="margin-top:12px;display:flex;gap:8px">
+    <button class="btn btn-secondary" onclick="closePayment()">Quay lại</button>
+    <button class="btn btn-primary" onclick="confirmPayment()">Xuất hóa đơn</button>
+  </div>
+</main>
+
+<!-- Màn hình cài đặt -->
+<main id="settings-screen" style="display:none">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <h2>Cài đặt</h2>
+    <button class="btn btn-light" onclick="backToTables()">← Quay lại</button>
+  </div>
+  <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px">
+    <button class="settings-line btn btn-secondary" onclick="openMenuSettings()">📋 Cài đặt Menu</button>
+    <button class="settings-line btn btn-secondary" onclick="openPrinterSettings()">🖨️ Cài đặt Máy in</button>
+  </div>
+</main>
+
+<!-- Màn hình cài đặt menu -->
+<main id="menu-settings-screen" style="display:none">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <h2>Cài đặt Menu</h2>
+    <button class="btn btn-light" onclick="openSettings()">← Quay lại</button>
+  </div>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px">
+    <div style="flex:1;min-width:220px">
+      <h4>Danh mục</h4>
+      <div style="margin-bottom:8px">
+        <input id="new-cat-name" placeholder="Danh mục" />
+        <button class="btn btn-secondary" onclick="addCategory()">Thêm DM</button>
+      </div>
+      <ul id="categories-list" class="cart-list"></ul>
+    </div>
+    <div style="flex:2;min-width:260px">
+      <h4>Quản lý Món</h4>
+      <div style="display:flex;gap:6px;align-items:center;margin-bottom:8px">
+        <select id="cat-select"></select>
+        <input id="new-item-name" placeholder="Tên món" />
+        <input id="new-item-price" placeholder="Giá" type="number" />
+        <button class="btn btn-primary" onclick="addMenuItem()">Thêm món</button>
+      </div>
+      <ul id="menu-settings-list" class="cart-list"></ul>
+    </div>
+  </div>
+</main>
+
+<!-- Màn hình cài đặt in -->
+<main id="printer-settings-screen" style="display:none">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <h2>Cài đặt Máy in</h2>
+    <button class="btn btn-light" onclick="openSettings()">← Quay lại</button>
+  </div>
+  <div style="margin-top:8px">
+    <label>Khổ giấy:
+      <select id="paper-size">
+        <option value="58">58mm</option>
+        <option value="80">80mm</option>
+      </select>
+    </label><br/>
+    <label><input type="checkbox" id="print-name" checked> In tên quán</label><br/>
+    <button class="btn btn-primary" onclick="printTest()">In thử</button>
+  </div>
+</main>
+
+<!-- Màn hình lịch sử -->
+<main id="history-screen" style="display:none">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <h2>Lịch sử</h2>
+    <div style="display:flex;gap:8px;align-items:center">
+      <input type="date" id="history-date" />
+      <button class="btn btn-secondary" onclick="clearDateFilter()">Xóa</button>
+      <button class="btn btn-light" onclick="backToTables()">← Quay lại</button>
+    </div>
+  </div>
+  <div id="history-container" style="margin-top:8px"></div>
+</main>
+```
+
+  </div>
+
+  <!-- Popup chọn bàn -->
+
+  <div id="table-popup" style="display:none;
+    position:fixed;top:0;left:0;right:0;bottom:0;
+    background:rgba(0,0,0,0.5);z-index:999;
+    align-items:center;justify-content:center">
+
+```
+<div style="background:#fff;padding:16px;border-radius:12px;
+            max-width:400px;width:100%;max-height:90vh;overflow:auto">
+  
+  <div style="display:flex;gap:8px;margin-bottom:12px;justify-content:center">
+    <button id="ground-btn" class="btn btn-primary">Tầng trệt</button>
+    <button id="upstairs-btn" class="btn btn-secondary">Tầng lầu</button>
+  </div>
+
+  <!-- Tầng trệt -->
+  <div id="ground-floor">
+    <h4>Ngoài trời</h4>
+    <div style="display:flex;gap:8px;margin-bottom:12px">
+      <button class="btn btn-secondary table-choice">B1</button>
+      <button class="btn btn-secondary table-choice">B2</button>
+    </div>
+
+    <h4>Tường</h4>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px">
+      <button class="btn btn-secondary table-choice">T1</button>
+      <button class="btn btn-secondary table-choice">T2</button>
+      <button class="btn btn-secondary table-choice">T3</button>
+      <button class="btn btn-secondary table-choice">T4</button>
+    </div>
+
+    <h4>Giữa</h4>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px">
+      <button class="btn btn-secondary table-choice">G1</button>
+      <button class="btn btn-secondary table-choice">G2</button>
+      <button class="btn btn-secondary table-choice">G3</button>
+      <button class="btn btn-secondary table-choice">G4</button>
+    </div>
+
+    <h4>Nệm</h4>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px">
+      <button class="btn btn-secondary table-choice">N1</button>
+      <button class="btn btn-secondary table-choice">N2</button>
+      <button class="btn btn-secondary table-choice">N3</button>
+      <button class="btn btn-secondary table-choice">N4</button>
+    </div>
+  </div>
+
+  <!-- Tầng lầu -->
+  <div id="upstairs-floor" style="display:none">
+    <h4>Tầng lầu</h4>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <button class="btn btn-secondary table-choice">L1</button>
+      <button class="btn btn-secondary table-choice">L2</button>
+      <button class="btn btn-secondary table-choice">L3</button>
+      <button class="btn btn-secondary table-choice">L4</button>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:8px;margin-top:16px;justify-content:flex-end">
+    <button id="cancel-table" class="btn btn-secondary">Hủy bàn</button>
+    <button id="confirm-table" class="btn btn-primary">Chọn bàn</button>
+  </div>
+</div>
+```
 
   </div>
 
   <script src="app.js"></script>
+
   <script>
     document.addEventListener('DOMContentLoaded', ()=>{
       const b = document.getElementById('brand');
       if(b) b.addEventListener('click', ()=>{ backToTables(); });
     });
   </script>
+
 </body>
 </html>
