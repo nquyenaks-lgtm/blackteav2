@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>BlackTea POS v8</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <header style="display:flex;justify-content:space-between;align-items:center;padding:8px 0">
+      <h1 id="brand" style="cursor:pointer">BlackTea POS</h1>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="btn btn-light" onclick="openHistory()" title="Lịch sử">📜</button>
+        <button class="btn btn-light" onclick="openSettings()" title="Cài đặt">⚙️</button>
+      </div>
+    </header>
+
+    <main id="table-screen">
+      <div style="margin-bottom:10px; display:flex; gap:12px; align-items:center;">
+        <button id="takeaway-btn" class="btn btn-primary wide">Khách mang đi</button>
+        <button id="dinein-btn" class="btn btn-primary wide">Khách tại bàn</button>
+        <input id="new-table-name" placeholder="Nhập tên bàn (VD: VIP 1)" style="margin-left:8px; padding:8px; border-radius:6px; border:1px solid #ccc" />
+        <button id="add-table-btn" class="btn btn-secondary">+ Thêm bàn</button>
+      </div>
+      <h2>Bàn đang phục vụ</h2>
+      <div id="tables" class="table-grid"></div>
+    </main>
+
+    <!-- Menu / payment / settings from original app (kept but truncated in this demo index) -->
+    <!-- ... other screens are still loaded in app.js and toggled by JS ... -->
+
+    <!-- Overlay chọn bàn (table selector) -->
+    <div id="table-selector-overlay" class="overlay hidden" aria-hidden="true">
+      <div class="selector-dialog">
+        <aside class="selector-sidebar">
+          <button class="selector-tab active" data-floor="ground">Tầng trệt</button>
+          <button class="selector-tab" data-floor="upper">Tầng lầu</button>
+        </aside>
+
+        <section class="selector-main">
+          <div id="selector-ground" class="selector-floor active">
+            <div class="area-card outdoor">
+              <h3 class="area-title">Ngoài trời</h3>
+              <div class="area-tables" id="outdoor-list"></div>
+            </div>
+
+            <div class="areas-row">
+              <div class="area-card" id="card-tuong">
+                <h3 class="area-title">Tường</h3>
+                <div class="area-tables" id="tuong-list"></div>
+              </div>
+              <div class="area-card" id="card-giua">
+                <h3 class="area-title">Giữa</h3>
+                <div class="area-tables" id="giua-list"></div>
+              </div>
+              <div class="area-card" id="card-nem">
+                <h3 class="area-title">Nệm</h3>
+                <div class="area-tables" id="nem-list"></div>
+              </div>
+            </div>
+            <div class="area-card" id="card-them" style="display:none">
+              <h3 class="area-title">Bàn thềm</h3>
+              <div class="area-tables" id="them-list"></div>
+            </div>
+          </div>
+
+          <div id="selector-upper" class="selector-floor">
+            <h3 class="area-title center">Tầng lầu</h3>
+            <div class="upper-grid" id="upper-list"></div>
+          </div>
+
+          <div class="selector-footer">
+            <button class="btn btn-secondary" id="cancel-select">Huỷ bàn</button>
+            <button class="btn btn-primary" id="confirm-select">Chọn bàn</button>
+          </div>
+        </section>
+      </div>
+    </div>
+
+
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', ()=>{
+      const b = document.getElementById('brand');
+      if(b) b.addEventListener('click', ()=>{ backToTables(); });
+    });
+  </script>
+</body>
+</html>
