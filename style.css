@@ -81,3 +81,46 @@ input,select{padding:8px;border:1px solid #ccc;border-radius:6px}
 .history-total{font-weight:800;text-align:right;margin-top:6px}
 .payment-table{width:100%;border-collapse:collapse;margin-top:8px}
 .payment-table td, .payment-table th{padding:6px;border-bottom:1px dashed #eee;font-size:14px}
+
+/* ====== Bổ sung style cho modal chọn bàn ====== */
+.table-select-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  max-width: 500px;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.table-select-list button {
+  min-width: 80px;
+  min-height: 50px;
+  font-size: 16px;
+  background: #f0f0f0; /* xám nhạt mặc định */
+  color: #222;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s, color 0.3s;
+}
+
+.table-select-list button.active {
+  background: #2b6ef6; /* xanh khi chọn */
+  color: #fff;
+  border-color: #2b6ef6;
+}
+
+.table-select-list button:hover {
+  background: #ddd; /* xám đậm khi hover */
+}
+
+
+/* nút đóng modal */
+.table-select-list .btn-danger {
+  background: #dc3545;
+  margin-top: 10px;
+}
+

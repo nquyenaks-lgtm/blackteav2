@@ -5,6 +5,14 @@ const KEY_CATS = 'BT8_CATS';
 const KEY_TABLES = 'BT8_TABLES';
 const KEY_HISTORY = 'BT8_HISTORY';
 const KEY_GUEST = 'BT8_GUEST_CNT';
+const FIXED_TABLES = [
+  "L1","L2","L3","L4",
+  "NT1","NT2",
+  "T1","G1","N1",
+  "T2","G2","N2",
+  "T3","G3","N3",
+  "T4","G4","N4"
+];
 
 let MENU = JSON.parse(localStorage.getItem(KEY_MENU)) || [
   // --- Cà phê ---
@@ -87,30 +95,97 @@ function isoDateKey(t){ const d = new Date(t); const y=d.getFullYear(); const m=
 function displayDateFromISO(iso){ const parts = iso.split('-'); return parts[2] + '/' + parts[1] + '/' + parts[0]; }
 function saveAll(){ localStorage.setItem(KEY_MENU, JSON.stringify(MENU)); localStorage.setItem(KEY_CATS, JSON.stringify(CATEGORIES)); localStorage.setItem(KEY_TABLES, JSON.stringify(TABLES)); localStorage.setItem(KEY_HISTORY, JSON.stringify(HISTORY)); localStorage.setItem(KEY_GUEST, String(GUEST_CNT)); }
 
-// render tables
+// render tables (sắp xếp: L = 4 cột, NT = 2 cột, T/G/N = mỗi bàn 1 hàng dọc)
 function renderTables(){
-  const div = $('tables'); div.innerHTML = '';
-  if(!TABLES.length){ div.innerHTML = '<div class="small">Chưa có bàn nào</div>'; return; }
-  TABLES.forEach(t=>{
-    const card = document.createElement('div'); card.className='table-card';
-    const info = document.createElement('div'); info.className='table-info';
-    const name = document.createElement('div'); name.className='table-name'; name.innerText = t.name;
-    info.appendChild(name);
-    if(t.cart && t.cart.length){
-      let qty=0, total=0; t.cart.forEach(it=>{ qty+=it.qty; total+=it.qty*it.price; });
-      const meta = document.createElement('div'); meta.className='table-meta'; meta.innerText = qty + ' món • ' + fmtV(total) + ' VND';
-      info.appendChild(meta);
-    }
-    card.appendChild(info);
-    card.onclick = ()=> openTableFromMain(t.id);
-    div.appendChild(card);
+  const div = $('tables');
+  div.innerHTML = '';
+  if(!TABLES.length){
+    div.innerHTML = '<div class="small">Chưa có bàn nào</div>';
+    return;
+  }
+
+  // nhóm L (4 cột)
+  const groupL = TABLES.filter(t => t.name.startsWith('L'))
+                       .sort((a,b)=> a.name.localeCompare(b.name));
+  if(groupL.length){
+    const row = document.createElement('div');
+    row.className = 'table-section table-section-4';
+    groupL.forEach(t => row.appendChild(makeTableCard(t)));
+    div.appendChild(row);
+  }
+
+  // nhóm NT (2 cột)
+  const groupNT = TABLES.filter(t => t.name.startsWith('NT'))
+                        .sort((a,b)=> a.name.localeCompare(b.name));
+  if(groupNT.length){
+    const row = document.createElement('div');
+    row.className = 'table-section table-section-2';
+    groupNT.forEach(t => row.appendChild(makeTableCard(t)));
+    div.appendChild(row);
+  }
+
+  // nhóm T, G, N (mỗi bàn một hàng dọc)
+  ['T','G','N'].forEach(prefix=>{
+    const g = TABLES.filter(t => t.name.startsWith(prefix))
+                    .sort((a,b)=> a.name.localeCompare(b.name));
+    g.forEach(t=>{
+      const row = document.createElement('div');
+      row.className = 'table-section table-section-1';
+      row.appendChild(makeTableCard(t));
+      div.appendChild(row);
+    });
   });
 }
 
+// helper tạo thẻ bàn (dùng trong renderTables)
+function makeTableCard(t){
+  const card = document.createElement('div');
+  card.className = 'table-card';
+
+  const info = document.createElement('div');
+  info.className = 'table-info';
+
+  const name = document.createElement('div');
+  name.className = 'table-name';
+  name.innerText = t.name;
+  info.appendChild(name);
+
+  if(t.cart && t.cart.length){
+    let qty=0, total=0;
+    t.cart.forEach(it=>{ qty += it.qty; total += it.qty * it.price; });
+    const meta = document.createElement('div');
+    meta.className = 'table-meta';
+    meta.innerText = qty + ' món • ' + fmtV(total) + ' VND';
+    info.appendChild(meta);
+  }
+
+  card.appendChild(info);
+
+  // click: highlight + mở bàn
+  card.onclick = ()=> {
+    document.querySelectorAll('.table-card').forEach(c=>{
+      c.classList.remove('active');
+    });
+    card.classList.add('active');
+    openTableFromMain(t.id);
+  };
+
+  return card;
+}
 // add guest
 function addGuest(){
   GUEST_CNT += 1;
   const name = 'Khách vãng lai ' + GUEST_CNT;
+  const id = Date.now();
+  TABLES.push({ id, name, cart: [] });
+  saveAll();
+  createdFromMain = true;
+  openTable(id);
+}
+
+function addGuestVisit(){
+  GUEST_CNT += 1;
+  const name = 'Khách ghé quán ' + GUEST_CNT; // tên mới
   const id = Date.now();
   TABLES.push({ id, name, cart: [] });
   saveAll();
@@ -370,10 +445,55 @@ function renderHistory(){
   });
 }
 
+// hiện danh sách bàn để chọn
+function openTableModal() {
+  // tạo danh sách bàn cố định
+  const list = document.createElement('div');
+  list.className = 'table-select-list';
+
+  FIXED_TABLES.forEach(name => {
+    const btn = document.createElement('button');
+    btn.className = 'btn btn-secondary';
+    btn.style.margin = '5px';
+    btn.innerText = name;
+    btn.onclick = () => {
+      // khi chọn 1 bàn
+      const id = Date.now();
+      TABLES.push({ id, name, cart: [] });
+      saveAll();
+      createdFromMain = true;
+      // đóng modal, mở order screen
+      document.body.removeChild(list);
+      openTable(id);
+    };
+    list.appendChild(btn);
+  });
+
+  // thêm nút đóng
+  const closeBtn = document.createElement('button');
+  closeBtn.innerText = 'Đóng';
+  closeBtn.className = 'btn btn-danger';
+  closeBtn.onclick = () => document.body.removeChild(list);
+  list.appendChild(document.createElement('br'));
+  list.appendChild(closeBtn);
+
+  // hiển thị như modal đơn giản
+  list.style.position = 'fixed';
+  list.style.top = '50%';
+  list.style.left = '50%';
+  list.style.transform = 'translate(-50%,-50%)';
+  list.style.background = '#fff';
+  list.style.padding = '20px';
+  list.style.zIndex = '1000';
+  list.style.border = '1px solid #ccc';
+
+  document.body.appendChild(list);
+}
+
 // init
 window.addEventListener('load', ()=>{
   if($('guest-btn')) $('guest-btn').addEventListener('click', addGuest);
-  if($('add-table-btn')) $('add-table-btn').addEventListener('click', addNamed);
+  if($('guest-visit-btn')) $('guest-visit-btn').addEventListener('click', openTableModal);
   if($('cancel-order-btn')) $('cancel-order-btn').addEventListener('click', cancelOrder);
   if($('save-btn')) $('save-btn').addEventListener('click', saveOrder);
   if($('addmore-btn')) $('addmore-btn').addEventListener('click', addMore);
@@ -381,51 +501,4 @@ window.addEventListener('load', ()=>{
   if($('history-date')) $('history-date').addEventListener('change', ()=> renderHistory());
   const brand = document.getElementById('brand'); if(brand) brand.addEventListener('click', ()=> backToTables());
   renderTables(); renderCategories(); populateCatSelect(); renderMenuSettings(); saveAll();
-});
-let selectedTableName = null;
-
-// mở popup
-function openTablePopup(){
-  document.getElementById('table-popup').style.display = 'flex';
-  selectedTableName = null;
-}
-
-// đóng popup
-function closeTablePopup(){
-  document.getElementById('table-popup').style.display = 'none';
-}
-
-// chọn bàn trong popup
-document.querySelectorAll('.table-choice').forEach(btn=>{
-  btn.addEventListener('click', ()=>{
-    document.querySelectorAll('.table-choice').forEach(b=> b.classList.remove('btn-primary'));
-    btn.classList.add('btn-primary');
-    selectedTableName = btn.innerText;
-  });
-});
-
-// nút huỷ
-document.getElementById('cancel-table').addEventListener('click', ()=>{
-  closeTablePopup();
-});
-
-// nút chọn
-document.getElementById('confirm-table').addEventListener('click', ()=>{
-  if(!selectedTableName) return;
-  const id = Date.now();
-  TABLES.push({ id, name: selectedTableName, cart: [] });
-  saveAll();
-  closeTablePopup();
-  createdFromMain = true;
-  openTable(id);
-});
-
-// chuyển tab
-document.getElementById('ground-btn').addEventListener('click', ()=>{
-  document.getElementById('ground-floor').style.display = 'block';
-  document.getElementById('upstairs-floor').style.display = 'none';
-});
-document.getElementById('upstairs-btn').addEventListener('click', ()=>{
-  document.getElementById('ground-floor').style.display = 'none';
-  document.getElementById('upstairs-floor').style.display = 'block';
 });
