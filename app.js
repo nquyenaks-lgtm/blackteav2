@@ -547,7 +547,7 @@ function openTableModal() {
 
     const legend = document.createElement("legend");
     legend.innerText = titleText;
-    legend.style.fontSize = "14px";
+    legend.style.fontSize = "12px";
     legend.style.padding = "0 5px";
     legend.style.textAlign = "center";
     group.appendChild(legend);
