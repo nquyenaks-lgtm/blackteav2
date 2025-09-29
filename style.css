@@ -147,12 +147,18 @@ input,select{padding:8px;border:1px solid #ccc;border-radius:6px}
   background-color: #0c57b5;
 }
 
-/* Tăng kích thước nút chọn bàn */
-.table-selection button,
-.btn-table,
-.table-btn {
-  font-size: 20px;      /* chữ to hơn */
-  padding: 18px 25px;   /* cao + rộng hơn */
-  min-width: 100px;     /* chiều ngang tối thiểu */
-  border-radius: 10px;  /* bo tròn */
+/* Style chung cho nút bàn */
+.btn.btn-secondary,
+.btn.btn-success {
+  font-size: 18px;      /* chữ to hơn */
+  padding: 15px 20px;   /* tăng khoảng cách trong nút */
+  min-width: 90px;      /* chiều rộng tối thiểu */
+  min-height: 60px;     /* chiều cao tối thiểu */
+  border-radius: 10px;  /* bo góc */
+  text-align: center;
+}
+
+/* Khi nút được chọn (màu xanh) */
+.btn.btn-success {
+  font-weight: bold;
 }
