@@ -447,48 +447,148 @@ function renderHistory(){
 
 // hiện danh sách bàn để chọn
 function openTableModal() {
-  // tạo danh sách bàn cố định
   const list = document.createElement('div');
-  list.className = 'table-select-list';
-
-  FIXED_TABLES.forEach(name => {
-    const btn = document.createElement('button');
-    btn.className = 'btn btn-secondary';
-    btn.style.margin = '5px';
-    btn.innerText = name;
-    btn.onclick = () => {
-      // khi chọn 1 bàn
-      const id = Date.now();
-      TABLES.push({ id, name, cart: [] });
-      saveAll();
-      createdFromMain = true;
-      // đóng modal, mở order screen
-      document.body.removeChild(list);
-      openTable(id);
-    };
-    list.appendChild(btn);
-  });
-
-  // thêm nút đóng
-  const closeBtn = document.createElement('button');
-  closeBtn.innerText = 'Đóng';
-  closeBtn.className = 'btn btn-danger';
-  closeBtn.onclick = () => document.body.removeChild(list);
-  list.appendChild(document.createElement('br'));
-  list.appendChild(closeBtn);
-
-  // hiển thị như modal đơn giản
   list.style.position = 'fixed';
   list.style.top = '50%';
   list.style.left = '50%';
-  list.style.transform = 'translate(-50%,-50%)';
+  list.style.transform = 'translate(-50%, -50%)';
   list.style.background = '#fff';
   list.style.padding = '20px';
   list.style.zIndex = '1000';
   list.style.border = '1px solid #ccc';
+  list.style.borderRadius = '8px';
+  list.style.maxWidth = '700px';
+  list.style.maxHeight = '80vh';
+  list.style.overflowY = 'auto';
+
+  let selectedTable = null; // Lưu bàn đang chọn
+
+  // Hàm tạo nút bàn
+  function createTableBtn(name) {
+    const btn = document.createElement('button');
+    btn.className = 'btn btn-secondary';
+    btn.innerText = name;
+    btn.style.transition = "0.2s";
+
+    btn.onclick = () => {
+      // Bỏ highlight bàn cũ
+      if (selectedTable) {
+        selectedTable.style.background = "";
+        selectedTable.style.color = "";
+      }
+      // Highlight bàn mới
+      selectedTable = btn;
+      btn.style.background = "#0d6efd";
+      btn.style.color = "#fff";
+    };
+
+    return btn;
+  }
+
+  // Hàm render nhóm
+  function renderGroup(titleText, layoutFn) {
+    const group = document.createElement("div");
+    group.style.border = "1px solid #ddd";
+    group.style.borderRadius = "8px";
+    group.style.padding = "10px";
+    group.style.marginBottom = "15px";
+    group.style.background = "#f9f9f9";
+
+    const title = document.createElement("h3");
+    title.innerText = titleText;
+    title.style.marginBottom = "10px";
+    title.style.fontSize = "16px";
+    group.appendChild(title);
+
+    layoutFn(group);
+    list.appendChild(group);
+  }
+
+  // Nhóm Lầu
+  renderGroup("Bàn trên lầu", (group) => {
+    const grid = document.createElement("div");
+    grid.style.display = "grid";
+    grid.style.gridTemplateColumns = "repeat(4, 1fr)";
+    grid.style.gap = "10px";
+    ["L1","L2","L3","L4"].forEach(name => {
+      grid.appendChild(createTableBtn(name));
+    });
+    group.appendChild(grid);
+  });
+
+  // Nhóm Ngoài trời
+  renderGroup("Bàn ngoài trời", (group) => {
+    const grid = document.createElement("div");
+    grid.style.display = "grid";
+    grid.style.gridTemplateColumns = "repeat(2, 1fr)";
+    grid.style.gap = "10px";
+    ["NT1","NT2"].forEach(name => {
+      grid.appendChild(createTableBtn(name));
+    });
+    group.appendChild(grid);
+  });
+
+  // Nhóm T/G/N
+  renderGroup("Bàn tường / Bàn giữa / Bàn nệm", (group) => {
+    const grid = document.createElement("div");
+    grid.style.display = "grid";
+    grid.style.gridTemplateColumns = "repeat(3, 1fr)";
+    grid.style.gap = "10px";
+
+    const tTables = ["T1","T2","T3","T4"];
+    const gTables = ["G1","G2","G3","G4"];
+    const nTables = ["N1","N2","N3","N4"];
+
+    for (let i = 0; i < 4; i++) {
+      grid.appendChild(createTableBtn(tTables[i]));
+      grid.appendChild(createTableBtn(gTables[i]));
+      grid.appendChild(createTableBtn(nTables[i]));
+    }
+    group.appendChild(grid);
+  });
+
+  // Nút hành động
+  const actions = document.createElement("div");
+  actions.style.display = "flex";
+  actions.style.justifyContent = "flex-end";
+  actions.style.gap = "10px";
+  actions.style.marginTop = "15px";
+
+  const cancelBtn = document.createElement('button');
+  cancelBtn.innerText = 'Huỷ';
+  cancelBtn.className = 'btn btn-outline-secondary';
+  cancelBtn.onclick = () => document.body.removeChild(list);
+
+  const confirmBtn = document.createElement('button');
+  confirmBtn.innerText = 'Chọn bàn';
+  confirmBtn.className = 'btn btn-primary';
+  confirmBtn.onclick = () => {
+    if (!selectedTable) {
+      alert("Vui lòng chọn một bàn trước!");
+      return;
+    }
+    const name = selectedTable.innerText;
+
+    if (TABLES.some(t => t.name === name)) {
+      alert("Bàn " + name + " đã được mở!");
+      return;
+    }
+
+    const id = Date.now();
+    TABLES.push({ id, name, cart: [] });
+    saveAll();
+    document.body.removeChild(list);
+    createdFromMain = true;
+    openTable(id);
+  };
+
+  actions.appendChild(cancelBtn);
+  actions.appendChild(confirmBtn);
+  list.appendChild(actions);
 
   document.body.appendChild(list);
 }
+
 
 // init
 window.addEventListener('load', ()=>{
