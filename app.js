@@ -467,7 +467,7 @@ function openTableModal() {
   // Hàm tạo nút bàn
   function createTableBtn(name) {
     const btn = document.createElement('button');
-    btn.className = 'btn btn-secondary table-btn';
+    btn.className = 'btn btn-secondary';
     btn.innerText = name;
     btn.style.transition = "0.2s";
 
