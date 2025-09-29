@@ -133,8 +133,8 @@ input,select{padding:8px;border:1px solid #ccc;border-radius:6px}
 
 .button-container button {
   flex: 1;           /* chia đều chiều ngang */
-  font-size: 22px;   /* chữ to hơn */
-  padding: 25px 0;   /* tăng chiều cao nút */
+  font-size: 19px;   /* chữ to hơn */
+  padding: 20px 0;   /* tăng chiều cao nút */
   border-radius: 12px;  /* bo tròn nút */
   background-color: #1a73e8;
   color: white;
