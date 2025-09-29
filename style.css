@@ -133,8 +133,8 @@ input,select{padding:8px;border:1px solid #ccc;border-radius:6px}
 
 .button-container button {
   flex: 1;           /* chia đều chiều ngang */
-  font-size: 17px;   /* chữ to hơn */
-  padding: 18px 0;   /* tăng chiều cao nút */
+  font-size: 19px;   /* chữ to hơn */
+  padding: 20px 0;   /* tăng chiều cao nút */
   border-radius: 12px;  /* bo tròn nút */
   background-color: #1a73e8;
   color: white;
@@ -147,18 +147,17 @@ input,select{padding:8px;border:1px solid #ccc;border-radius:6px}
   background-color: #0c57b5;
 }
 
-/* Style chung cho nút bàn */
+/* Style chung cho nút bàn  */
 .btn.btn-secondary,
 .btn.btn-success {
-  font-size: 18px;      /* chữ to hơn */
-  padding: 15px 20px;   /* tăng khoảng cách trong nút */
-  min-width: 90px;      /* chiều rộng tối thiểu */
-  min-height: 60px;     /* chiều cao tối thiểu */
-  border-radius: 10px;  /* bo góc */
+  font-size: 17px;      /* giảm chữ xuống 1px (~6%) */
+  padding: 14px 18px;   /* giảm padding */
+  min-width: 85px;      /* giảm chiều rộng tối thiểu */
+  min-height: 56px;     /* giảm chiều cao tối thiểu */
+  border-radius: 10px;
   text-align: center;
 }
 
-/* Khi nút được chọn (màu xanh) */
 .btn.btn-success {
   font-weight: bold;
 }
