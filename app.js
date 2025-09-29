@@ -1,5 +1,5 @@
 // BlackTea POS v8 final - full logic with payment preview, discount, history filter and expandable history items
-
+let selectedTable = null;
 const KEY_MENU = 'BT8_MENU';
 const KEY_CATS = 'BT8_CATS';
 const KEY_TABLES = 'BT8_TABLES';
@@ -99,11 +99,10 @@ function saveAll(){ localStorage.setItem(KEY_MENU, JSON.stringify(MENU)); localS
 function renderTables(){
   const div = $('tables');
   div.innerHTML = '';
-  const nonEmptyTables = TABLES.filter(t => t.cart && t.cart.length > 0);
-if(!nonEmptyTables.length){
-  div.innerHTML = '<div class="small">Chưa có bàn nào</div>';
-  return;
-}
+  if(!TABLES.length){
+    div.innerHTML = '<div class="small">Chưa có bàn nào</div>';
+    return;
+  }
 
   // nhóm L (4 cột)
   const groupL = TABLES.filter(t => t.name.startsWith('L'))
@@ -285,22 +284,7 @@ function changeQty(id,delta){ if(!currentTable) return; const item = MENU.find(m
 function renderCart(){ const ul = $('cart-list'); ul.innerHTML = ''; if(!currentTable || !currentTable.cart.length){ ul.innerHTML = '<div class="small">Chưa có món</div>'; $('total').innerText='0'; return; } let total=0; currentTable.cart.forEach(it=>{ total += it.price*it.qty; const li=document.createElement('li'); li.innerHTML = '<div><div style="font-weight:700">'+it.name+'</div><div class="small">'+fmtV(it.price)+' x '+it.qty+'</div></div><div style="font-weight:700">'+fmtV(it.price*it.qty)+'</div>'; ul.appendChild(li); }); $('total').innerText = fmtV(total); }
 
 // primary actions (new table)
-function cancelOrder(){
-  if(!currentTable) return;
-
-  // xoá bàn hiện tại khỏi danh sách TABLES
-  TABLES = TABLES.filter(t => t.id !== currentTable.id);
-  saveAll();
-  renderTables();
-
-  // reset currentTable
-  currentTable = null;
-
-  // ẩn màn hình order, quay về màn hình chính
-  $('order-screen').style.display = 'none';
-  $('menu-screen').style.display = 'none';
-  $('main-screen').style.display = 'block';
-}
+function cancelOrder(){ if(!currentTable) return; currentTable.cart=[]; renderMenuList(); renderCart(); }
 
 function saveOrder(){ if(!currentTable) return; if(!currentTable.cart.length){ return; } TABLES = TABLES.map(t=> t.id===currentTable.id ? currentTable : t); saveAll(); backToTables(); }
 
@@ -489,13 +473,11 @@ function openTableModal() {
     btn.onclick = () => {
       // Bỏ highlight bàn cũ
       if (selectedTable) {
-        selectedTable.style.background = "";
-        selectedTable.style.color = "";
+        selectedTable.className = "btn btn-secondary";
       }
       // Highlight bàn mới
       selectedTable = btn;
-      btn.style.background = "#0d6efd";
-      btn.style.color = "#fff";
+      btn.className = "btn btn-success";
     };
 
     return btn;
@@ -503,18 +485,19 @@ function openTableModal() {
 
   // Hàm render nhóm
   function renderGroup(titleText, layoutFn) {
-    const group = document.createElement("div");
+    const group = document.createElement("fieldset");
     group.style.border = "1px solid #ddd";
     group.style.borderRadius = "8px";
     group.style.padding = "10px";
     group.style.marginBottom = "15px";
     group.style.background = "#f9f9f9";
 
-    const title = document.createElement("h3");
-    title.innerText = titleText;
-    title.style.marginBottom = "10px";
-    title.style.fontSize = "16px";
-    group.appendChild(title);
+    const legend = document.createElement("legend");
+    legend.innerText = titleText;
+    legend.style.fontSize = "12px";
+    legend.style.padding = "0 6px";
+    legend.style.textAlign = "center";
+    group.appendChild(legend);
 
     layoutFn(group);
     list.appendChild(group);
@@ -544,24 +527,47 @@ function openTableModal() {
     group.appendChild(grid);
   });
 
-  // Nhóm T/G/N
-  renderGroup("Bàn tường / Bàn giữa / Bàn nệm", (group) => {
-    const grid = document.createElement("div");
-    grid.style.display = "grid";
-    grid.style.gridTemplateColumns = "repeat(3, 1fr)";
-    grid.style.gap = "10px";
+  
+  // Nhóm T / G / N hiển thị song song
+  const threeCols = document.createElement("div");
+  threeCols.style.display = "flex";
+  threeCols.style.gap = "15px";
+  threeCols.style.marginBottom = "15px";
+  threeCols.style.alignItems = "flex-start";
 
-    const tTables = ["T1","T2","T3","T4"];
-    const gTables = ["G1","G2","G3","G4"];
-    const nTables = ["N1","N2","N3","N4"];
+  // Hàm tạo group nhỏ cho từng loại bàn
+  function renderMiniGroup(titleText, tables) {
+    const group = document.createElement("fieldset");
+    group.style.border = "1px solid #ddd";
+    group.style.borderRadius = "8px";
+    group.style.padding = "10px";
+    group.style.background = "#f9f9f9";
+    group.style.flex = "1"; // để 3 cột đều nhau
 
-    for (let i = 0; i < 4; i++) {
-      grid.appendChild(createTableBtn(tTables[i]));
-      grid.appendChild(createTableBtn(gTables[i]));
-      grid.appendChild(createTableBtn(nTables[i]));
-    }
-    group.appendChild(grid);
-  });
+    const legend = document.createElement("legend");
+    legend.innerText = titleText;
+    legend.style.fontSize = "14px";
+    legend.style.padding = "0 5px";
+    legend.style.textAlign = "center";
+    group.appendChild(legend);
+
+    const col = document.createElement("div");
+    col.style.display = "flex";
+    col.style.flexDirection = "column";
+    col.style.gap = "8px";
+
+    tables.forEach(name => col.appendChild(createTableBtn(name)));
+
+    group.appendChild(col);
+    return group;
+  }
+
+  // Thêm 3 group vào hàng ngang
+  threeCols.appendChild(renderMiniGroup("Bàn tường", ["T1","T2","T3","T4"]));
+  threeCols.appendChild(renderMiniGroup("Bàn giữa", ["G1","G2","G3","G4"]));
+  threeCols.appendChild(renderMiniGroup("Bàn nệm", ["N1","N2","N3","N4"]));
+
+  list.appendChild(threeCols);
 
   // Nút hành động
   const actions = document.createElement("div");
@@ -604,6 +610,7 @@ function openTableModal() {
 
   document.body.appendChild(list);
 }
+
 
 
 // init
