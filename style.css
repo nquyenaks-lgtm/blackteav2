@@ -147,17 +147,17 @@ input,select{padding:8px;border:1px solid #ccc;border-radius:6px}
   background-color: #0c57b5;
 }
 
-/* Style chung cho nút bàn  */
-.btn.btn-secondary,
-.btn.btn-success {
-  font-size: 17px;      /* giảm chữ xuống 1px (~6%) */
-  padding: 14px 18px;   /* giảm padding */
-  min-width: 85px;      /* giảm chiều rộng tối thiểu */
-  min-height: 56px;     /* giảm chiều cao tối thiểu */
+/* Style riêng cho nút bàn */
+.table-btn {
+  font-size: 17px;       /* chữ vừa phải */
+  padding: 14px 18px;    /* nút cao và rộng vừa đủ */
+  min-width: 85px;       /* chiều rộng tối thiểu */
+  min-height: 56px;      /* chiều cao tối thiểu */
   border-radius: 10px;
   text-align: center;
 }
 
-.btn.btn-success {
+/* Khi bàn đang chọn (active) */
+.table-btn.active {
   font-weight: bold;
 }
