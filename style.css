@@ -124,3 +124,18 @@ input,select{padding:8px;border:1px solid #ccc;border-radius:6px}
   margin-top: 10px;
 }
 
+/* Style cho 2 nút khách */
+.guest-buttons {
+  display: flex;
+  gap: 15px;          /* khoảng cách giữa 2 nút */
+  margin: 15px 0;
+}
+
+.guest-buttons button {
+  flex: 1;            /* mỗi nút chiếm đều 50% */
+  font-size: 22px;    /* chữ to hơn */
+  padding: 25px 0;    /* tăng chiều cao nút */
+  border-radius: 12px;
+}
+
+
