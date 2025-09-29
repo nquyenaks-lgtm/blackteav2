@@ -175,7 +175,7 @@ function makeTableCard(t){
 // add guest
 function addGuest(){
   GUEST_CNT += 1;
-  const name = 'Khách vãng lai ' + GUEST_CNT;
+  const name = 'Khách mang đi ' + GUEST_CNT;
   const id = Date.now();
   TABLES.push({ id, name, cart: [] });
   saveAll();

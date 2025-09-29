@@ -124,3 +124,16 @@ input,select{padding:8px;border:1px solid #ccc;border-radius:6px}
   margin-top: 10px;
 }
 
+/* Nút khách */
+.guest-buttons {
+  display: flex;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.guest-buttons button {
+  flex: 1;               /* chia đều chiều ngang */
+  font-size: 16px;       /* chữ rõ hơn */
+  padding: 14px 0;       /* chiều cao vừa đẹp */
+  border-radius: 8px;
+}
