@@ -457,7 +457,8 @@ function openTableModal() {
   list.style.zIndex = '1000';
   list.style.border = '1px solid #ccc';
   list.style.borderRadius = '8px';
-  list.style.maxWidth = '700px';
+  list.style.maxWidth = '95%';
+  list.style.width = '600px';
   list.style.maxHeight = '80vh';
   list.style.overflowY = 'auto';
 
