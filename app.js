@@ -99,10 +99,11 @@ function saveAll(){ localStorage.setItem(KEY_MENU, JSON.stringify(MENU)); localS
 function renderTables(){
   const div = $('tables');
   div.innerHTML = '';
-  if(!TABLES.length){
-    div.innerHTML = '<div class="small">Chưa có bàn nào</div>';
-    return;
-  }
+  const nonEmptyTables = TABLES.filter(t => t.cart && t.cart.length > 0);
+if(!nonEmptyTables.length){
+  div.innerHTML = '<div class="small">Chưa có bàn nào</div>';
+  return;
+}
 
   // nhóm L (4 cột)
   const groupL = TABLES.filter(t => t.name.startsWith('L'))
@@ -284,7 +285,22 @@ function changeQty(id,delta){ if(!currentTable) return; const item = MENU.find(m
 function renderCart(){ const ul = $('cart-list'); ul.innerHTML = ''; if(!currentTable || !currentTable.cart.length){ ul.innerHTML = '<div class="small">Chưa có món</div>'; $('total').innerText='0'; return; } let total=0; currentTable.cart.forEach(it=>{ total += it.price*it.qty; const li=document.createElement('li'); li.innerHTML = '<div><div style="font-weight:700">'+it.name+'</div><div class="small">'+fmtV(it.price)+' x '+it.qty+'</div></div><div style="font-weight:700">'+fmtV(it.price*it.qty)+'</div>'; ul.appendChild(li); }); $('total').innerText = fmtV(total); }
 
 // primary actions (new table)
-function cancelOrder(){ if(!currentTable) return; currentTable.cart=[]; renderMenuList(); renderCart(); }
+function cancelOrder(){
+  if(!currentTable) return;
+
+  // xoá bàn hiện tại khỏi danh sách TABLES
+  TABLES = TABLES.filter(t => t.id !== currentTable.id);
+  saveAll();
+  renderTables();
+
+  // reset currentTable
+  currentTable = null;
+
+  // ẩn màn hình order, quay về màn hình chính
+  $('order-screen').style.display = 'none';
+  $('menu-screen').style.display = 'none';
+  $('main-screen').style.display = 'block';
+}
 
 function saveOrder(){ if(!currentTable) return; if(!currentTable.cart.length){ return; } TABLES = TABLES.map(t=> t.id===currentTable.id ? currentTable : t); saveAll(); backToTables(); }
 
