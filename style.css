@@ -197,10 +197,7 @@ input,select{padding:8px;border:1px solid #ccc;border-radius:6px}
   white-space: nowrap; /* giữ nguyên 1 dòng, không xuống hàng */
 }
 // Tiieu đè sát lenn
-body {
-  margin: 0;
-  padding: 0;
-}
+
 // Bàn đang phục vụ
 <style>
   .section-title {
@@ -222,3 +219,8 @@ body {
     box-shadow: 0 2px 6px rgba(0,0,0,0.15); /* bóng mờ */
   }
 </style>
+
+body {
+  margin: 0;
+  padding: 0;
+}
