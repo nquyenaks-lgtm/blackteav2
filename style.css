@@ -1,7 +1,18 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Inter,Arial,Helvetica,sans-serif;background:#f6f7fb;color:#222;padding:12px}
 .app{max-width:980px;margin:0 auto}
-header{padding:8px 0}
+// thanh tile
+header {
+  width: 100%;               /* Tràn hết chiều ngang */
+  margin: 0;                 /* Bỏ khoảng cách ngoài */
+  padding: 12px 16px;        /* Canh padding đẹp hơn */
+  background: #2c3e50;       /* Màu xanh đậm */
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
 h1{font-size:18px}
 h2,h3,h4{margin:8px 0}
 .table-grid{display:flex;flex-direction:column;gap:8px;margin-top:8px}
