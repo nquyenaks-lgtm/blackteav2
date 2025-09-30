@@ -1,5 +1,11 @@
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Inter,Arial,Helvetica,sans-serif;background:#f6f7fb;color:#222;padding:12px}
+body {
+  margin: 0;
+  padding: 70px 12px 12px 12px; /* chừa khoảng trống trên cho header */
+  font-family: Inter, Arial, Helvetica, sans-serif;
+  background: #f6f7fb;
+  color: #222;
+}
 .app{max-width:980px;margin:0 auto}
 header{padding:8px 0}
 h1{font-size:18px}
@@ -197,12 +203,6 @@ input,select{padding:8px;border:1px solid #ccc;border-radius:6px}
   white-space: nowrap; /* giữ nguyên 1 dòng, không xuống hàng */
 }
 // Thanh tieu đề
-/* Reset margin */
-body {
-  margin: 0;
-  padding-top: 70px; /* chừa chỗ cho header cố định */
-  font-family: Arial, sans-serif;
-}
 
 /* Header */
 header {
