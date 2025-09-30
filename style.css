@@ -232,7 +232,7 @@ main {
   display: flex;
   justify-content: center;
   gap: 16px;          /* khoảng cách giữa 2 nút */
-  margin: 24px auto;  /* cách header xuống */
+  margin: 16px auto;  /* cách header xuống */
 }
 
 .guest-btn {
