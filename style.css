@@ -206,6 +206,7 @@ body {
 }
 
 /* Header */
+/* Header */
 header {
   width: 100%;
   background: #2c3e50;   /* xanh than */
@@ -218,35 +219,28 @@ header {
   top: 0;
   left: 0;
   z-index: 1000;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.25); /* hiệu ứng nổi */
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
 }
 
-header h1#brand {
-  margin: 0;
+/* Tiêu đề */
+header .title {
   font-size: 20px;
-  font-weight: 700;
-  color: #fff;
-  text-shadow: 1px 1px 3px rgba(0,0,0,0.6); /* chữ nổi hơn */
-  cursor: pointer;
+  font-weight: bold;
 }
 
-/* Icon container */
-.header-icons {
+/* Nhóm icon bên phải */
+header .actions {
   display: flex;
-  gap: 18px;
   align-items: center;
 }
 
-/* Icon trực tiếp */
-.icon-btn {
-  font-size: 26px;     /* icon to */
-  color: #fff;         /* màu trắng */
+/* Icon trong header */
+header .icon-btn {
+  font-size: 28px;     /* chỉnh icon to hơn */
+  margin-left: 18px;   /* khoảng cách giữa 2 icon */
   cursor: pointer;
-  user-select: none;
-  transition: transform 0.2s, opacity 0.2s;
 }
 
-.icon-btn:hover {
-  transform: scale(1.2);  /* phóng to nhẹ khi hover */
-  opacity: 0.8;           /* mờ nhẹ */
+header .icon-btn:hover {
+  opacity: 0.8;        /* hiệu ứng hover */
 }
