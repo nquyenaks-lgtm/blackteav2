@@ -195,26 +195,56 @@ input,select{padding:8px;border:1px solid #ccc;border-radius:6px}
   color: #555;
   white-space: nowrap; /* giữ nguyên 1 dòng, không xuống hàng */
 }
-.header {
+/* Reset margin */
+body {
+  margin: 0;
+  padding: 70px 0 0 0;   /* chừa khoảng trống bằng chiều cao header */
+  font-family: Arial, sans-serif;
+  background: #f4f4f4;   /* nếu có */
+}
+
+/* Header */
+header {
+  width: 100%;
+  background: #2c3e50;   /* xanh than */
+  color: #fff;
+  padding: 12px 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 16px;
-  background: #2c3e50;   /* xanh đậm */
-  color: #fff;
+  position: fixed;   /* cố định trên cùng */
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.25); /* hiệu ứng nổi */
 }
 
+header h1#brand {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.6); /* chữ nổi hơn */
+  cursor: pointer;
+}
+
+/* Icon container */
 .header-icons {
   display: flex;
-  gap: 16px;
+  gap: 18px;
+  align-items: center;
 }
 
+/* Icon trực tiếp */
 .icon-btn {
-  font-size: 24px;   /* cho icon to hơn */
-  color: #fff;       /* luôn trắng */
+  font-size: 26px;     /* icon to */
+  color: #fff;         /* màu trắng */
   cursor: pointer;
   user-select: none;
+  transition: transform 0.2s, opacity 0.2s;
 }
+
 .icon-btn:hover {
-  opacity: 0.8;
+  transform: scale(1.2);  /* phóng to nhẹ khi hover */
+  opacity: 0.8;           /* mờ nhẹ */
 }
