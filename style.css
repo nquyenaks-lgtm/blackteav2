@@ -252,13 +252,18 @@ header h1#brand {
 
 /*  bàn đang phục vụ */
 .section-bar {
-  width: 100%;
-  background: linear-gradient(to right, #4a69ad 85%, rgba(74,105,173,0) 100%);
+  width: 100vw; /* tràn hết ngang màn hình */
+  margin-left: -16px; /* nếu body có padding thì kéo ra hết */
+  background: 
+    linear-gradient(to right, #3b5998 60%, rgba(59,89,152,0) 100%),
+    linear-gradient(to bottom, #3b5998, rgba(59,89,152,0.6));
   color: #fff;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
-  padding: 8px 14px;
-  margin: 12px 0;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+  padding: 6px 12px;  /* giảm padding để hẹp lại */
+  line-height: 1.4;   /* cho chữ gọn */
+  margin-top: 12px;
+  border-radius: 4px; /* bo nhẹ nhìn mềm hơn */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  display: inline-block; /* ô chỉ cao vừa chữ + padding */
 }
