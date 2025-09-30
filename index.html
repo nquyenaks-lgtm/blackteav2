@@ -54,49 +54,29 @@
   <div class="app">
     
 <header style="
-  position:fixed;   /* dính lên trên cùng */
-  top:0;
-  left:0;
-  right:0;
   display:flex;
   justify-content:space-between;
   align-items:center;
   padding:12px 16px;
-  background:#4da3ff; /* xanh dương nhạt */
+  background:#2c3e50;
   color:#fff;
   box-shadow:0 2px 6px rgba(0,0,0,0.15);
-  width:100%;
-  border-radius:0;
-  z-index:1000;
 ">
-  <h1 id="brand" style="
-    margin:0;
-    font-size:24px;
-    font-weight:800;
-    cursor:pointer;
-    background:#fff;
-    color:#4da3ff;
-    padding:6px 16px;
-    border-radius:10px;
-    letter-spacing:1px;
-    box-shadow:0 2px 4px rgba(0,0,0,0.2);
-  ">
+  <h1 id="brand" style="margin:0; font-size:20px; font-weight:700; cursor:pointer;">
     BlackTea POS
   </h1>
   <div style="display:flex; gap:12px; align-items:center;">
     <button class="btn btn-light" onclick="openHistory()" title="Lịch sử"
-      style="background:#fff; color:#4da3ff; border-radius:6px; padding:6px 10px;">
+      style="background:#fff; color:#2c3e50; border-radius:6px; padding:6px 10px;">
       📜
     </button>
     <button class="btn btn-light" onclick="openSettings()" title="Cài đặt"
-      style="background:#fff; color:#4da3ff; border-radius:6px; padding:6px 10px;">
+      style="background:#fff; color:#2c3e50; border-radius:6px; padding:6px 10px;">
       ⚙️
     </button>
   </div>
 </header>
 
-    <main style="margin-top:70px;">
-  
 
     <main id="table-screen">
       
@@ -114,7 +94,7 @@
 </h2>
       <div id="tables" class="table-grid"></div>
     </main>
-    </main>
+
     <main id="menu-screen" style="display:none">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
         <button class="btn btn-light" onclick="backToTables()">← Quay lại</button>
@@ -174,6 +154,7 @@
     <div style="margin-top:12px;display:flex;gap:8px">
       <button class="btn btn-secondary" onclick="closePayment()">Quay lại</button>
       <button class="btn btn-primary" onclick="confirmPayment()">Xuất hóa đơn</button>
+    </div>
   </div>
 
   <script>
