@@ -262,3 +262,15 @@ header h1#brand {
   background-color: #3b5998 !important; /* đậm hơn khi hover */
   border-color: #3b5998 !important;
 }
+/*  bàn đang phục vụ */
+.section-bar {
+  width: 100%;
+  background: linear-gradient(to right, #4a69ad 85%, rgba(74,105,173,0) 100%);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 8px 14px;
+  margin: 12px 0;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
