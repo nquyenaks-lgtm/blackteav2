@@ -230,25 +230,23 @@ header h1#brand {
   cursor: pointer;
 }
 
-/* Buttons container */
-header .header-buttons {
+/* Icon container */
+.header-icons {
   display: flex;
-  gap: 12px;
+  gap: 18px;
   align-items: center;
 }
 
-/* Buttons */
-header .header-buttons button {
-  background: #fff;
-  color: #5dade2;
-  border: none;
-  border-radius: 6px;
-  padding: 6px 10px;
-  font-size: 16px;
+/* Icon trực tiếp */
+.icon-btn {
+  font-size: 26px;     /* icon to */
+  color: #fff;         /* màu trắng */
   cursor: pointer;
-  transition: 0.2s;
+  user-select: none;
+  transition: transform 0.2s, opacity 0.2s;
 }
 
-header .header-buttons button:hover {
-  background: #ebf5fb;
+.icon-btn:hover {
+  transform: scale(1.2);  /* phóng to nhẹ khi hover */
+  opacity: 0.8;           /* mờ nhẹ */
 }
