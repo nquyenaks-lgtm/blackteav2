@@ -196,7 +196,29 @@ input,select{padding:8px;border:1px solid #ccc;border-radius:6px}
   color: #555;
   white-space: nowrap; /* giữ nguyên 1 dòng, không xuống hàng */
 }
+// Tiieu đè sát lenn
 body {
   margin: 0;
   padding: 0;
 }
+// Bàn đang phục vụ
+<style>
+  .section-title {
+    width: 100%;                /* chiếm toàn bộ chiều ngang */
+    padding: 10px 14px;
+    margin: 12px 0;
+    font-weight: 600;
+    font-style: italic;
+    color: #2c3e50;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: 6px;
+    background: linear-gradient(
+      to right,
+      #ebf5fb 85%,    /* xanh nhạt ở bên trái */
+      rgba(235,245,251,0) 100% /* mờ dần về bên phải */
+    );
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15); /* bóng mờ */
+  }
+</style>
