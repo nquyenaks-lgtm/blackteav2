@@ -206,30 +206,58 @@ body {
 }
 
 /* Header */
-/* Header */
+header {
+  width: 100%;
+  background: #2c3e50;   /* xanh than */
+  color: #fff;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;   /* cố định trên cùng */
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
 header .title {
-  font-size: 26px;     /* chữ BlackTea POS to hơn */
+  font-size: 26px;    /* chữ BlackTea POS to hơn */
   font-weight: bold;
 }
 
-/* Vùng chứa 2 nút */
+header .actions {
+  display: flex;
+  align-items: center;
+}
+
+header .icon-btn {
+  font-size: 26px;
+  margin-left: 16px;
+  cursor: pointer;
+}
+
+/* Hai nút dưới header */
 .signboard {
   display: flex;
   justify-content: center;
-  gap: 30px;            /* khoảng cách giữa 2 nút */
-  margin-top: 32px;     /* khoảng cách từ header xuống */
-  padding: 0 32px;      /* tạo khoảng cách hai bên cho cân đối */
+  gap: 30px;
+  margin-top: 70px;    /* khoảng cách xuống dưới header */
+  padding: 0 32px;
 }
 
-/* Style nút */
 .sign-btn {
-  background: #2c3e50;
+  background: #2c3e50;  /* cùng màu với header */
   color: #fff;
-  font-size: 16px;      /* nhỏ hơn ~20% */
+  font-size: 16px;      /* nhỏ lại ~20% */
   font-weight: bold;
-  padding: 11px 20px;   /* thu nhỏ tổng thể */
+  padding: 11px 20px;
   border-radius: 12px;
   border: none;
   cursor: pointer;
   box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+.sign-btn:hover {
+  opacity: 0.9;
 }
