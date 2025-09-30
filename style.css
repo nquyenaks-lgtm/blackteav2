@@ -1,11 +1,5 @@
 *{box-sizing:border-box;margin:0;padding:0}
-body {
-  margin: 0;
-  padding: 70px 12px 12px 12px; /* chừa khoảng trống trên cho header */
-  font-family: Inter, Arial, Helvetica, sans-serif;
-  background: #f6f7fb;
-  color: #222;
-}
+body{font-family:Inter,Arial,Helvetica,sans-serif;background:#f6f7fb;color:#222;padding:12px}
 .app{max-width:980px;margin:0 auto}
 header{padding:8px 0}
 h1{font-size:18px}
@@ -201,56 +195,4 @@ input,select{padding:8px;border:1px solid #ccc;border-radius:6px}
   font-size: 13px;
   color: #555;
   white-space: nowrap; /* giữ nguyên 1 dòng, không xuống hàng */
-}
-// Thanh tieu đề
-
-/* Header */
-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 16px;
-  background: #5dade2; /* xanh dương nhạt */
-  color: #fff;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-  z-index: 1000;
-}
-
-/* Logo */
-header h1 {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 700;
-  background: #fff;
-  color: #5dade2;
-  padding: 6px 12px;
-  border-radius: 6px;
-}
-
-/* Buttons container */
-header .header-buttons {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-
-/* Buttons */
-header .header-buttons button {
-  background: #fff;
-  color: #5dade2;
-  border: none;
-  border-radius: 6px;
-  padding: 6px 10px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-header .header-buttons button:hover {
-  background: #ebf5fb;
 }
