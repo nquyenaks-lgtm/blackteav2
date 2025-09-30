@@ -223,7 +223,7 @@ header {
 
 /* ===== MAIN CONTENT ===== */
 main {
-  margin-top: 24px;   /* trừ chỗ header để ko bị khoảng trắng */
+  margin-top: 12px;   /* trừ chỗ header để ko bị khoảng trắng */
   padding: 0 16px;    /* căn lề giống header */
 }
 
