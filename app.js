@@ -1,5 +1,6 @@
 // BlackTea POS v8 final - full logic with payment preview, discount, history filter and expandable history items
 let selectedTable = null;
+let isAddingMore = false;
 const KEY_MENU = 'BT8_MENU';
 const KEY_CATS = 'BT8_CATS';
 const KEY_TABLES = 'BT8_TABLES';
@@ -88,6 +89,14 @@ let createdFromMain = false;
 let activeCategory = 'Tất cả';
 
 // helpers
+function showCustomAlert(msg) {
+  document.getElementById("customAlertMessage").innerText = msg;
+  document.getElementById("customAlert").style.display = "block";
+}
+
+function closeCustomAlert() {
+  document.getElementById("customAlert").style.display = "none";
+}
 function $(id){ return document.getElementById(id); }
 function fmtV(n){ return n.toLocaleString('vi-VN'); }
 function nowStr(){ return new Date().toLocaleString('vi-VN'); }
@@ -95,7 +104,7 @@ function isoDateKey(t){ const d = new Date(t); const y=d.getFullYear(); const m=
 function displayDateFromISO(iso){ const parts = iso.split('-'); return parts[2] + '/' + parts[1] + '/' + parts[0]; }
 function saveAll(){ localStorage.setItem(KEY_MENU, JSON.stringify(MENU)); localStorage.setItem(KEY_CATS, JSON.stringify(CATEGORIES)); localStorage.setItem(KEY_TABLES, JSON.stringify(TABLES)); localStorage.setItem(KEY_HISTORY, JSON.stringify(HISTORY)); localStorage.setItem(KEY_GUEST, String(GUEST_CNT)); }
 
-// render tables (sắp xếp: L = 4 cột, NT = 2 cột, T/G/N = mỗi bàn 1 hàng dọc)
+// render tables (sắp xếp: L = 4 cột, NT = 2 cột, T/G/N = mỗi bàn 1 hàng dọc, khác = Bàn tạm)
 function renderTables(){
   const div = $('tables');
   div.innerHTML = '';
@@ -126,7 +135,7 @@ function renderTables(){
 
   // nhóm T, G, N (mỗi bàn một hàng dọc)
   ['T','G','N'].forEach(prefix=>{
-    const g = TABLES.filter(t => t.name.startsWith(prefix))
+    const g = TABLES.filter(t => t.name.startsWith(prefix) && !(prefix === 'N' && t.name.startsWith('NT')))
                     .sort((a,b)=> a.name.localeCompare(b.name));
     g.forEach(t=>{
       const row = document.createElement('div');
@@ -135,7 +144,24 @@ function renderTables(){
       div.appendChild(row);
     });
   });
+
+  // ===== nhóm "khác" (bàn tạm, khách mang đi, khách ghé quán, tên do người dùng) =====
+  const others = TABLES.filter(t =>
+    !t.name.startsWith('L') &&
+    !t.name.startsWith('NT') &&
+    !t.name.startsWith('T') &&
+    !t.name.startsWith('G') &&
+    !t.name.startsWith('N')
+  ).sort((a,b)=> a.name.localeCompare(b.name));
+
+  if(others.length){
+    const row = document.createElement('div');
+    row.className = 'table-section table-section-others';
+    others.forEach(t => row.appendChild(makeTableCard(t)));
+    div.appendChild(row);
+  }
 }
+
 
 // helper tạo thẻ bàn (dùng trong renderTables)
 function makeTableCard(t){
@@ -147,12 +173,21 @@ function makeTableCard(t){
 
   const name = document.createElement('div');
   name.className = 'table-name';
-  name.innerText = t.name;
+
+  // Hiển thị tên dài hơn trong danh sách “Bàn đang phục vụ”
+  let displayName = t.name;
+  if (t.name.startsWith('L'))      displayName = `Bàn trên lầu ${t.name}`;
+  else if (t.name.startsWith('NT')) displayName = `Bàn ngoài trời ${t.name}`;
+  else if (t.name.startsWith('T'))  displayName = `Bàn tường ${t.name}`;
+  else if (t.name.startsWith('G'))  displayName = `Bàn giữa ${t.name}`;
+  else if (t.name.startsWith('N'))  displayName = `Bàn nệm ${t.name}`;
+
+  name.innerText = displayName;
   info.appendChild(name);
 
   if(t.cart && t.cart.length){
-    let qty=0, total=0;
-    t.cart.forEach(it=>{ qty += it.qty; total += it.qty * it.price; });
+    let qty = 0, total = 0;
+    t.cart.forEach(it => { qty += it.qty; total += it.qty * it.price; });
     const meta = document.createElement('div');
     meta.className = 'table-meta';
     meta.innerText = qty + ' món • ' + fmtV(total) + ' VND';
@@ -161,11 +196,8 @@ function makeTableCard(t){
 
   card.appendChild(info);
 
-  // click: highlight + mở bàn
-  card.onclick = ()=> {
-    document.querySelectorAll('.table-card').forEach(c=>{
-      c.classList.remove('active');
-    });
+  card.onclick = () => {
+    document.querySelectorAll('.table-card').forEach(c => c.classList.remove('active'));
     card.classList.add('active');
     openTableFromMain(t.id);
   };
@@ -222,15 +254,23 @@ function openTable(id){
   renderCategories();
   renderMenuList();
   renderCart();
-  if(createdFromMain){
-    $('primary-actions').style.display = 'flex';
-    $('table-actions').style.display = 'none';
-    $('menu-list').style.display = 'block';
+  if (createdFromMain) {
+  $('primary-actions').style.display = 'flex';
+  $('table-actions').style.display = 'none';
+  $('menu-list').style.display = 'block';
+
+  // 👉 chỉ ẩn nút Huỷ đơn khi đang ở chế độ thêm món
+  if (isAddingMore) {
+    $('cancel-order-btn').style.display = 'none';
   } else {
-    $('primary-actions').style.display = 'none';
-    $('table-actions').style.display = 'flex';
-    $('menu-list').style.display = 'none';
+    $('cancel-order-btn').style.display = 'inline-block';
   }
+} else {
+  $('primary-actions').style.display = 'none';
+  $('table-actions').style.display = 'flex';
+  $('menu-list').style.display = 'none';
+}
+
 }
 
 // back
@@ -286,11 +326,39 @@ function renderCart(){ const ul = $('cart-list'); ul.innerHTML = ''; if(!current
 // primary actions (new table)
 function cancelOrder(){ if(!currentTable) return; currentTable.cart=[]; renderMenuList(); renderCart(); }
 
-function saveOrder(){ if(!currentTable) return; if(!currentTable.cart.length){ return; } TABLES = TABLES.map(t=> t.id===currentTable.id ? currentTable : t); saveAll(); backToTables(); }
+function saveOrder() {
+  if (!currentTable) return;
+  if (!currentTable.cart.length) return;
+
+  const idx = TABLES.findIndex(t => t.id === currentTable.id);
+
+  if (idx >= 0) {
+    // Nếu bàn đã tồn tại → cập nhật lại
+    TABLES[idx] = { ...currentTable };
+  } else {
+    // Nếu bàn chưa tồn tại (VD: Khách mang đi) → thêm mới
+    TABLES.push({ ...currentTable });
+  }
+
+  saveAll();
+  renderTables();
+  backToTables();
+}
 
 // table actions
-function addMore(){ if(!currentTable) return; $('menu-list').style.display='block'; createdFromMain = true; $('primary-actions').style.display='flex'; $('table-actions').style.display='none'; renderMenuList(); }
+function addMore(){ 
+  if(!currentTable) return; 
+  $('menu-list').style.display='block'; 
+  createdFromMain = true; 
+  $('primary-actions').style.display='flex'; 
+  $('table-actions').style.display='none'; 
 
+  // Ẩn nút Hủy đơn khi bấm Thêm món
+  const cancelBtn = $('cancel-order-btn');
+  if (cancelBtn) cancelBtn.style.display = 'none';
+
+  renderMenuList(); 
+}
 function payTable(){ if(!currentTable) return; if(!currentTable.cart.length){ return; } // open payment screen with bill preview
   $('menu-screen').style.display='none'; $('payment-screen').style.display='block';
   $('pay-table-name').innerText = currentTable.name;
@@ -445,8 +513,20 @@ function renderHistory(){
   });
 }
 
-// hiện danh sách bàn để chọn
+// hiện danh sách bàn để chọn (có overlay mờ nền)
 function openTableModal() {
+  // ===== Overlay mờ nền =====
+  const overlay = document.createElement('div');
+  overlay.style.position = 'fixed';
+  overlay.style.top = '0';
+  overlay.style.left = '0';
+  overlay.style.width = '100%';
+  overlay.style.height = '100%';
+  overlay.style.background = 'rgba(0,0,0,0.5)'; // nền mờ
+  overlay.style.zIndex = '999';
+  document.body.appendChild(overlay);
+
+  // ===== Bảng chọn bàn =====
   const list = document.createElement('div');
   list.style.position = 'fixed';
   list.style.top = '50%';
@@ -454,7 +534,7 @@ function openTableModal() {
   list.style.transform = 'translate(-50%, -50%)';
   list.style.background = '#fff';
   list.style.padding = '20px';
-  list.style.zIndex = '1000';
+  list.style.zIndex = '1000';   // nằm trên overlay
   list.style.border = '1px solid #ccc';
   list.style.borderRadius = '8px';
   list.style.maxWidth = '95%';
@@ -462,9 +542,15 @@ function openTableModal() {
   list.style.maxHeight = '80vh';
   list.style.overflowY = 'auto';
 
-  let selectedTable = null; // Lưu bàn đang chọn
+  let selectedTable = null;
 
-  // Hàm tạo nút bàn
+  // ===== Hàm đóng modal =====
+  function closeModal() {
+    document.body.removeChild(list);
+    document.body.removeChild(overlay);
+  }
+
+  // ===== Hàm tạo nút bàn =====
   function createTableBtn(name) {
     const btn = document.createElement('button');
     btn.className = 'btn btn-secondary';
@@ -472,11 +558,9 @@ function openTableModal() {
     btn.style.transition = "0.2s";
 
     btn.onclick = () => {
-      // Bỏ highlight bàn cũ
       if (selectedTable) {
         selectedTable.className = "btn btn-secondary";
       }
-      // Highlight bàn mới
       selectedTable = btn;
       btn.className = "btn btn-success";
     };
@@ -484,7 +568,7 @@ function openTableModal() {
     return btn;
   }
 
-  // Hàm render nhóm
+  // ===== Hàm render nhóm =====
   function renderGroup(titleText, layoutFn) {
     const group = document.createElement("fieldset");
     group.style.border = "1px solid #ddd";
@@ -504,7 +588,7 @@ function openTableModal() {
     list.appendChild(group);
   }
 
-  // Nhóm Lầu
+  // ===== Nhóm Lầu =====
   renderGroup("Bàn trên lầu", (group) => {
     const grid = document.createElement("div");
     grid.style.display = "grid";
@@ -516,7 +600,7 @@ function openTableModal() {
     group.appendChild(grid);
   });
 
-  // Nhóm Ngoài trời
+  // ===== Nhóm Ngoài trời =====
   renderGroup("Bàn ngoài trời", (group) => {
     const grid = document.createElement("div");
     grid.style.display = "grid";
@@ -528,22 +612,20 @@ function openTableModal() {
     group.appendChild(grid);
   });
 
-  
-  // Nhóm T / G / N hiển thị song song
+  // ===== Nhóm T / G / N song song =====
   const threeCols = document.createElement("div");
   threeCols.style.display = "flex";
   threeCols.style.gap = "15px";
   threeCols.style.marginBottom = "15px";
   threeCols.style.alignItems = "flex-start";
 
-  // Hàm tạo group nhỏ cho từng loại bàn
   function renderMiniGroup(titleText, tables) {
     const group = document.createElement("fieldset");
     group.style.border = "1px solid #ddd";
     group.style.borderRadius = "8px";
     group.style.padding = "10px";
     group.style.background = "#f9f9f9";
-    group.style.flex = "1"; // để 3 cột đều nhau
+    group.style.flex = "1";
 
     const legend = document.createElement("legend");
     legend.innerText = titleText;
@@ -563,14 +645,12 @@ function openTableModal() {
     return group;
   }
 
-  // Thêm 3 group vào hàng ngang
   threeCols.appendChild(renderMiniGroup("Bàn tường", ["T1","T2","T3","T4"]));
   threeCols.appendChild(renderMiniGroup("Bàn giữa", ["G1","G2","G3","G4"]));
   threeCols.appendChild(renderMiniGroup("Bàn nệm", ["N1","N2","N3","N4"]));
-
   list.appendChild(threeCols);
 
-  // Nút hành động
+  // ===== Nút hành động =====
   const actions = document.createElement("div");
   actions.style.display = "flex";
   actions.style.justifyContent = "flex-end";
@@ -580,7 +660,7 @@ function openTableModal() {
   const cancelBtn = document.createElement('button');
   cancelBtn.innerText = 'Huỷ';
   cancelBtn.className = 'btn btn-outline-secondary';
-  cancelBtn.onclick = () => document.body.removeChild(list);
+  cancelBtn.onclick = closeModal;
 
   const confirmBtn = document.createElement('button');
   confirmBtn.innerText = 'Chọn bàn';
@@ -593,14 +673,14 @@ function openTableModal() {
     const name = selectedTable.innerText;
 
     if (TABLES.some(t => t.name === name)) {
-      alert("Bàn " + name + " đã được mở!");
+      showCustomAlert("Bàn " + name + " đã mở hãy chọn bàn khác hoặc vào đơn hàng của bàn này bấm thêm món");
       return;
     }
 
     const id = Date.now();
     TABLES.push({ id, name, cart: [] });
     saveAll();
-    document.body.removeChild(list);
+    closeModal();
     createdFromMain = true;
     openTable(id);
   };
@@ -611,6 +691,7 @@ function openTableModal() {
 
   document.body.appendChild(list);
 }
+
 
 
 

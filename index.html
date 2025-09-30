@@ -86,11 +86,12 @@
         <div class="cart-summary">
           <div>Tổng: <span id="total">0</span> VND</div>
           <div class="cart-actions" id="primary-actions" style="display:none">
-            <button id="cancel-order-btn" class="btn btn-action">Hủy đơn</button>
+  	    <button id="cancel-order-btn" class="btn btn-action" data-context="new">Đặt lại</button>
             <button id="save-btn" class="btn btn-action primary">Lưu đơn</button>
           </div>
+
           <div class="cart-actions" id="table-actions" style="display:none">
-            <button id="addmore-btn" class="btn btn-action">+ Thêm món</button>
+            <button id="addmore-btn" class="btn btn-action">Thêm món</button>
             <button id="pay-btn" class="btn btn-action primary">Thanh toán</button>
           </div>
         </div>
@@ -197,5 +198,13 @@
       if(b) b.addEventListener('click', ()=>{ backToTables(); });
     });
   </script>
+<!-- Custom Alert -->
+<div id="customAlert" class="custom-alert">
+  <div class="custom-alert-box">
+    <p id="customAlertMessage">Thông báo</p>
+    <button onclick="closeCustomAlert()">Xác nhận</button>
+  </div>
+</div>
+
 </body>
 </html>
