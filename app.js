@@ -749,12 +749,12 @@ function openTableModal() {
     btn.style.transition = "0.2s";
 
     btn.onclick = () => {
-      if (selectedTable) {
-        selectedTable.className = "btn btn-secondary";
-      }
-      selectedTable = btn;
-      btn.className = "btn btn-success";
-    };
+  if (selectedTable) {
+    selectedTable.className = "btn btn-secondary";
+  }
+  selectedTable = btn;
+  btn.className = "btn btn-primary";  // xanh dương
+};
 
     return btn;
   }
