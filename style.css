@@ -237,25 +237,25 @@ body {
 .guest-buttons {
   display: flex;
   justify-content: center;
-  gap: 24px;                /* khoảng cách giữa 2 nút */
-  margin: 24px auto;        /* căn giữa + cách header xuống */
-  max-width: 400px;         /* khống chế độ rộng tối đa để cân đối */
+  gap: 12px;              /* khoảng cách vừa phải */
+  margin: 16px auto;      /* căn giữa + cách header */
+  max-width: 360px;       /* khống chế độ rộng */
 }
 
 .guest-btn {
-  flex: 1;                  /* chia đều chiều rộng */
-  background: #2c3e50;      /* cùng màu header */
-  color: #fff;
+  flex: 1;                
+  background: #2c3e50;    /* xanh than */
+  color: #fff;            /* chữ trắng */
   border: none;
-  border-radius: 8px;
-  padding: 14px 0;
-  font-size: 16px;
-  font-weight: bold;
+  border-radius: 6px;
+  padding: 10px 0;        /* nút nhỏ gọn hơn */
+  font-size: 15px;        /* chữ vừa phải */
+  font-weight: 600;
   cursor: pointer;
   transition: background 0.2s;
   text-align: center;
 }
 
 .guest-btn:hover {
-  background: #34495e;
+  background: #1a242f;    /* màu hover đậm hơn */
 }
