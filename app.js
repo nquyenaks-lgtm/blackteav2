@@ -536,17 +536,37 @@ function updateFinalTotal(){
 // close payment (back to table screen)
 function closePayment(){ $('payment-screen').style.display='none'; $('menu-screen').style.display='block'; renderCart(); renderMenuList(); }
 
+// Xuất bill tính tiền
 function confirmPayment(){
   console.log(">>> confirmPayment chạy");
 
+  if (!currentTable) return;
+
+  // Tính toán subtotal
+  const subtotal = currentTable.cart.reduce((sum, it) => sum + it.price * it.qty, 0);
+
+  // Lấy discount từ input
+  const raw = $('discount-input').value.trim();
+  let discount = 0;
+  if (raw.endsWith('%')) {
+    const pct = parseFloat(raw.slice(0,-1));
+    if (!isNaN(pct)) discount = subtotal * (pct/100);
+  } else {
+    const v = parseFloat(raw.replace(/[^0-9.-]/g,''));
+    if (!isNaN(v)) discount = v;
+  }
+
+  const total = Math.max(0, Math.round(subtotal - discount));
+
+  // Lưu bill
   const rec = { 
-    table: currentTable ? currentTable.name : "???",
-    time: new Date().toLocaleString(),
-    iso: new Date().toISOString().split("T")[0],
-    items: currentTable ? currentTable.cart.slice() : [],
-    subtotal: 0,
-    discount: 0,
-    total: 0
+    table: currentTable.name,
+    time: nowStr(),           // dùng nowStr để format chuẩn dd/mm/yyyy hh:mm:ss
+    iso: isoDateKey(new Date()),
+    items: currentTable.cart.slice(),
+    subtotal,
+    discount,
+    total
   };
 
   HISTORY.push(rec);
@@ -554,6 +574,7 @@ function confirmPayment(){
 
   console.log(">>> Bill đã lưu:", rec);
 
+  // Xoá bàn
   TABLES = TABLES.filter(t => t.id !== currentTable.id);
   saveAll();
 
