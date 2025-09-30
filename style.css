@@ -198,9 +198,10 @@ input,select{padding:8px;border:1px solid #ccc;border-radius:6px}
 /* Reset margin */
 body {
   margin: 0;
-  padding: 70px 0 0 0;   /* chừa khoảng trống bằng chiều cao header */
-  font-family: Arial, sans-serif;
-  background: #f4f4f4;   /* nếu có */
+  padding: 80px 12px 12px 12px; /* chừa chỗ cho header */
+  font-family: 'Roboto', Arial, sans-serif;
+  background: #f6f7fb;
+  color: #222;
 }
 
 /* Header */
