@@ -53,27 +53,11 @@
 <body>
   <div class="app">
     
-<header style="
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:12px 16px;
-  background:#2c3e50;
-  color:#fff;
-  box-shadow:0 2px 6px rgba(0,0,0,0.15);
-">
-  <h1 id="brand" style="margin:0; font-size:20px; font-weight:700; cursor:pointer;">
-    BlackTea POS
-  </h1>
-  <div style="display:flex; gap:12px; align-items:center;">
-    <button class="btn btn-light" onclick="openHistory()" title="Lịch sử"
-      style="background:#fff; color:#2c3e50; border-radius:6px; padding:6px 10px;">
-      📜
-    </button>
-    <button class="btn btn-light" onclick="openSettings()" title="Cài đặt"
-      style="background:#fff; color:#2c3e50; border-radius:6px; padding:6px 10px;">
-      ⚙️
-    </button>
+<header class="header">
+  <h1 id="brand">BlackTea POS</h1>
+  <div class="header-icons">
+    <span class="icon-btn" onclick="openHistory()" title="Lịch sử">🧾</span>
+    <span class="icon-btn" onclick="openSettings()" title="Cài đặt">⚙️</span>
   </div>
 </header>
 
