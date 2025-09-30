@@ -53,21 +53,45 @@
 <body>
   <div class="app">
     
-<header class="header">
-  <h1 id="brand">BlackTea POS</h1>
-  <div class="header-icons">
-    <span class="icon-btn" onclick="openHistory()" title="Lịch sử">🧾</span>
-    <span class="icon-btn" onclick="openSettings()" title="Cài đặt">⚙️</span>
+<header style="
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 16px;
+  background:#2c3e50;
+  color:#fff;
+  box-shadow:0 2px 6px rgba(0,0,0,0.15);
+">
+  <h1 id="brand" style="margin:0; font-size:20px; font-weight:700; cursor:pointer;">
+    BlackTea POS
+  </h1>
+  <div style="display:flex; gap:12px; align-items:center;">
+    <button class="btn btn-light" onclick="openHistory()" title="Lịch sử"
+      style="background:#fff; color:#2c3e50; border-radius:6px; padding:6px 10px;">
+      📜
+    </button>
+    <button class="btn btn-light" onclick="openSettings()" title="Cài đặt"
+      style="background:#fff; color:#2c3e50; border-radius:6px; padding:6px 10px;">
+      ⚙️
+    </button>
   </div>
 </header>
-  <div class="guest-buttons">
-  <button class="guest-btn" onclick="openTakeAway()">Khách mang đi</button>
-  <button class="guest-btn" onclick="openTableMode()">Khách ghé quán</button>
+
+
+    <main id="table-screen">
+      
+<div class="guest-buttons" style="display:flex; justify-content:center; gap:12px; margin:16px 0;">
+  <button id="guest-btn" class="btn btn-primary" style="flex:1; max-width:160px; padding:12px 0; font-size:15px;">
+    Khách mang đi
+  </button>
+  <button id="guest-visit-btn" class="btn btn-primary" style="flex:1; max-width:160px; padding:12px 0; font-size:15px;">
+    Khách ghé quán
+  </button>
 </div>
 
-<div class="section-title">
-  Bàn đang phục vụ
-</div>
+<h2 style="margin:16px 0 12px; font-size:16px; font-weight:600; color:#555;">
+  📋 Bàn đang phục vụ
+</h2>
       <div id="tables" class="table-grid"></div>
     </main>
 
