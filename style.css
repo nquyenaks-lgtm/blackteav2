@@ -251,19 +251,21 @@ header h1#brand {
 }
 
 /*  bàn đang phục vụ */
-.section-bar {
-  width: 100vw; /* tràn hết ngang màn hình */
-  margin-left: -16px; /* nếu body có padding thì kéo ra hết */
-  background: 
-    linear-gradient(to right, #3b5998 60%, rgba(59,89,152,0) 100%),
-    linear-gradient(to bottom, #3b5998, rgba(59,89,152,0.6));
+.section-title {
+  display: inline-block;
+  background: linear-gradient(to right, #3b82f6, #1e40af); /* xanh nhạt -> đậm */
   color: #fff;
-  font-size: 15px;
   font-weight: 600;
-  padding: 6px 12px;  /* giảm padding để hẹp lại */
-  line-height: 1.4;   /* cho chữ gọn */
-  margin-top: 12px;
-  border-radius: 4px; /* bo nhẹ nhìn mềm hơn */
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-  display: inline-block; /* ô chỉ cao vừa chữ + padding */
+  font-size: 16px;
+  padding: 4px 10px;     /* ô nhỏ sát chữ */
+  border-radius: 6px;
+  margin: 12px 0;
+  user-select: none;     /* cấm bôi chữ */
+}
+/* Ngăn chọn chữ toàn bộ web */
+body {
+  -webkit-user-select: none; /* Safari/Chrome */
+  -moz-user-select: none;    /* Firefox */
+  -ms-user-select: none;     /* IE/Edge cũ */
+  user-select: none;         /* Chuẩn */
 }
