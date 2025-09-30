@@ -537,9 +537,8 @@ function updateFinalTotal(){
 function closePayment(){ $('payment-screen').style.display='none'; $('menu-screen').style.display='block'; renderCart(); renderMenuList(); }
 
 // Xuất bill tính tiền
+// ===================== HÀM XUẤT HÓA ĐƠN =====================
 function confirmPayment() {
-  console.log(">>> confirmPayment chạy");
-
   if (!currentTable || !currentTable.cart || currentTable.cart.length === 0) {
     alert("Không có món nào để thanh toán!");
     return;
@@ -550,52 +549,55 @@ function confirmPayment() {
     return sum + (Number(it.price) || 0) * (Number(it.qty) || 0);
   }, 0);
 
-  // ===== Lấy discount từ input (nếu có) =====
+  // ===== Lấy chiết khấu từ input =====
   let discount = 0;
-  const discountEl = document.getElementById("discount") || document.getElementById("discount-input");
-  if (discountEl) {
-    const raw = discountEl.value.trim();
-    if (raw.endsWith("%")) {
-      const pct = parseFloat(raw.slice(0, -1));
-      if (!isNaN(pct)) discount = Math.floor(subtotal * (pct / 100));
-    } else {
-      const v = parseFloat(raw.replace(/[^0-9.-]/g, ""));
-      if (!isNaN(v)) discount = v;
+  const el = document.getElementById("discount");
+  if (el) {
+    const val = parseInt(el.value, 10) || 0;
+    if (val >= 0 && val <= 100) {
+      // giảm theo %
+      discount = Math.round(subtotal * val / 100);
+    } else if (val >= 1000) {
+      // giảm theo số tiền
+      discount = val;
     }
   }
 
   // ===== Tính total =====
-  const total = Math.max(0, subtotal - discount);
+  let total = subtotal - discount;
+  if (total < 0) total = 0;
 
-  // ===== Tạo object bill =====
-  const rec = { 
-    table: currentTable ? currentTable.name : "???",
+  // Làm tròn đến nghìn
+  const r = total % 1000;
+  total = r >= 500 ? (total - r + 1000) : (total - r);
+
+  // ===== Tạo bill =====
+  const rec = {
+    table: currentTable.name,
     time: new Date().toLocaleString(),
     iso: new Date().toISOString().split("T")[0],
-    items: currentTable ? currentTable.cart.slice() : [],
+    items: currentTable.cart.slice(),
     subtotal,
     discount,
     total
   };
 
-  // ===== Lưu vào history =====
+  // ===== Lưu vào lịch sử =====
   HISTORY.push(rec);
   saveAll();
 
-  console.log(">>> Bill đã lưu:", rec);
-
-  // ===== Xóa bàn đã thanh toán =====
+  // ===== Reset bàn =====
   TABLES = TABLES.filter(t => t.id !== currentTable.id);
   saveAll();
 
-  // ===== Ẩn màn hình thanh toán & quay về màn bàn =====
+  // ===== Đóng màn hình thanh toán =====
   $('payment-screen').style.display = 'none';
   backToTables();
 
-  // ===== Cập nhật lại lịch sử để hiển thị đơn mới ngay =====
-  if (typeof renderHistory === "function") {
-    renderHistory();
-  }
+  // ===== Render lại lịch sử =====
+  if (typeof renderHistory === "function") renderHistory();
+
+  alert("✅ Xuất hóa đơn thành công!");
 }
 // print final bill
 function printFinalBill(rec){
