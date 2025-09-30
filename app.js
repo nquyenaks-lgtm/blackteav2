@@ -597,7 +597,6 @@ function confirmPayment() {
   // ===== Render lại lịch sử =====
   if (typeof renderHistory === "function") renderHistory();
 
-  alert("✅ Xuất hóa đơn thành công!");
 }
 // print final bill
 function printFinalBill(rec){
