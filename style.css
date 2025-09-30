@@ -249,3 +249,16 @@ header h1#brand {
   transform: scale(1.2);  /* phóng to nhẹ khi hover */
   opacity: 0.8;           /* mờ nhẹ */
 }
+/* Đổi màu mặc định của nút primary/secondary thành màu header */
+.btn-primary,
+.btn-secondary {
+  background-color: #4a69ad !important; /* màu header */
+  border-color: #4a69ad !important;
+  color: #fff !important;
+}
+
+.btn-primary:hover,
+.btn-secondary:hover {
+  background-color: #3b5998 !important; /* đậm hơn khi hover */
+  border-color: #3b5998 !important;
+}
