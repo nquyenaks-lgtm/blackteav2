@@ -460,15 +460,16 @@ function renderCart(){ const ul = $('cart-list'); ul.innerHTML = ''; if(!current
 function cancelOrder(){ if(!currentTable) return; currentTable.cart=[]; renderMenuList(); renderCart(); }
 
 function saveOrder() {
+function saveOrder() {
   if (!currentTable) return;
   if (!currentTable.cart.length) return;
 
   // ✅ Đánh dấu món đã order và lưu lại số lượng gốc (baseQty)
   currentTable.cart = currentTable.cart.map(it => ({
-  ...it,
-  locked: true,
-  baseQty: (it.locked && typeof it.baseQty === 'number') ? it.baseQty : it.qty
-}));
+    ...it,
+    locked: true,
+    baseQty: (it.locked && typeof it.baseQty === 'number') ? it.baseQty : it.qty
+  }));
 
   const idx = TABLES.findIndex(t => t.id === currentTable.id);
 
@@ -481,8 +482,12 @@ function saveOrder() {
   saveAll();
   renderTables();
   backToTables();
-}
 
+  // 👉 Reset header để ẩn nút X sau khi lưu đơn
+  $('header-buttons').style.display = 'flex';    // hiện lại icon 📜⚙️
+  $('order-info').classList.add('hidden');       // ẩn cụm Khách mang đi / Bàn ...
+  $('backBtn').classList.remove('show');         // ẩn ❌
+}
 // table actions
 function addMore(){ 
   if(!currentTable) return; 
