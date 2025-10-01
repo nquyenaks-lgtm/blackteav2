@@ -270,35 +270,35 @@ body {
   user-select: none;         /* Chuẩn */
 }
 /* ===== Header khi vào bàn ===== */
+/* ===== Header khi vào bàn ===== */
 #order-info {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 20px;      /* cùng size BlackTea */
-  font-weight: 700;
   flex: 1;
 }
 
 #brandName,
 #orderTitle,
 .divider {
-  font-size: 20px;      /* cùng size */
+  font-size: 20px; 
   font-weight: 700;
-  color: #fff;          /* cùng màu với BlackTea */
+  color: #fff;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.6); /* đổ bóng giống BlackTea */
   white-space: nowrap;
 }
 
 .divider {
-  opacity: 0.9;         /* giữ màu trắng, hơi mờ nhẹ nếu thích */
+  margin: 0 4px; /* tạo khoảng cách nhỏ giữa BlackTea và tên bàn */
 }
 
-/* Nút ✖ */
+/* Nút ✖ (chỉ hiện khi mở bàn, ẩn ở trang chính nhờ .hidden trong app.js) */
 #backBtn {
   margin-left: auto;
   background: transparent;
   border: none;
   color: #ff3333;
-  font-size: 24px;      /* to hơn 20% so với 20px */
+  font-size: 24px;   /* to hơn 20% so với 20px */
   font-weight: bold;
   cursor: pointer;
   transition: transform 0.2s, color 0.2s;
