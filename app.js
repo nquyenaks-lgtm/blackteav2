@@ -361,7 +361,6 @@ function openTable(id){
   $('header-buttons').style.display = 'none';     // ẩn icon 📜⚙️
   $('order-info').classList.remove('hidden');     // hiện cụm BlackTea | Bàn L1 ✖
   $('orderTitle').innerText = currentTable.name;  // gán tên bàn
-  $('backBtn').classList.add('hidden'); // ẩn ✖
 }
 
 // back
