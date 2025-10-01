@@ -356,10 +356,14 @@ header {
   background: transparent;
   border: none;
   color: #ff4d4d;
-  font-size: 26px;   /* bằng icon cài đặt */
+  font-size: 26px;   /* to bằng icon cài đặt */
   font-weight: bold;
   cursor: pointer;
   transition: 0.2s;
+  display: none;     /* ẩn mặc định khi ở trang chính */
+}
+#backBtn.show {
+  display: block;    /* chỉ hiện khi mở order */
 }
 #backBtn:hover {
   color: #ff0000;
