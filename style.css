@@ -274,35 +274,31 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 20px;      /* chữ to bằng BlackTea */
+  font-size: 20px;      /* cùng size BlackTea */
   font-weight: 700;
-  flex: 1;              /* đẩy nút X sang phải */
+  flex: 1;
 }
 
-#brandName {
-  font-size: 20px;      /* BlackTea */
+#brandName,
+#orderTitle,
+.divider {
+  font-size: 20px;      /* cùng size */
   font-weight: 700;
+  color: #fff;          /* cùng màu với BlackTea */
+  white-space: nowrap;
 }
 
 .divider {
-  opacity: 0.7;
-  font-weight: normal;
-}
-
-#orderTitle {
-  font-size: 20px;      /* tên bàn cùng size BlackTea */
-  font-weight: 700;
-  color: #fff;
-  white-space: nowrap;
+  opacity: 0.9;         /* giữ màu trắng, hơi mờ nhẹ nếu thích */
 }
 
 /* Nút ✖ */
 #backBtn {
-  margin-left: auto; 
+  margin-left: auto;
   background: transparent;
   border: none;
   color: #ff3333;
-  font-size: 24px;      /* lớn hơn 20% so với 20px chữ */
+  font-size: 24px;      /* to hơn 20% so với 20px */
   font-weight: bold;
   cursor: pointer;
   transition: transform 0.2s, color 0.2s;
