@@ -53,18 +53,22 @@
 <body>
   <div class="app">
     
-<header class="header">
-  <h1 id="brand">BlackTea</h1>
-
-  <!-- THÊM MỚI: cụm order-info -->
-  <div id="order-info" class="hidden">
-    <span id="orderTitle"></span>
-    <button id="backBtn" onclick="goBack()">✖</button>
+<header>
+  <!-- Bên trái: logo + tên bàn -->
+  <div class="header-left">
+    <h1 id="brand">BlackTea</h1>
+    <div id="order-info" class="hidden">
+      <span id="orderTitle"></span>
+    </div>
   </div>
 
-  <div class="header-icons" id="header-buttons">
-    <span class="icon-btn" onclick="openHistory()" title="Lịch sử">🧾</span>
-    <span class="icon-btn" onclick="openSettings()" title="Cài đặt">⚙️</span>
+  <!-- Bên phải: icon lịch sử, cài đặt (trang chính) + nút X (order) -->
+  <div class="header-right">
+    <div class="header-icons" id="header-buttons">
+      <span class="icon-btn" onclick="openHistory()" title="Lịch sử">🧾</span>
+      <span class="icon-btn" onclick="openSettings()" title="Cài đặt">⚙️</span>
+    </div>
+    <button id="backBtn" class="hidden" onclick="goBack()">✖</button>
   </div>
 </header>
 
