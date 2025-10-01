@@ -270,26 +270,16 @@ body {
   user-select: none;         /* Chuẩn */
 }
 /* ===== Header Order Info ===== */
-header {
-  width: 100%;
-  background: #4a69ad;
-  color: #fff;
-  padding: 12px 16px;
-  display: flex;
+#brand {
+  display: inline-flex;
   align-items: center;
-  justify-content: flex-start; /* luôn gom trái, bỏ space-between */
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1000;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.25);
 }
 
 #order-info {
-  display: flex;
+  display: inline-flex; 
   align-items: center;
-  gap: 2px;         
-  margin-left: 8px; /* ngay sau BlackTea */
+  gap: 2px;         /* khoảng cách nhỏ giữa | và tên bàn */
+  margin-left: 8px; /* sát ngay sau chữ BlackTea */
 }
 
 #order-info.hidden {
@@ -318,12 +308,13 @@ header {
   background: transparent;
   border: none;
   color: #ff4d4d;
-  font-size: 26px;   /* bằng icon cài đặt */
+  font-size: 26px;   /* to bằng icon cài đặt */
   font-weight: bold;
   cursor: pointer;
   transition: 0.2s;
-  margin-left: auto; /* luôn đẩy sang phải */
+  margin-left: auto; /* luôn đẩy sang góc phải */
 }
+
 #backBtn:hover {
   color: #ff0000;
 }
