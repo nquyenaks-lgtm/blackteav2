@@ -290,13 +290,12 @@ function makeTableCard(t){
 }
 // add guest
 function addGuest(){
-  GUEST_CNT += 1;
-  const name = 'Khách mang đi ' + GUEST_CNT;
-  const id = Date.now();
-  TABLES.push({ id, name, cart: [], createdAt: Date.now() });
+  const tempId = Date.now();
+  const name = 'Khách mang đi (chưa lưu)';
+  TABLES.push({ id: tempId, name, cart: [], createdAt: Date.now(), isTemp: true });
   saveAll();
   createdFromMain = true;
-  openTable(id);
+  openTable(tempId);
 }
 
 function addGuestVisit(){
@@ -456,15 +455,20 @@ function saveOrder() {
   if (!currentTable) return;
   if (!currentTable.cart.length) return;
 
-  // ✅ Đánh dấu món đã order và lưu lại số lượng gốc (baseQty)
+  // Nếu là khách mang đi chưa được đánh số
+  if (currentTable.isTemp) {
+    GUEST_CNT += 1;
+    currentTable.name = 'Khách mang đi ' + GUEST_CNT;
+    delete currentTable.isTemp;
+  }
+
   currentTable.cart = currentTable.cart.map(it => ({
-  ...it,
-  locked: true,
-  baseQty: (it.locked && typeof it.baseQty === 'number') ? it.baseQty : it.qty
-}));
+    ...it,
+    locked: true,
+    baseQty: (it.locked && typeof it.baseQty === 'number') ? it.baseQty : it.qty
+  }));
 
   const idx = TABLES.findIndex(t => t.id === currentTable.id);
-
   if (idx >= 0) {
     TABLES[idx] = { ...currentTable };
   } else {
