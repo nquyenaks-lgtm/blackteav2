@@ -269,20 +269,19 @@ body {
   -ms-user-select: none;     /* IE/Edge cũ */
   user-select: none;         /* Chuẩn */
 }
-/* ===== Header Order Info ===== */
-/* Header khi vào bàn */
+/* ===== Header khi vào bàn ===== */
 #order-info {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 16px;
-  font-weight: 600;
-  flex: 1; /* chiếm khoảng trống để đẩy X ra phải */
+  gap: 8px;
+  font-size: 20px;      /* chữ to bằng BlackTea */
+  font-weight: 700;
+  flex: 1;              /* đẩy nút X sang phải */
 }
 
-#orderTitle {
-  color: #fff;
-  white-space: nowrap;
+#brandName {
+  font-size: 20px;      /* BlackTea */
+  font-weight: 700;
 }
 
 .divider {
@@ -290,13 +289,20 @@ body {
   font-weight: normal;
 }
 
-/* Nút X */
+#orderTitle {
+  font-size: 20px;      /* tên bàn cùng size BlackTea */
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+}
+
+/* Nút ✖ */
 #backBtn {
-  margin-left: auto;   /* đẩy sang phải */
+  margin-left: auto; 
   background: transparent;
   border: none;
   color: #ff3333;
-  font-size: 24px;     /* to hơn */
+  font-size: 24px;      /* lớn hơn 20% so với 20px chữ */
   font-weight: bold;
   cursor: pointer;
   transition: transform 0.2s, color 0.2s;
