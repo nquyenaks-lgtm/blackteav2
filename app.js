@@ -355,6 +355,11 @@ function openTable(id) {
 
 }
 
+// Ham goback
+function goBack() {
+  backToTables();
+}
+
 // back
 function backToTables() {
   currentTable = null;
