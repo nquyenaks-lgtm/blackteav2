@@ -379,7 +379,8 @@ function backToTables() {
 }
 
 function goBack() {
-  backToTables();
+  // ... code ản nút x màn hinh chnhs
+  $('backBtn').classList.add('hidden');
 }
 
 // categories
