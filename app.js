@@ -380,33 +380,26 @@ function backToTables() {
 
 function goBack() {
   if (currentTable) {
-    // Nếu bàn chưa có món thì xoá luôn
-    if (!currentTable.cart || currentTable.cart.length === 0) {
+    const hasItems = currentTable.cart && currentTable.cart.length > 0;
+
+    if (!hasItems) {
+      // Nếu trống: reset trạng thái bàn thay vì xoá
+      currentTable.status = "empty";
       currentTable.cart = [];
-      currentTable.total = 0;
-      localStorage.setItem(KEY_TABLES, JSON.stringify(TABLES));
     }
   }
 
-  // Ẩn order-info, hiện lại các nút ở header
+  // Quay về màn chính
+  $('menu-screen').style.display = 'none';
+  $('table-screen').style.display = 'block';
   $('order-info').classList.add('hidden');
   $('header-buttons').style.display = 'flex';
   $('backBtn').classList.add('hidden');
 
-  // Quay lại màn hình chọn bàn
-  $('menu-screen').style.display = 'none';
-  $('table-screen').style.display = 'block';
+  // Render lại danh sách bàn để cập nhật ngay
+  renderTables();
+
   currentTable = null;
-}
-// categories
-function renderCategories(){
-  const bar = $('category-bar'); bar.innerHTML = '';
-  CATEGORIES.forEach(cat=>{
-    const b = document.createElement('button'); b.className='category-btn' + (cat===activeCategory ? ' active' : '');
-    b.innerText = cat;
-    b.onclick = ()=>{ activeCategory = cat; renderMenuList(); renderCategories(); };
-    bar.appendChild(b);
-  });
 }
 
 // menu list
