@@ -369,16 +369,3 @@ header {
 #backBtn:hover {
   color: #ff0000;
 }
-/* Modal chọn bàn (che full màn hình, cao hơn header) */
-#table-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.5); /* nền mờ */
-  display: none;               /* ẩn mặc định */
-  justify-content: center;
-  align-items: center;
-  z-index: 2000;               /* cao hơn header (header = 1000) */
-}
