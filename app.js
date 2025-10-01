@@ -324,22 +324,24 @@ function addNamed(){
 // open from main
 function openTableFromMain(id){ createdFromMain = false; openTable(id); }
 
-function openTable(id) {
-  currentTable = tables.find(t => t.id === id);
-  if (!currentTable) return;
-
-  // Ẩn màn hình chọn bàn, hiện màn hình menu
+function openTable(id){
+  currentTable = TABLES.find(t=>t.id===id);
+  if(!currentTable) return;
   $('table-screen').style.display = 'none';
   $('menu-screen').style.display = 'block';
-
-  // Hiển thị thông tin bàn
-  renderOrder();
-
-  // ===== Cập nhật header =====
-  $('header-buttons').style.display = 'none';             // ẩn 📜 ⚙️
-  $('order-info').classList.remove('hidden');             // hiện cụm order-info
-  $('orderTitle').innerText = currentTable.name;          // tên bàn/khách
-}
+  $('settings-screen').style.display = 'none';
+  $('menu-settings-screen').style.display = 'none';
+  $('printer-settings-screen').style.display = 'none';
+  $('history-screen').style.display = 'none';
+  $('payment-screen').style.display = 'none';
+  $('table-title').innerText = currentTable.name;
+  renderCategories();
+  renderMenuList();
+  renderCart();
+  if (createdFromMain) {
+  $('primary-actions').style.display = 'flex';
+  $('table-actions').style.display = 'none';
+  $('menu-list').style.display = 'block';
 
   // 👉 chỉ ẩn nút Huỷ đơn khi đang ở chế độ thêm món
   if (isAddingMore) {
@@ -355,23 +357,14 @@ function openTable(id) {
 
 }
 
-// Ham goback
-function goBack() {
-  backToTables();
-}
-
 // back
 function backToTables() {
-  currentTable = null;
-
-  // Ẩn màn hình menu, hiện lại màn hình chọn bàn
-  $('menu-screen').style.display = 'none';
-  $('table-screen').style.display = 'block';
-
-  // ===== Khôi phục header =====
-  $('header-buttons').style.display = 'flex';             // hiện lại 📜 ⚙️
-  $('order-info').classList.add('hidden');                // ẩn cụm order-info
-}
+  if (currentTable) {
+    // Nếu bàn mới tạo mà chưa có món => xóa luôn
+    if (createdFromMain && (!currentTable.cart || currentTable.cart.length === 0)) {
+      TABLES = TABLES.filter(t => t.id !== currentTable.id);
+    }
+  }
 
   currentTable = null;
   createdFromMain = false;
@@ -543,67 +536,29 @@ function updateFinalTotal(){
 // close payment (back to table screen)
 function closePayment(){ $('payment-screen').style.display='none'; $('menu-screen').style.display='block'; renderCart(); renderMenuList(); }
 
-// Xuất bill tính tiền
-// ===================== HÀM XUẤT HÓA ĐƠN =====================
-function confirmPayment() {
-  if (!currentTable || !currentTable.cart || currentTable.cart.length === 0) {
-    alert("Không có món nào để thanh toán!");
-    return;
-  }
+function confirmPayment(){
+  console.log(">>> confirmPayment chạy");
 
-  // ===== Tính subtotal =====
-  const subtotal = currentTable.cart.reduce((sum, it) => {
-    return sum + (Number(it.price) || 0) * (Number(it.qty) || 0);
-  }, 0);
-
-  // ===== Lấy chiết khấu từ input =====
-  let discount = 0;
-  const el = document.getElementById("discount");
-  if (el) {
-    const val = parseInt(el.value, 10) || 0;
-    if (val >= 0 && val <= 100) {
-      // giảm theo %
-      discount = Math.round(subtotal * val / 100);
-    } else if (val >= 1000) {
-      // giảm theo số tiền
-      discount = val;
-    }
-  }
-
-  // ===== Tính total =====
-  let total = subtotal - discount;
-  if (total < 0) total = 0;
-
-  // Làm tròn đến nghìn
-  const r = total % 1000;
-  total = r >= 500 ? (total - r + 1000) : (total - r);
-
-  // ===== Tạo bill =====
-  const rec = {
-    table: currentTable.name,
+  const rec = { 
+    table: currentTable ? currentTable.name : "???",
     time: new Date().toLocaleString(),
     iso: new Date().toISOString().split("T")[0],
-    items: currentTable.cart.slice(),
-    subtotal,
-    discount,
-    total
+    items: currentTable ? currentTable.cart.slice() : [],
+    subtotal: 0,
+    discount: 0,
+    total: 0
   };
 
-  // ===== Lưu vào lịch sử =====
   HISTORY.push(rec);
   saveAll();
 
-  // ===== Reset bàn =====
+  console.log(">>> Bill đã lưu:", rec);
+
   TABLES = TABLES.filter(t => t.id !== currentTable.id);
   saveAll();
 
-  // ===== Đóng màn hình thanh toán =====
   $('payment-screen').style.display = 'none';
   backToTables();
-
-  // ===== Render lại lịch sử =====
-  if (typeof renderHistory === "function") renderHistory();
-
 }
 // print final bill
 function printFinalBill(rec){
@@ -756,12 +711,12 @@ function openTableModal() {
     btn.style.transition = "0.2s";
 
     btn.onclick = () => {
-  if (selectedTable) {
-    selectedTable.className = "btn btn-secondary";
-  }
-  selectedTable = btn;
-  btn.className = "btn btn-primary";  // xanh dương
-};
+      if (selectedTable) {
+        selectedTable.className = "btn btn-secondary";
+      }
+      selectedTable = btn;
+      btn.className = "btn btn-success";
+    };
 
     return btn;
   }
