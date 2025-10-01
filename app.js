@@ -334,7 +334,7 @@ function openTable(id){
   $('printer-settings-screen').style.display = 'none';
   $('history-screen').style.display = 'none';
   $('payment-screen').style.display = 'none';
-  $('table-title').innerText = currentTable.name;
+  $('table-title').innerText = "";
   $('backBtn').classList.remove('hidden'); // hiện ✖
   renderCategories();
   renderMenuList();
