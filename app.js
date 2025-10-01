@@ -380,28 +380,22 @@ function backToTables() {
 
 function goBack() {
   if (currentTable) {
-    const hasItems = currentTable.cart && currentTable.cart.length > 0;
-
-    if (!hasItems) {
-      // Nếu trống: reset trạng thái bàn thay vì xoá
-      currentTable.status = "empty";
-      currentTable.cart = [];
+    // Nếu là Khách mang đi và chưa có order thì xoá hẳn
+    if (currentTable.name.includes("Khách mang đi") && (!currentTable.orders || currentTable.orders.length === 0)) {
+      TABLES = TABLES.filter(t => t.id !== currentTable.id);
     }
   }
 
-  // Quay về màn chính
+  // Reset UI
   $('menu-screen').style.display = 'none';
   $('table-screen').style.display = 'block';
   $('order-info').classList.add('hidden');
   $('header-buttons').style.display = 'flex';
   $('backBtn').classList.add('hidden');
 
-  // Render lại danh sách bàn để cập nhật ngay
   renderTables();
-
   currentTable = null;
 }
-
 // menu list
 function renderMenuList(){
   const list = $('menu-list'); list.innerHTML = '';
