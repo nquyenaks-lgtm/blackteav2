@@ -460,7 +460,6 @@ function renderCart(){ const ul = $('cart-list'); ul.innerHTML = ''; if(!current
 function cancelOrder(){ if(!currentTable) return; currentTable.cart=[]; renderMenuList(); renderCart(); }
 
 function saveOrder() {
-function saveOrder() {
   if (!currentTable) return;
   if (!currentTable.cart.length) return;
 
@@ -483,10 +482,8 @@ function saveOrder() {
   renderTables();
   backToTables();
 
-  // 👉 Reset header để ẩn nút X sau khi lưu đơn
-  $('header-buttons').style.display = 'flex';    // hiện lại icon 📜⚙️
-  $('order-info').classList.add('hidden');       // ẩn cụm Khách mang đi / Bàn ...
-  $('backBtn').classList.remove('show');         // ẩn ❌
+  // 👉 Thêm dòng này
+  $('backBtn').classList.add('hidden');  
 }
 // table actions
 function addMore(){ 
