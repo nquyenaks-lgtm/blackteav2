@@ -324,24 +324,22 @@ function addNamed(){
 // open from main
 function openTableFromMain(id){ createdFromMain = false; openTable(id); }
 
-function openTable(id){
-  currentTable = TABLES.find(t=>t.id===id);
-  if(!currentTable) return;
+function openTable(id) {
+  currentTable = tables.find(t => t.id === id);
+  if (!currentTable) return;
+
+  // Ẩn màn hình chọn bàn, hiện màn hình menu
   $('table-screen').style.display = 'none';
   $('menu-screen').style.display = 'block';
-  $('settings-screen').style.display = 'none';
-  $('menu-settings-screen').style.display = 'none';
-  $('printer-settings-screen').style.display = 'none';
-  $('history-screen').style.display = 'none';
-  $('payment-screen').style.display = 'none';
-  $('table-title').innerText = currentTable.name;
-  renderCategories();
-  renderMenuList();
-  renderCart();
-  if (createdFromMain) {
-  $('primary-actions').style.display = 'flex';
-  $('table-actions').style.display = 'none';
-  $('menu-list').style.display = 'block';
+
+  // Hiển thị thông tin bàn
+  renderOrder();
+
+  // ===== Cập nhật header =====
+  $('header-buttons').style.display = 'none';             // ẩn 📜 ⚙️
+  $('order-info').classList.remove('hidden');             // hiện cụm order-info
+  $('orderTitle').innerText = currentTable.name;          // tên bàn/khách
+}
 
   // 👉 chỉ ẩn nút Huỷ đơn khi đang ở chế độ thêm món
   if (isAddingMore) {
@@ -359,12 +357,16 @@ function openTable(id){
 
 // back
 function backToTables() {
-  if (currentTable) {
-    // Nếu bàn mới tạo mà chưa có món => xóa luôn
-    if (createdFromMain && (!currentTable.cart || currentTable.cart.length === 0)) {
-      TABLES = TABLES.filter(t => t.id !== currentTable.id);
-    }
-  }
+  currentTable = null;
+
+  // Ẩn màn hình menu, hiện lại màn hình chọn bàn
+  $('menu-screen').style.display = 'none';
+  $('table-screen').style.display = 'block';
+
+  // ===== Khôi phục header =====
+  $('header-buttons').style.display = 'flex';             // hiện lại 📜 ⚙️
+  $('order-info').classList.add('hidden');                // ẩn cụm order-info
+}
 
   currentTable = null;
   createdFromMain = false;
