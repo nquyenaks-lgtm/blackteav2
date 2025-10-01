@@ -1,6 +1,35 @@
 // BlackTea POS v8 final - full logic with payment preview, discount, history filter and expandable history items
 let selectedTable = null;
 let isAddingMore = false;
+const TABLES = [
+  // Bàn trên lầu
+  { id: "L1", name: "Bàn trên lầu L1", group: "Bàn trên lầu" },
+  { id: "L2", name: "Bàn trên lầu L2", group: "Bàn trên lầu" },
+  { id: "L3", name: "Bàn trên lầu L3", group: "Bàn trên lầu" },
+  { id: "L4", name: "Bàn trên lầu L4", group: "Bàn trên lầu" },
+
+  // Bàn ngoài trời
+  { id: "NT1", name: "Bàn ngoài trời 1", group: "Bàn ngoài trời" },
+  { id: "NT2", name: "Bàn ngoài trời 2", group: "Bàn ngoài trời" },
+
+  // Bàn tường
+  { id: "T1", name: "Bàn tường T1", group: "Bàn tường" },
+  { id: "T2", name: "Bàn tường T2", group: "Bàn tường" },
+  { id: "T3", name: "Bàn tường T3", group: "Bàn tường" },
+  { id: "T4", name: "Bàn tường T4", group: "Bàn tường" },
+
+  // Bàn giữa
+  { id: "G1", name: "Bàn giữa G1", group: "Bàn giữa" },
+  { id: "G2", name: "Bàn giữa G2", group: "Bàn giữa" },
+  { id: "G3", name: "Bàn giữa G3", group: "Bàn giữa" },
+  { id: "G4", name: "Bàn giữa G4", group: "Bàn giữa" },
+
+  // Bàn nệm
+  { id: "N1", name: "Bàn nệm N1", group: "Bàn nệm" },
+  { id: "N2", name: "Bàn nệm N2", group: "Bàn nệm" },
+  { id: "N3", name: "Bàn nệm N3", group: "Bàn nệm" },
+  { id: "N4", name: "Bàn nệm N4", group: "Bàn nệm" }
+];
 const KEY_MENU = 'BT8_MENU';
 const KEY_CATS = 'BT8_CATS';
 const KEY_TABLES = 'BT8_TABLES';
