@@ -579,7 +579,7 @@ function confirmPayment() {
   // ===== Tổng tiền cuối =====
   const total = subtotal - discount;
 
-  // ✅ Lưu lịch sử thanh toán
+  // ===== Lưu lịch sử local =====
   HISTORY.push({
     table: currentTable.name,
     items: [...currentTable.cart],
@@ -589,15 +589,15 @@ function confirmPayment() {
     time: new Date().toLocaleString()
   });
 
-  // ✅ Xoá giỏ hàng bàn hiện tại
+  // ===== Reset giỏ hàng của bàn =====
   currentTable.cart = [];
   saveAll();
   renderTables();
 
-  // 👉 Reset header về trạng thái mặc định
+  // 👉 Reset header (ẩn ❌, hiện lại icon lịch sử + cài đặt)
   $('order-info').classList.add('hidden');
   $('header-buttons').style.display = 'flex';
-  $('backBtn').style.display = 'none';  // ẩn ❌
+  $('backBtn').style.display = 'none';
 
   // 👉 Quay về màn hình chính
   $('payment-screen').style.display = 'none';
