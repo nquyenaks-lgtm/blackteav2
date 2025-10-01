@@ -204,10 +204,10 @@ body {
   color: #222;
 }
 
-/* Header */
+/* ===== HEADER ===== */
 header {
   width: 100%;
-  background: #4a69ad;   /* xanh than */
+  background: #4a69ad;   /* xanh chủ đạo */
   color: #fff;
   padding: 12px 16px;
   display: flex;
@@ -236,7 +236,7 @@ header h1#brand {
   align-items: center;
 }
 
-/* Icon trực tiếp */
+/* Icon trực tiếp (📜 ⚙️) */
 .icon-btn {
   font-size: 26px;     /* icon to */
   color: #fff;         /* màu trắng */
@@ -250,49 +250,36 @@ header h1#brand {
   opacity: 0.8;           /* mờ nhẹ */
 }
 
-/*  bàn đang phục vụ */
-.section-title {
-  display: inline-block;
-  background: linear-gradient(to right, #3b82f6, #1e40af); /* xanh nhạt -> đậm */
-  color: #fff;
-  font-weight: 600;
-  font-size: 16px;
-  padding: 4px 10px;     /* ô nhỏ sát chữ */
-  border-radius: 6px;
-  margin: 12px 0;
-  user-select: none;     /* cấm bôi chữ */
-}
-/* Ngăn chọn chữ toàn bộ web */
-body {
-  -webkit-user-select: none; /* Safari/Chrome */
-  -moz-user-select: none;    /* Firefox */
-  -ms-user-select: none;     /* IE/Edge cũ */
-  user-select: none;         /* Chuẩn */
-}
-/* ===== Header Order Info ===== */
+/* ===== Header Order Info (hiện khi vào bàn/khách) ===== */
 #order-info {
   display: flex;
   align-items: center;
   gap: 6px;
+  margin-left: 10px;
 }
+
 #order-info.hidden {
   display: none;
 }
+
 #orderTitle {
   font-weight: 500;
-  font-size: 13px;
+  font-size: 15px;
   color: #fff;
   white-space: nowrap;
 }
+
 #backBtn {
+  margin-left: auto;     /* đẩy sang bên phải */
   background: transparent;
   border: none;
   color: #ff4d4d;
-  font-size: 16px;
+  font-size: 22px;
   font-weight: bold;
   cursor: pointer;
   transition: 0.2s;
 }
+
 #backBtn:hover {
   color: #ff0000;
 }
