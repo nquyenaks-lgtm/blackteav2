@@ -1,5 +1,4 @@
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Inter,Arial,Helvetica,sans-serif;background:#f6f7fb;color:#222;padding:12px}
 .app{max-width:980px;margin:0 auto}
 header{padding:8px 0}
 h1{font-size:18px}
@@ -195,4 +194,78 @@ input,select{padding:8px;border:1px solid #ccc;border-radius:6px}
   font-size: 13px;
   color: #555;
   white-space: nowrap; /* giữ nguyên 1 dòng, không xuống hàng */
+}
+/* Reset margin */
+body {
+  margin: 0;
+  padding: 50px 12px 12px 12px; /* chừa chỗ cho header */
+  font-family: 'Roboto', Arial, sans-serif;
+  background: #f6f7fb;
+  color: #222;
+}
+
+/* Header */
+header {
+  width: 100%;
+  background: #4a69ad;   /* xanh than */
+  color: #fff;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;   /* cố định trên cùng */
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.25); /* hiệu ứng nổi */
+}
+
+header h1#brand {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.6); /* chữ nổi hơn */
+  cursor: pointer;
+}
+
+/* Icon container */
+.header-icons {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+}
+
+/* Icon trực tiếp */
+.icon-btn {
+  font-size: 26px;     /* icon to */
+  color: #fff;         /* màu trắng */
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.icon-btn:hover {
+  transform: scale(1.2);  /* phóng to nhẹ khi hover */
+  opacity: 0.8;           /* mờ nhẹ */
+}
+
+/*  bàn đang phục vụ */
+.section-title {
+  display: inline-block;
+  background: linear-gradient(to right, #3b82f6, #1e40af); /* xanh nhạt -> đậm */
+  color: #fff;
+  font-weight: 600;
+  font-size: 16px;
+  padding: 4px 10px;     /* ô nhỏ sát chữ */
+  border-radius: 6px;
+  margin: 12px 0;
+  user-select: none;     /* cấm bôi chữ */
+}
+/* Ngăn chọn chữ toàn bộ web */
+body {
+  -webkit-user-select: none; /* Safari/Chrome */
+  -moz-user-select: none;    /* Firefox */
+  -ms-user-select: none;     /* IE/Edge cũ */
+  user-select: none;         /* Chuẩn */
 }

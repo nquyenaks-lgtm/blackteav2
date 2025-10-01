@@ -536,29 +536,67 @@ function updateFinalTotal(){
 // close payment (back to table screen)
 function closePayment(){ $('payment-screen').style.display='none'; $('menu-screen').style.display='block'; renderCart(); renderMenuList(); }
 
-function confirmPayment(){
-  console.log(">>> confirmPayment chạy");
+// Xuất bill tính tiền
+// ===================== HÀM XUẤT HÓA ĐƠN =====================
+function confirmPayment() {
+  if (!currentTable || !currentTable.cart || currentTable.cart.length === 0) {
+    alert("Không có món nào để thanh toán!");
+    return;
+  }
 
-  const rec = { 
-    table: currentTable ? currentTable.name : "???",
+  // ===== Tính subtotal =====
+  const subtotal = currentTable.cart.reduce((sum, it) => {
+    return sum + (Number(it.price) || 0) * (Number(it.qty) || 0);
+  }, 0);
+
+  // ===== Lấy chiết khấu từ input =====
+  let discount = 0;
+  const el = document.getElementById("discount");
+  if (el) {
+    const val = parseInt(el.value, 10) || 0;
+    if (val >= 0 && val <= 100) {
+      // giảm theo %
+      discount = Math.round(subtotal * val / 100);
+    } else if (val >= 1000) {
+      // giảm theo số tiền
+      discount = val;
+    }
+  }
+
+  // ===== Tính total =====
+  let total = subtotal - discount;
+  if (total < 0) total = 0;
+
+  // Làm tròn đến nghìn
+  const r = total % 1000;
+  total = r >= 500 ? (total - r + 1000) : (total - r);
+
+  // ===== Tạo bill =====
+  const rec = {
+    table: currentTable.name,
     time: new Date().toLocaleString(),
     iso: new Date().toISOString().split("T")[0],
-    items: currentTable ? currentTable.cart.slice() : [],
-    subtotal: 0,
-    discount: 0,
-    total: 0
+    items: currentTable.cart.slice(),
+    subtotal,
+    discount,
+    total
   };
 
+  // ===== Lưu vào lịch sử =====
   HISTORY.push(rec);
   saveAll();
 
-  console.log(">>> Bill đã lưu:", rec);
-
+  // ===== Reset bàn =====
   TABLES = TABLES.filter(t => t.id !== currentTable.id);
   saveAll();
 
+  // ===== Đóng màn hình thanh toán =====
   $('payment-screen').style.display = 'none';
   backToTables();
+
+  // ===== Render lại lịch sử =====
+  if (typeof renderHistory === "function") renderHistory();
+
 }
 // print final bill
 function printFinalBill(rec){
@@ -711,12 +749,12 @@ function openTableModal() {
     btn.style.transition = "0.2s";
 
     btn.onclick = () => {
-      if (selectedTable) {
-        selectedTable.className = "btn btn-secondary";
-      }
-      selectedTable = btn;
-      btn.className = "btn btn-success";
-    };
+  if (selectedTable) {
+    selectedTable.className = "btn btn-secondary";
+  }
+  selectedTable = btn;
+  btn.className = "btn btn-primary";  // xanh dương
+};
 
     return btn;
   }
