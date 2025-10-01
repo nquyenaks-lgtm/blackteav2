@@ -576,40 +576,33 @@ function confirmPayment() {
     }
   }
 
-  // ===== Tính total =====
-  let total = subtotal - discount;
-  if (total < 0) total = 0;
+  // ===== Tổng tiền cuối =====
+  const total = subtotal - discount;
 
-  // Làm tròn đến nghìn
-  const r = total % 1000;
-  total = r >= 500 ? (total - r + 1000) : (total - r);
-
-  // ===== Tạo bill =====
-  const rec = {
+  // ✅ Lưu lịch sử thanh toán
+  HISTORY.push({
     table: currentTable.name,
-    time: new Date().toLocaleString(),
-    iso: new Date().toISOString().split("T")[0],
-    items: currentTable.cart.slice(),
+    items: [...currentTable.cart],
     subtotal,
     discount,
-    total
-  };
+    total,
+    time: new Date().toLocaleString()
+  });
 
-  // ===== Lưu vào lịch sử =====
-  HISTORY.push(rec);
+  // ✅ Xoá giỏ hàng bàn hiện tại
+  currentTable.cart = [];
   saveAll();
+  renderTables();
 
-  // ===== Reset bàn =====
-  TABLES = TABLES.filter(t => t.id !== currentTable.id);
-  saveAll();
+  // 👉 Reset header về trạng thái mặc định
+  $('order-info').classList.add('hidden');
+  $('header-buttons').style.display = 'flex';
+  $('backBtn').style.display = 'none';  // ẩn ❌
 
-  // ===== Đóng màn hình thanh toán =====
+  // 👉 Quay về màn hình chính
   $('payment-screen').style.display = 'none';
-  backToTables();
-
-  // ===== Render lại lịch sử =====
-  if (typeof renderHistory === "function") renderHistory();
-
+  $('table-screen').style.display = 'block';
+  currentTable = null;
 }
 // print final bill
 function printFinalBill(rec){
