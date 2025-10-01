@@ -465,10 +465,10 @@ function saveOrder() {
 
   // ✅ Đánh dấu món đã order và lưu lại số lượng gốc (baseQty)
   currentTable.cart = currentTable.cart.map(it => ({
-  ...it,
-  locked: true,
-  baseQty: (it.locked && typeof it.baseQty === 'number') ? it.baseQty : it.qty
-}));
+    ...it,
+    locked: true,
+    baseQty: (it.locked && typeof it.baseQty === 'number') ? it.baseQty : it.qty
+  }));
 
   const idx = TABLES.findIndex(t => t.id === currentTable.id);
 
@@ -480,7 +480,13 @@ function saveOrder() {
 
   saveAll();
   renderTables();
-  backToTables();
+
+  // 👉 Reset header về trạng thái mặc định sau khi lưu
+  $('order-info').classList.add('hidden');     // ẩn "Khách mang đi | ..."
+  $('header-buttons').style.display = 'flex'; // hiện lại icon 📜⚙️
+  $('backBtn').classList.add('hidden');       // ẩn ❌
+
+  backToTables(); // quay về màn hình chính
 }
 
 // table actions
