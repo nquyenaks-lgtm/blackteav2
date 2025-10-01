@@ -465,10 +465,10 @@ function saveOrder() {
 
   // ✅ Đánh dấu món đã order và lưu lại số lượng gốc (baseQty)
   currentTable.cart = currentTable.cart.map(it => ({
-    ...it,
-    locked: true,
-    baseQty: (it.locked && typeof it.baseQty === 'number') ? it.baseQty : it.qty
-  }));
+  ...it,
+  locked: true,
+  baseQty: (it.locked && typeof it.baseQty === 'number') ? it.baseQty : it.qty
+}));
 
   const idx = TABLES.findIndex(t => t.id === currentTable.id);
 
@@ -480,13 +480,7 @@ function saveOrder() {
 
   saveAll();
   renderTables();
-
-  // 👉 Reset header về trạng thái mặc định sau khi lưu
-  $('order-info').classList.add('hidden');     // ẩn "Khách mang đi | ..."
-  $('header-buttons').style.display = 'flex'; // hiện lại icon 📜⚙️
-  $('backBtn').classList.add('hidden');       // ẩn ❌
-
-  backToTables(); // quay về màn hình chính
+  backToTables();
 }
 
 // table actions
@@ -576,33 +570,40 @@ function confirmPayment() {
     }
   }
 
-  // ===== Tổng tiền cuối =====
-  const total = subtotal - discount;
+  // ===== Tính total =====
+  let total = subtotal - discount;
+  if (total < 0) total = 0;
 
-  // ===== Lưu lịch sử local =====
-  HISTORY.push({
+  // Làm tròn đến nghìn
+  const r = total % 1000;
+  total = r >= 500 ? (total - r + 1000) : (total - r);
+
+  // ===== Tạo bill =====
+  const rec = {
     table: currentTable.name,
-    items: [...currentTable.cart],
+    time: new Date().toLocaleString(),
+    iso: new Date().toISOString().split("T")[0],
+    items: currentTable.cart.slice(),
     subtotal,
     discount,
-    total,
-    time: new Date().toLocaleString()
-  });
+    total
+  };
 
-  // ===== Reset giỏ hàng của bàn =====
-  currentTable.cart = [];
+  // ===== Lưu vào lịch sử =====
+  HISTORY.push(rec);
   saveAll();
-  renderTables();
 
-  // 👉 Reset header (ẩn ❌, hiện lại icon lịch sử + cài đặt)
-  $('order-info').classList.add('hidden');
-  $('header-buttons').style.display = 'flex';
-  $('backBtn').style.display = 'none';
+  // ===== Reset bàn =====
+  TABLES = TABLES.filter(t => t.id !== currentTable.id);
+  saveAll();
 
-  // 👉 Quay về màn hình chính
+  // ===== Đóng màn hình thanh toán =====
   $('payment-screen').style.display = 'none';
-  $('table-screen').style.display = 'block';
-  currentTable = null;
+  backToTables();
+
+  // ===== Render lại lịch sử =====
+  if (typeof renderHistory === "function") renderHistory();
+
 }
 // print final bill
 function printFinalBill(rec){
