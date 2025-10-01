@@ -338,47 +338,47 @@ function openTable(id){
   renderCategories();
   renderMenuList();
   renderCart();
+
   if (createdFromMain) {
-  $('primary-actions').style.display = 'flex';
-  $('table-actions').style.display = 'none';
-  $('menu-list').style.display = 'block';
+    $('primary-actions').style.display = 'flex';
+    $('table-actions').style.display = 'none';
+    $('menu-list').style.display = 'block';
 
-  // 👉 chỉ ẩn nút Huỷ đơn khi đang ở chế độ thêm món
-  if (isAddingMore) {
-    $('cancel-order-btn').style.display = 'none';
+    // 👉 chỉ ẩn nút Huỷ đơn khi đang ở chế độ thêm món
+    if (isAddingMore) {
+      $('cancel-order-btn').style.display = 'none';
+    } else {
+      $('cancel-order-btn').style.display = 'inline-block';
+    }
   } else {
-    $('cancel-order-btn').style.display = 'inline-block';
+    $('primary-actions').style.display = 'none';
+    $('table-actions').style.display = 'flex';
+    $('menu-list').style.display = 'none';
   }
-} else {
-  $('primary-actions').style.display = 'none';
-  $('table-actions').style.display = 'flex';
-  $('menu-list').style.display = 'none';
-}
 
+  // 👉 Thêm đoạn này để điều khiển header
+  $('header-buttons').style.display = 'none';     // ẩn icon 📜⚙️
+  $('order-info').classList.remove('hidden');     // hiện cụm BlackTea | Bàn L1 ✖
+  $('orderTitle').innerText = currentTable.name;  // gán tên bàn
 }
 
 // back
 function backToTables() {
-  if (currentTable) {
-    // Nếu bàn mới tạo mà chưa có món => xóa luôn
-    if (createdFromMain && (!currentTable.cart || currentTable.cart.length === 0)) {
-      TABLES = TABLES.filter(t => t.id !== currentTable.id);
-    }
-  }
-
-  currentTable = null;
-  createdFromMain = false;
-
+  $('table-screen').style.display = 'block';
   $('menu-screen').style.display = 'none';
   $('settings-screen').style.display = 'none';
   $('menu-settings-screen').style.display = 'none';
   $('printer-settings-screen').style.display = 'none';
   $('history-screen').style.display = 'none';
   $('payment-screen').style.display = 'none';
-  $('table-screen').style.display = 'block';
 
-  renderTables();
-  saveAll();
+  // 👉 trả header về mặc định
+  $('header-buttons').style.display = 'flex';  
+  $('order-info').classList.add('hidden');
+}
+
+function goBack() {
+  backToTables();
 }
 
 // categories
