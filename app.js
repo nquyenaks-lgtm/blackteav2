@@ -481,6 +481,10 @@ function saveOrder() {
   saveAll();
   renderTables();
   backToTables();
+  // Tránh hiện nút
+  $('header-buttons').style.display = 'flex';   // hiện lại icon 📜⚙️  
+$('order-info').classList.add('hidden');      // ẩn cụm BlackTea | Khách ...  
+$('backBtn').classList.remove('show');        // ẩn nút ❌
 }
 
 // table actions
@@ -603,7 +607,10 @@ function confirmPayment() {
 
   // ===== Render lại lịch sử =====
   if (typeof renderHistory === "function") renderHistory();
-
+  
+$('header-buttons').style.display = 'flex';   // hiện lại icon 📜⚙️  
+$('order-info').classList.add('hidden');      // ẩn cụm BlackTea | Khách ...  
+$('backBtn').classList.remove('show');        // ẩn nút ❌
 }
 // print final bill
 function printFinalBill(rec){
