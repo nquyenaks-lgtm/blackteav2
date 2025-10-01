@@ -583,11 +583,8 @@ function confirmPayment() {
     time: new Date().toLocaleString()
   });
 
-  // ===== Xoá bàn đã thanh toán khỏi TABLES =====
-  const idx = TABLES.findIndex(t => t.id === currentTable.id);
-  if (idx >= 0) {
-    TABLES.splice(idx, 1);  // xoá bàn khỏi danh sách
-  }
+  // ✅ Xóa giỏ hàng của bàn (giữ nguyên bàn trong TABLES)
+  currentTable.cart = [];
 
   saveAll();
   renderTables();
