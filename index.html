@@ -53,11 +53,17 @@
 <body>
   <div class="app">
     
-<header class="header">
-  <h1 id="brand">BlackTea</h1>
-  <div class="header-icons">
-    <span class="icon-btn" onclick="openHistory()" title="Lịch sử">🧾</span>
-    <span class="icon-btn" onclick="openSettings()" title="Cài đặt">⚙️</span>
+<header>
+  <div id="header-content">
+    <h1 id="brand">BLACKTEA</h1>
+    <div id="order-info" class="hidden">
+      <span id="orderTitle"></span>
+      <button id="backBtn" onclick="goBack()">✖</button>
+    </div>
+    <div id="header-buttons">
+      <button onclick="openHistory()">📜</button>
+      <button onclick="openSettings()">⚙️</button>
+    </div>
   </div>
 </header>
 
