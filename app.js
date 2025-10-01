@@ -602,6 +602,7 @@ function confirmPayment() {
   // ===== Đóng màn hình thanh toán =====
   $('payment-screen').style.display = 'none';
   backToTables();
+  $('backBtn').classList.add('hidden');
 
   // ===== Render lại lịch sử =====
   if (typeof renderHistory === "function") renderHistory();
