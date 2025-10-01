@@ -325,8 +325,13 @@ function addNamed(){
 function openTableFromMain(id){ createdFromMain = false; openTable(id); }
 
 function openTable(id){
-  currentTable = TABLES.find(t=>t.id===id);
-  if(!currentTable) return;
+  // ⚡️ Nếu chưa có thì tạo đơn nháp, không push TABLES
+  if (!TABLES.find(t => t.id === id)) {
+    currentTable = { id, name: "Bàn " + id, cart: [] };
+  } else {
+    currentTable = TABLES.find(t => t.id === id);
+  }
+
   $('table-screen').style.display = 'none';
   $('menu-screen').style.display = 'block';
   $('settings-screen').style.display = 'none';
@@ -334,8 +339,10 @@ function openTable(id){
   $('printer-settings-screen').style.display = 'none';
   $('history-screen').style.display = 'none';
   $('payment-screen').style.display = 'none';
+
   $('table-title').innerText = "";
   $('backBtn').classList.remove('hidden'); // hiện ✖
+
   renderCategories();
   renderMenuList();
   renderCart();
@@ -345,7 +352,6 @@ function openTable(id){
     $('table-actions').style.display = 'none';
     $('menu-list').style.display = 'block';
 
-    // 👉 chỉ ẩn nút Huỷ đơn khi đang ở chế độ thêm món
     if (isAddingMore) {
       $('cancel-order-btn').style.display = 'none';
     } else {
@@ -357,10 +363,10 @@ function openTable(id){
     $('menu-list').style.display = 'none';
   }
 
-  // 👉 Thêm đoạn này để điều khiển header
-  $('header-buttons').style.display = 'none';     // ẩn icon 📜⚙️
-  $('order-info').classList.remove('hidden');     // hiện cụm BlackTea | Bàn L1 ✖
-  $('orderTitle').innerText = currentTable.name;  // gán tên bàn
+  // 👉 Điều khiển header
+  $('header-buttons').style.display = 'none';     
+  $('order-info').classList.remove('hidden');     
+  $('orderTitle').innerText = currentTable.name;  
 }
 
 // back
