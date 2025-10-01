@@ -269,41 +269,30 @@ body {
   -ms-user-select: none;     /* IE/Edge cũ */
   user-select: none;         /* Chuẩn */
 }
-/* ===== Header khi vào bàn ===== */
-/* ===== Header khi vào bàn ===== */
+/* ===== Header Order Info ===== */
 #order-info {
   display: flex;
   align-items: center;
-  gap: 8px;
-  flex: 1;
+  gap: 6px;
 }
-
-#brandName,
-#orderTitle,
-.divider {
-  font-size: 20px; 
-  font-weight: 700;
+#order-info.hidden {
+  display: none;
+}
+#orderTitle {
+  font-weight: 500;
+  font-size: 13px;
   color: #fff;
-  text-shadow: 1px 1px 3px rgba(0,0,0,0.6); /* đổ bóng giống BlackTea */
   white-space: nowrap;
 }
-
-.divider {
-  margin: 0 4px; /* tạo khoảng cách nhỏ giữa BlackTea và tên bàn */
-}
-
-/* Nút ✖ (chỉ hiện khi mở bàn, ẩn ở trang chính nhờ .hidden trong app.js) */
 #backBtn {
-  margin-left: auto;
   background: transparent;
   border: none;
-  color: #ff3333;
-  font-size: 24px;   /* to hơn 20% so với 20px */
+  color: #ff4d4d;
+  font-size: 16px;
   font-weight: bold;
   cursor: pointer;
-  transition: transform 0.2s, color 0.2s;
+  transition: 0.2s;
 }
 #backBtn:hover {
-  transform: scale(1.2);
   color: #ff0000;
 }
