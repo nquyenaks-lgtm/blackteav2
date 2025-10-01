@@ -379,10 +379,15 @@ function backToTables() {
 }
 
 function goBack() {
-  // ... code ản nút x màn hinh chnhs
-  $('backBtn').classList.add('hidden');
-}
+  // 👉 Trả header về mặc định + quay lại màn hình bàn
+  backToTables();
 
+  // 👉 Ẩn nút X
+  $('backBtn').classList.add('hidden');
+
+  // 👉 Xoá trạng thái bàn hiện tại
+  currentTable = null;
+}
 // categories
 function renderCategories(){
   const bar = $('category-bar'); bar.innerHTML = '';
