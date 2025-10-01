@@ -55,7 +55,14 @@
     
 <header class="header">
   <h1 id="brand">BlackTea</h1>
-  <div class="header-icons">
+
+  <!-- THÊM MỚI: cụm order-info -->
+  <div id="order-info" class="hidden">
+    <span id="orderTitle"></span>
+    <button id="backBtn" onclick="goBack()">✖</button>
+  </div>
+
+  <div class="header-icons" id="header-buttons">
     <span class="icon-btn" onclick="openHistory()" title="Lịch sử">🧾</span>
     <span class="icon-btn" onclick="openSettings()" title="Cài đặt">⚙️</span>
   </div>
@@ -81,7 +88,6 @@
 
     <main id="menu-screen" style="display:none">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-        <button class="btn btn-light" onclick="backToTables()">← Quay lại</button>
         <h2 id="table-title" style="margin:0"></h2>
       </div>
 
