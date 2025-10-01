@@ -555,7 +555,7 @@ function closePayment(){ $('payment-screen').style.display='none'; $('menu-scree
 // ===================== HÀM XUẤT HÓA ĐƠN =====================
 function confirmPayment() {
   if (!currentTable || !currentTable.cart || currentTable.cart.length === 0) {
-    return; // không có món thì thôi
+    return; // Không có món thì thoát
   }
 
   // ===== Tính subtotal =====
@@ -569,26 +569,33 @@ function confirmPayment() {
   if (el) {
     const val = parseInt(el.value, 10) || 0;
     if (val >= 0 && val <= 100) {
-      discount = Math.round(subtotal * val / 100); // giảm theo %
+      discount = Math.round(subtotal * val / 100); // giảm %
     } else if (val >= 1000) {
-      discount = val; // giảm theo số tiền
+      discount = val; // giảm số tiền
     }
   }
 
-  const finalTotal = subtotal - discount;
+  const total = subtotal - discount;
 
-  // ✅ Lưu vào lịch sử
+  // ✅ Lưu vào lịch sử TRƯỚC khi reset
   HISTORY.push({
     id: Date.now(),
     table: currentTable.name,
     items: [...currentTable.cart],
-    total: finalTotal,
+    subtotal,
+    discount,
+    total,
     time: new Date().toLocaleString()
   });
   localStorage.setItem(KEY_HISTORY, JSON.stringify(HISTORY));
 
-  // ✅ Reset bàn để tránh bị treo
-  currentTable.cart = [];
+  // ✅ Reset bàn (xoá giỏ và giải phóng luôn trong TABLES)
+  const idx = TABLES.findIndex(t => t.id === currentTable.id);
+  if (idx >= 0) {
+    TABLES[idx].cart = [];
+  }
+  currentTable = null;
+
   saveAll();
   renderTables();
   backToTables();
