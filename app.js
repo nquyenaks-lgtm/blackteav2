@@ -378,28 +378,7 @@ function backToTables() {
 }
 
 function goBack() {
-  // Nếu có bàn hiện tại
-  if (currentTable) {
-    // Nếu giỏ hàng trống thì xoá bàn khỏi danh sách
-    if (!currentTable.cart || currentTable.cart.length === 0) {
-      TABLES = TABLES.filter(t => t.id !== currentTable.id);
-    }
-    currentTable = null;
-  }
-
-  // Ẩn tất cả màn
-  $('menu-screen').style.display = 'none';
-  $('settings-screen').style.display = 'none';
-  $('menu-settings-screen').style.display = 'none';
-  $('printer-settings-screen').style.display = 'none';
-  $('history-screen').style.display = 'none';
-  $('payment-screen').style.display = 'none';
-
-  // Hiện màn hình bàn chính
-  $('table-screen').style.display = 'block';
-
-  // Render lại danh sách bàn
-  renderTables();
+  backToTables();
 }
 
 // categories
