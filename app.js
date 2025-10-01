@@ -379,14 +379,7 @@ function backToTables() {
 }
 
 function goBack() {
-  if (currentTable) {
-    // Nếu là Khách mang đi và chưa có order thì xoá hẳn
-    if (currentTable.name.includes("Khách mang đi") && (!currentTable.orders || currentTable.orders.length === 0)) {
-      TABLES = TABLES.filter(t => t.id !== currentTable.id);
-    }
-  }
-
-  // Reset UI
+  // Quay về màn hình chính
   $('menu-screen').style.display = 'none';
   $('table-screen').style.display = 'block';
   $('order-info').classList.add('hidden');
