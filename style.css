@@ -270,29 +270,38 @@ body {
   user-select: none;         /* Chuẩn */
 }
 /* ===== Header Order Info ===== */
+/* Header khi vào bàn */
 #order-info {
   display: flex;
   align-items: center;
   gap: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  flex: 1; /* chiếm khoảng trống để đẩy X ra phải */
 }
-#order-info.hidden {
-  display: none;
-}
+
 #orderTitle {
-  font-weight: 500;
-  font-size: 13px;
   color: #fff;
   white-space: nowrap;
 }
+
+.divider {
+  opacity: 0.7;
+  font-weight: normal;
+}
+
+/* Nút X */
 #backBtn {
+  margin-left: auto;   /* đẩy sang phải */
   background: transparent;
   border: none;
-  color: #ff4d4d;
-  font-size: 16px;
+  color: #ff3333;
+  font-size: 24px;     /* to hơn */
   font-weight: bold;
   cursor: pointer;
-  transition: 0.2s;
+  transition: transform 0.2s, color 0.2s;
 }
 #backBtn:hover {
+  transform: scale(1.2);
   color: #ff0000;
 }
