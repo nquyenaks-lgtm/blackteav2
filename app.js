@@ -564,49 +564,43 @@ function confirmPayment() {
   if (el) {
     const val = parseInt(el.value, 10) || 0;
     if (val >= 0 && val <= 100) {
-      // giảm theo %
       discount = Math.round(subtotal * val / 100);
     } else if (val >= 1000) {
-      // giảm theo số tiền
       discount = val;
     }
   }
 
-  // ===== Tính total =====
-  let total = subtotal - discount;
-  if (total < 0) total = 0;
-
-  // Làm tròn đến nghìn
-  const r = total % 1000;
-  total = r >= 500 ? (total - r + 1000) : (total - r);
-
-  // ===== Tạo bill =====
-  const rec = {
-    table: currentTable.name,
-    time: new Date().toLocaleString(),
-    iso: new Date().toISOString().split("T")[0],
-    items: currentTable.cart.slice(),
-    subtotal,
-    discount,
-    total
-  };
+  // ===== Tổng tiền cuối =====
+  const total = subtotal - discount;
 
   // ===== Lưu vào lịch sử =====
-  HISTORY.push(rec);
-  saveAll();
+  HISTORY.push({
+    table: currentTable.name,
+    items: [...currentTable.cart],
+    subtotal,
+    discount,
+    total,
+    time: new Date().toLocaleString()
+  });
 
-  // ===== Reset bàn =====
-  TABLES = TABLES.filter(t => t.id !== currentTable.id);
-  saveAll();
+  // ===== Xoá bàn đã thanh toán khỏi TABLES =====
+  const idx = TABLES.findIndex(t => t.id === currentTable.id);
+  if (idx >= 0) {
+    TABLES.splice(idx, 1);  // xoá bàn khỏi danh sách
+  }
 
-  // ===== Đóng màn hình thanh toán =====
-  $('payment-screen').style.display = 'none';
-  backToTables();
+  saveAll();
+  renderTables();
+
+  // 👉 Reset header
+  $('order-info').classList.add('hidden');
+  $('header-buttons').style.display = 'flex';
   $('backBtn').classList.add('hidden');
 
-  // ===== Render lại lịch sử =====
-  if (typeof renderHistory === "function") renderHistory();
-
+  // 👉 Quay về màn hình chính
+  $('payment-screen').style.display = 'none';
+  $('table-screen').style.display = 'block';
+  currentTable = null;
 }
 // print final bill
 function printFinalBill(rec){
