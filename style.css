@@ -363,7 +363,7 @@ header {
 }
 
 #backBtn.hidden {
-  display: block;     /* ẩn mặc định khi ở trang chính */
+  display: none;     /* ẩn mặc định khi ở trang chính */
 }
 
 #backBtn:hover {
