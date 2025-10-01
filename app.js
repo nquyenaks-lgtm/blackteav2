@@ -379,16 +379,26 @@ function backToTables() {
 }
 
 function goBack() {
-  // Quay về màn hình chính
-  $('menu-screen').style.display = 'none';
-  $('table-screen').style.display = 'block';
-  $('order-info').classList.add('hidden');
-  $('header-buttons').style.display = 'flex';
+  // 👉 Trả header về mặc định + quay lại màn hình bàn
+  backToTables();
+
+  // 👉 Ẩn nút X
   $('backBtn').classList.add('hidden');
 
-  renderTables();
+  // 👉 Xoá trạng thái bàn hiện tại
   currentTable = null;
 }
+// categories
+function renderCategories(){
+  const bar = $('category-bar'); bar.innerHTML = '';
+  CATEGORIES.forEach(cat=>{
+    const b = document.createElement('button'); b.className='category-btn' + (cat===activeCategory ? ' active' : '');
+    b.innerText = cat;
+    b.onclick = ()=>{ activeCategory = cat; renderMenuList(); renderCategories(); };
+    bar.appendChild(b);
+  });
+}
+
 // menu list
 function renderMenuList(){
   const list = $('menu-list'); list.innerHTML = '';
