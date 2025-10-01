@@ -274,7 +274,7 @@ body {
   display: flex;
   align-items: center;
   margin-left: 8px;   /* đẩy cụm | + tên bàn sát ngay sau BlackTea */
-  gap: 6px;
+  gap: 2px;
 }
 
 #order-info.hidden {
