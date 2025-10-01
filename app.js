@@ -379,13 +379,23 @@ function backToTables() {
 }
 
 function goBack() {
-  // 👉 Trả header về mặc định + quay lại màn hình bàn
-  backToTables();
+  if (currentTable) {
+    // Nếu bàn chưa có món thì xoá luôn
+    if (!currentTable.cart || currentTable.cart.length === 0) {
+      currentTable.cart = [];
+      currentTable.total = 0;
+      localStorage.setItem(KEY_TABLES, JSON.stringify(TABLES));
+    }
+  }
 
-  // 👉 Ẩn nút X
+  // Ẩn order-info, hiện lại các nút ở header
+  $('order-info').classList.add('hidden');
+  $('header-buttons').style.display = 'flex';
   $('backBtn').classList.add('hidden');
 
-  // 👉 Xoá trạng thái bàn hiện tại
+  // Quay lại màn hình chọn bàn
+  $('menu-screen').style.display = 'none';
+  $('table-screen').style.display = 'block';
   currentTable = null;
 }
 // categories
