@@ -324,14 +324,20 @@ function addNamed(){
 // open from main
 function openTableFromMain(id){ createdFromMain = false; openTable(id); }
 
-function openTable(id){
-  // ⚡️ Nếu chưa có thì tạo đơn nháp, không push TABLES
-  if (!TABLES.find(t => t.id === id)) {
-    currentTable = { id, name: "Bàn " + id, cart: [] };
-  } else {
-    currentTable = TABLES.find(t => t.id === id);
+function openTable(id) {
+  // Tìm bàn đã tồn tại
+  currentTable = TABLES.find(t => t.id === id);
+
+  // Nếu chưa có thì tạo bản nháp, KHÔNG push vào TABLES
+  if (!currentTable) {
+    currentTable = {
+      id,
+      name: TABLES_DEF[id] || id, // dùng bảng định nghĩa tên (nếu có)
+      cart: []
+    };
   }
 
+  // Hiển thị giao diện
   $('table-screen').style.display = 'none';
   $('menu-screen').style.display = 'block';
   $('settings-screen').style.display = 'none';
@@ -339,10 +345,8 @@ function openTable(id){
   $('printer-settings-screen').style.display = 'none';
   $('history-screen').style.display = 'none';
   $('payment-screen').style.display = 'none';
-
   $('table-title').innerText = "";
   $('backBtn').classList.remove('hidden'); // hiện ✖
-
   renderCategories();
   renderMenuList();
   renderCart();
@@ -363,10 +367,10 @@ function openTable(id){
     $('menu-list').style.display = 'none';
   }
 
-  // 👉 Điều khiển header
-  $('header-buttons').style.display = 'none';     
-  $('order-info').classList.remove('hidden');     
-  $('orderTitle').innerText = currentTable.name;  
+  // Điều khiển header
+  $('header-buttons').style.display = 'none';
+  $('order-info').classList.remove('hidden');
+  $('orderTitle').innerText = currentTable.name;
 }
 
 // back
