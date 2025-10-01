@@ -335,6 +335,7 @@ function openTable(id){
   $('history-screen').style.display = 'none';
   $('payment-screen').style.display = 'none';
   $('table-title').innerText = currentTable.name;
+  $('backBtn').classList.remove('hidden'); // hiện ✖
   renderCategories();
   renderMenuList();
   renderCart();
@@ -360,6 +361,7 @@ function openTable(id){
   $('header-buttons').style.display = 'none';     // ẩn icon 📜⚙️
   $('order-info').classList.remove('hidden');     // hiện cụm BlackTea | Bàn L1 ✖
   $('orderTitle').innerText = currentTable.name;  // gán tên bàn
+  $('backBtn').classList.add('hidden'); // ẩn ✖
 }
 
 // back
