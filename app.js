@@ -655,34 +655,24 @@ function confirmPayment() {
 
   const finalTotal = subtotal - discount;
 
-  // ✅ Lưu vào lịch sử (dùng chung cấu trúc lưu trữ)
+  // ✅ Lưu vào lịch sử
   HISTORY.push({
     id: Date.now(),
     table: currentTable.name,
     items: [...currentTable.cart],
-    subtotal,
-    discount,
     total: finalTotal,
     time: new Date().toLocaleString()
   });
-
-  // gọi saveAll để đảm bảo lịch sử được ghi
-  saveAll();
+  localStorage.setItem(KEY_HISTORY, JSON.stringify(HISTORY));
 
   // ✅ Reset bàn
   currentTable.cart = [];
-  const idx = TABLES.findIndex(t => t.id === currentTable.id);
-  if (idx >= 0) {
-    TABLES[idx] = { ...currentTable, cart: [] };
-  }
-
   saveAll();
   renderTables();
-  hideOrderInfo();   // ẩn cụm BlackTea | Bàn | X
   backToTables();
 
-  // thông báo
-  showSimpleModal('Thanh toán thành công', 'Đơn đã được lưu vào lịch sử');
+  // 👉 Thông báo popup
+  showPopup("Xuất đơn hàng thành công");
 }
 function hideOrderInfo(){
   if ($('header-buttons')) $('header-buttons').style.display = 'flex';
