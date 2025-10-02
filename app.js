@@ -952,10 +952,10 @@ function openTableModal() {
     }
     const name = selectedTable.innerText;
 
-    if (TABLES.some(t => t.name === name)) {
-      showCustomAlert("Bàn " + name + " đã mở hãy chọn bàn khác hoặc vào đơn hàng của bàn này bấm thêm món");
-      return;
-    }
+    if (TABLES.some(t => t.name === name && t.cart && t.cart.length > 0)) {
+  showCustomAlert("Bàn " + name + " đang phục vụ, hãy chọn bàn khác hoặc vào đơn hàng của bàn này để thêm món.");
+  return;
+}
 
     const id = Date.now();
     TABLES.push({ id, name, cart: [], createdAt: new Date().toISOString() });
