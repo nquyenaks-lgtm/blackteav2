@@ -633,60 +633,54 @@ function showSimpleModal(message, okText='OK', onOk){
 
 function confirmPayment() {
   if (!currentTable || !currentTable.cart || currentTable.cart.length === 0) {
-    // không làm gì nếu rỗng
-    return;
+    return; // không có món thì thôi
   }
 
-  // tính subtotal
-  const subtotal = currentTable.cart.reduce((s,it) => s + (Number(it.price)||0) * (Number(it.qty)||0), 0);
+  // ===== Tính subtotal =====
+  const subtotal = currentTable.cart.reduce((sum, it) => {
+    return sum + (Number(it.price) || 0) * (Number(it.qty) || 0);
+  }, 0);
 
-  // lấy discount
+  // ===== Lấy chiết khấu từ input =====
   let discount = 0;
-  const el = document.getElementById('discount');
+  const el = document.getElementById("discount");
   if (el) {
     const val = parseInt(el.value, 10) || 0;
     if (val >= 0 && val <= 100) {
-      discount = Math.round(subtotal * val / 100);
+      discount = Math.round(subtotal * val / 100); // giảm theo %
     } else if (val >= 1000) {
-      discount = val;
+      discount = val; // giảm theo số tiền
     }
   }
 
   const finalTotal = subtotal - discount;
 
-  // LƯU vào HISTORY
-  if (typeof HISTORY === 'undefined') window.HISTORY = [];
-  window.HISTORY = window.HISTORY || [];
-  window.HISTORY.push({
+  // ✅ Lưu vào HISTORY trước khi reset
+  HISTORY.push({
     id: Date.now(),
-    tableId: currentTable.id,
-    tableName: currentTable.name,
-    items: JSON.parse(JSON.stringify(currentTable.cart)),
+    table: currentTable.name,
+    items: [...currentTable.cart],
     subtotal,
     discount,
     total: finalTotal,
     time: new Date().toLocaleString()
   });
-  localStorage.setItem(KEY_HISTORY, JSON.stringify(window.HISTORY));
+  localStorage.setItem(KEY_HISTORY, JSON.stringify(HISTORY));
 
-  // Hiện popup "Thanh toán xong" -> khi OK: reset bàn (xóa cart), lưu và ẩn X
-  showSimpleModal('Thanh toán thành công', 'Đã xong', function(){
-    // reset bàn hiện tại (clear cart)
-    currentTable.cart = [];
-    // nếu bàn đã lưu trong TABLES, update
-    const idx = TABLES.findIndex(t => t.id === currentTable.id);
-    if (idx >= 0) {
-      TABLES[idx] = { ...currentTable, _isDraft:false };
-    }
-    saveAll && saveAll();
-    renderTables && renderTables();
+  // ✅ Sau khi đã lưu -> reset bàn để tránh treo
+  currentTable.cart = [];
+  const idx = TABLES.findIndex(t => t.id === currentTable.id);
+  if (idx >= 0) {
+    TABLES[idx] = { ...currentTable, _isDraft: false, cart: [] };
+  }
 
-    // ẩn header order info / X
-    hideOrderInfo();
+  saveAll();
+  renderTables();
+  hideOrderInfo();   // ẩn cụm BlackTea | Bàn | X
+  backToTables();
 
-    // về màn chính
-    backToTables && backToTables();
-  });
+  // Hiện popup nhỏ xác nhận
+  showSimpleModal('Thành công. Xem hoặc in lại đơn trong lịch sử ', 'Đã xong');
 }
 function hideOrderInfo(){
   if ($('header-buttons')) $('header-buttons').style.display = 'flex';
