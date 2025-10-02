@@ -472,21 +472,27 @@ function saveOrder() {
 
   // ✅ Đánh dấu món đã order và lưu lại số lượng gốc (baseQty)
   currentTable.cart = currentTable.cart.map(it => ({
-  ...it,
-  locked: true,
-  baseQty: (it.locked && typeof it.baseQty === 'number') ? it.baseQty : it.qty
-}));
+    ...it,
+    locked: true,
+    baseQty: (it.locked && typeof it.baseQty === 'number') ? it.baseQty : it.qty
+  }));
 
   const idx = TABLES.findIndex(t => t.id === currentTable.id);
 
   if (idx >= 0) {
     TABLES[idx] = { ...currentTable };
   } else {
+    // 👉 nếu là bàn nháp thì chỉ khi save mới ghi thật
+    currentTable.isDraft = false;
     TABLES.push({ ...currentTable });
   }
 
   saveAll();
   renderTables();
+
+  // 👉 Ẩn dấu X sau khi lưu đơn
+  $('backBtn').classList.add('hidden');  
+
   backToTables();
 }
 
