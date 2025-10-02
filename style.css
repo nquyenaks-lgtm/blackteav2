@@ -350,6 +350,8 @@ header {
   transform: scale(1.2);
   opacity: 0.8;
 }
+
+/* Nút ✖ */
 #backBtn {
   background: transparent;
   border: none;
@@ -358,15 +360,10 @@ header {
   font-weight: bold;
   cursor: pointer;
   transition: 0.2s;
-  position: relative;
-  z-index: 1001;
 }
 
-/* Khi bị ẩn thì đẩy ra khỏi màn hình thay vì hiển thị */
 #backBtn.hidden {
-  position: absolute;
-  top: -9999px;
-  left: -9999px;
+  display: none;     /* ẩn mặc định khi ở trang chính */
 }
 
 #backBtn:hover {
