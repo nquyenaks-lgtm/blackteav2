@@ -669,10 +669,16 @@ function confirmPayment() {
   });
   localStorage.setItem(KEY_HISTORY, JSON.stringify(HISTORY));
 
-  // ✅ Reset bàn để tránh treo
-  currentTable.cart = [];
-  saveAll();
-  renderTables();
+  // ✅ Reset bàn sau khi thanh toán
+const idx = TABLES.findIndex(t => t.id === currentTable.id);
+if (idx >= 0) {
+  TABLES[idx] = { id: currentTable.id, name: currentTable.name, cart: [] };
+}
+currentTable = null;
+
+saveAll();
+renderTables();
+backToTables();
 
   // ✅ Ẩn cụm BlackTea | Bàn L1 ❌
   hideOrderInfo();
