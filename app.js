@@ -683,10 +683,10 @@ function hideOrderInfo(){
   if ($('order-info')) $('order-info').classList.add('hidden');
   if ($('orderTitle')) $('orderTitle').innerText = '';
   if ($('backBtn')) $('backBtn').classList.add('hidden');
-  // Thông báo
+}
     // thông báo
   showSimpleModal('Thành công', 'Xem và in lại đơn ở mục lịch sử');
-}
+
 }
 // print final bill
 function printFinalBill(rec){
