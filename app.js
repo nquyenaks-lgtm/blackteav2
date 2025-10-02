@@ -631,7 +631,6 @@ function showSimpleModal(message, okText='OK', onOk){
   document.body.appendChild(overlay);
 }
 
-// ===== THANH TOÁN / XUẤT HÓA ĐƠN =====
 function confirmPayment() {
   if (!currentTable || !currentTable.cart || currentTable.cart.length === 0) {
     return; // không có món thì thôi
@@ -656,7 +655,7 @@ function confirmPayment() {
 
   const finalTotal = subtotal - discount;
 
-  // ✅ Lưu vào lịch sử
+  // ✅ Lưu vào lịch sử (dùng chung cấu trúc lưu trữ)
   HISTORY.push({
     id: Date.now(),
     table: currentTable.name,
@@ -664,27 +663,32 @@ function confirmPayment() {
     subtotal,
     discount,
     total: finalTotal,
-    time: new Date().toLocaleString(),
-    iso: isoDateKey(new Date())   // cần để renderHistory nhóm theo ngày
+    time: new Date().toLocaleString()
   });
-  localStorage.setItem(KEY_HISTORY, JSON.stringify(HISTORY));
 
-  // ✅ Reset bàn để tránh treo
+  // gọi saveAll để đảm bảo lịch sử được ghi
+  saveAll();
+
+  // ✅ Reset bàn
   currentTable.cart = [];
+  const idx = TABLES.findIndex(t => t.id === currentTable.id);
+  if (idx >= 0) {
+    TABLES[idx] = { ...currentTable, cart: [] };
+  }
+
   saveAll();
   renderTables();
-
-  // ✅ Ẩn cụm BlackTea | Bàn L1 ❌
-  hideOrderInfo();
+  hideOrderInfo();   // ẩn cụm BlackTea | Bàn | X
   backToTables();
-  showSimpleModal('Thành công', 'Xem và in lại đơn ở mục lịch sử');
+
+  // thông báo
+  showSimpleModal('Thanh toán thành công', 'Đơn đã được lưu vào lịch sử');
 }
 function hideOrderInfo(){
   if ($('header-buttons')) $('header-buttons').style.display = 'flex';
   if ($('order-info')) $('order-info').classList.add('hidden');
   if ($('orderTitle')) $('orderTitle').innerText = '';
   if ($('backBtn')) $('backBtn').classList.add('hidden');
-
 }
 // print final bill
 function printFinalBill(rec){
