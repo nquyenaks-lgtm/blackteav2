@@ -350,8 +350,6 @@ header {
   transform: scale(1.2);
   opacity: 0.8;
 }
-
-/* Nút ✖ */
 #backBtn {
   background: transparent;
   border: none;
@@ -363,7 +361,9 @@ header {
 }
 
 #backBtn.hidden {
-  display: none;     /* ẩn mặc định khi ở trang chính */
+  position: absolute;
+  right: -9999px;  /* đẩy ra khỏi màn hình */
+  top: -9999px;    /* tránh hiện ở màn chính */
 }
 
 #backBtn:hover {
