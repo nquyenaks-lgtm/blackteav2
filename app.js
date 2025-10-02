@@ -677,15 +677,13 @@ function confirmPayment() {
   // ✅ Ẩn cụm BlackTea | Bàn L1 ❌
   hideOrderInfo();
   backToTables();
+  showSimpleModal('Thành công', 'Xem và in lại đơn ở mục lịch sử');
 }
 function hideOrderInfo(){
   if ($('header-buttons')) $('header-buttons').style.display = 'flex';
   if ($('order-info')) $('order-info').classList.add('hidden');
   if ($('orderTitle')) $('orderTitle').innerText = '';
   if ($('backBtn')) $('backBtn').classList.add('hidden');
-}
-    // thông báo
-  showSimpleModal('Thành công', 'Xem và in lại đơn ở mục lịch sử');
 
 }
 // print final bill
