@@ -634,7 +634,7 @@ function showSimpleModal(message, okText='OK', onOk){
 // ===== THANH TOÁN / XUẤT HÓA ĐƠN =====
 function confirmPayment() {
   if (!currentTable || !currentTable.cart || currentTable.cart.length === 0) {
-    return; // không có món thì thôi
+    return;
   }
 
   // ===== Tính subtotal =====
@@ -648,9 +648,9 @@ function confirmPayment() {
   if (el) {
     const val = parseInt(el.value, 10) || 0;
     if (val >= 0 && val <= 100) {
-      discount = Math.round(subtotal * val / 100); // giảm theo %
+      discount = Math.round(subtotal * val / 100);
     } else if (val >= 1000) {
-      discount = val; // giảm theo số tiền
+      discount = val;
     }
   }
 
@@ -661,37 +661,24 @@ function confirmPayment() {
     id: Date.now(),
     table: currentTable.name,
     items: [...currentTable.cart],
-    subtotal,
-    discount,
     total: finalTotal,
-    time: new Date().toLocaleString(),
-    iso: isoDateKey(new Date())   // cần để renderHistory nhóm theo ngày
+    time: new Date().toLocaleString()
   });
   localStorage.setItem(KEY_HISTORY, JSON.stringify(HISTORY));
 
   // ✅ Reset bàn sau khi thanh toán
-const idx = TABLES.findIndex(t => t.id === currentTable.id);
-if (idx >= 0) {
-  TABLES[idx] = { id: currentTable.id, name: currentTable.name, cart: [] };
-}
-currentTable = null;
+  const idx = TABLES.findIndex(t => t.id === currentTable.id);
+  if (idx >= 0) {
+    TABLES[idx] = { id: currentTable.id, name: currentTable.name, cart: [] };
+  }
+  currentTable = null;
 
-saveAll();
-renderTables();
-backToTables();
-
-  // ✅ Ẩn cụm BlackTea | Bàn L1 ❌
-  hideOrderInfo();
+  saveAll();
+  renderTables();
   backToTables();
 
-  // 👉 Thông báo popup
-  showPopup("Xuất đơn hàng thành công");
-}
-function hideOrderInfo(){
-  if ($('header-buttons')) $('header-buttons').style.display = 'flex';
-  if ($('order-info')) $('order-info').classList.add('hidden');
-  if ($('orderTitle')) $('orderTitle').innerText = '';
-  if ($('backBtn')) $('backBtn').classList.add('hidden');
+  // Thông báo nhỏ
+  showMessage("Xuất đơn thành công!");
 }
 // print final bill
 function printFinalBill(rec){
