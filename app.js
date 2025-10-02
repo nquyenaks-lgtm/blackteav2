@@ -343,9 +343,10 @@ function openTable(id){
     currentTable._isDraft = false;
   } else {
     // tạo bản nháp (chưa push vào TABLES)
+    // NOTE: để tránh phá grouping/logic gốc, lưu `name` = id (ví dụ "L4")
     currentTable = {
       id: id,
-      name: getTableFullName(id) || id,
+      name: id,
       cart: [],
       createdAt: Date.now(),
       _isDraft: true
@@ -361,13 +362,13 @@ function openTable(id){
   $('history-screen').style.display = 'none';
   $('payment-screen').style.display = 'none';
 
-  // Nếu muốn hiển thị tên ở phần giao diện chi tiết (nếu có)
+  // ẩn vùng table-title (tránh lặp tên)
   if ($('table-title')) $('table-title').innerText = "";
 
-  // hiển thị nút X / ẩn header buttons (theo yêu cầu)
+  // hiển thị/ẩn header phù hợp
   if ($('header-buttons')) $('header-buttons').style.display = 'none';
   if ($('order-info')) $('order-info').classList.remove('hidden');
-  if $('orderTitle').innerText = getTableFullName(currentTable.name);
+  if ($('orderTitle')) $('orderTitle').innerText = getTableFullName(currentTable.name);
   if ($('backBtn')) $('backBtn').classList.remove('hidden');
 
   // render danh mục, menu, giỏ hàng
@@ -375,6 +376,22 @@ function openTable(id){
   renderMenuList && renderMenuList();
   renderCart && renderCart();
 
+  // hiển thị primary actions (thêm món) / table actions theo flag createdFromMain nếu bạn dùng
+  if (createdFromMain) {
+    if ($('primary-actions')) $('primary-actions').style.display = 'flex';
+    if ($('table-actions')) $('table-actions').style.display = 'none';
+    if ($('menu-list')) $('menu-list').style.display = 'block';
+    if (isAddingMore) {
+      if ($('cancel-order-btn')) $('cancel-order-btn').style.display = 'none';
+    } else {
+      if ($('cancel-order-btn')) $('cancel-order-btn').style.display = 'inline-block';
+    }
+  } else {
+    if ($('primary-actions')) $('primary-actions').style.display = 'none';
+    if ($('table-actions')) $('table-actions').style.display = 'flex';
+    if ($('menu-list')) $('menu-list').style.display = 'none';
+  }
+}
   // hiển thị primary actions (thêm món) / table actions theo flag createdFromMain nếu bạn dùng
   if (createdFromMain) {
     if ($('primary-actions')) $('primary-actions').style.display = 'flex';
@@ -654,21 +671,27 @@ function confirmPayment() {
 
   const finalTotal = subtotal - discount;
 
-  // ✅ Lưu vào lịch sử
+  // ✅ Lưu vào lịch sử (ghi cả iso để renderHistory hoạt động)
   HISTORY.push({
     id: Date.now(),
-    table: getTableFullName(currentTable.name), // fix hàm
+    table: getTableFullName(currentTable.name), // hiển thị đẹp trong history
     items: [...currentTable.cart],
     subtotal,
     discount,
     total: finalTotal,
     time: new Date().toLocaleString(),
-    iso: isoDateKey(new Date())   // để renderHistory nhóm theo ngày
+    iso: isoDateKey(new Date())
   });
-  localStorage.setItem(KEY_HISTORY, JSON.stringify(HISTORY));
+  // dùng saveAll để đồng bộ với KEY_HISTORY (file của bạn có saveAll)
+  saveAll();
 
   // ✅ Reset bàn để tránh treo
   currentTable.cart = [];
+  const idx = TABLES.findIndex(t => t.id === currentTable.id);
+  if (idx >= 0) {
+    TABLES[idx] = { ...currentTable, cart: [] };
+  }
+
   saveAll();
   renderTables();
 
@@ -676,9 +699,10 @@ function confirmPayment() {
   hideOrderInfo();
   backToTables();
 
-  // 👉 Thông báo popup
-  showPopup("Xuất đơn hàng thành công");
-}
+  // 👉 Hiện modal xác nhận (file bạn có showSimpleModal)
+  if (typeof showSimpleModal === 'function') {
+    showSimpleModal('Xuất đơn hàng thành công', 'Đã xong');
+  }
 // print final bill
 function printFinalBill(rec){
   const win = window.open("", "In hoá đơn", "width=400,height=600");
