@@ -646,9 +646,9 @@ function confirmPayment() {
   if (el) {
     const val = parseInt(el.value, 10) || 0;
     if (val >= 0 && val <= 100) {
-      discount = Math.round(subtotal * val / 100); // giảm theo %
+      discount = Math.round(subtotal * val / 100); // giảm %
     } else if (val >= 1000) {
-      discount = val; // giảm theo số tiền
+      discount = val; // giảm số tiền
     }
   }
 
@@ -657,13 +657,13 @@ function confirmPayment() {
   // ✅ Lưu vào lịch sử
   HISTORY.push({
     id: Date.now(),
-    table: getTableFullNane (currentTable.name),
+    table: getTableFullName(currentTable.name), // fix hàm
     items: [...currentTable.cart],
     subtotal,
     discount,
     total: finalTotal,
     time: new Date().toLocaleString(),
-    iso: isoDateKey(new Date())   // cần để renderHistory nhóm theo ngày
+    iso: isoDateKey(new Date())   // để renderHistory nhóm theo ngày
   });
   localStorage.setItem(KEY_HISTORY, JSON.stringify(HISTORY));
 
@@ -678,12 +678,6 @@ function confirmPayment() {
 
   // 👉 Thông báo popup
   showPopup("Xuất đơn hàng thành công");
-}
-function hideOrderInfo(){
-  if ($('header-buttons')) $('header-buttons').style.display = 'flex';
-  if ($('order-info')) $('order-info').classList.add('hidden');
-  if ($('orderTitle')) $('orderTitle').innerText = '';
-  if ($('backBtn')) $('backBtn').classList.add('hidden');
 }
 // print final bill
 function printFinalBill(rec){
