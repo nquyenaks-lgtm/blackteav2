@@ -631,6 +631,7 @@ function showSimpleModal(message, okText='OK', onOk){
   document.body.appendChild(overlay);
 }
 
+// ===== THANH TOÁN / XUẤT HÓA ĐƠN =====
 function confirmPayment() {
   if (!currentTable || !currentTable.cart || currentTable.cart.length === 0) {
     return; // không có món thì thôi
@@ -660,15 +661,21 @@ function confirmPayment() {
     id: Date.now(),
     table: currentTable.name,
     items: [...currentTable.cart],
+    subtotal,
+    discount,
     total: finalTotal,
-    time: new Date().toLocaleString()
+    time: new Date().toLocaleString(),
+    iso: isoDateKey(new Date())   // cần để renderHistory nhóm theo ngày
   });
   localStorage.setItem(KEY_HISTORY, JSON.stringify(HISTORY));
 
-  // ✅ Reset bàn
+  // ✅ Reset bàn để tránh treo
   currentTable.cart = [];
   saveAll();
   renderTables();
+
+  // ✅ Ẩn cụm BlackTea | Bàn L1 ❌
+  hideOrderInfo();
   backToTables();
 
   // 👉 Thông báo popup
