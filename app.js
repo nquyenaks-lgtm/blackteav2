@@ -364,7 +364,7 @@ function openTable(id){
   $('payment-screen').style.display = 'none';
 
   // Nếu muốn hiển thị tên ở phần giao diện chi tiết (nếu có)
-  if ($('table-title')) $('table-title').innerText = currentTable.name || '';
+  if ($('table-title')) $('table-title').innerText = "";
 
   // hiển thị nút X / ẩn header buttons (theo yêu cầu)
   if ($('header-buttons')) $('header-buttons').style.display = 'none';
