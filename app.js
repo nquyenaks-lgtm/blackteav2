@@ -133,7 +133,16 @@ let currentTable = null;
 let createdFromMain = false;
 let activeCategory = 'Cà phê';
 
+function getTableFullName(id) {
+  if (id.startsWith("L"))  return `Bàn trên lầu ${id}`;
+  if (id.startsWith("NT")) return `Bàn ngoài trời ${id}`;
+  if (id.startsWith("T"))  return `Bàn tường ${id}`;
+  if (id.startsWith("G"))  return `Bàn giữa ${id}`;
+  if (id.startsWith("N"))  return `Bàn nệm ${id}`;
+  return id;
+}
 // helpers
+
 function showCustomAlert(msg) {
   document.getElementById("customAlertMessage").innerText = msg;
   document.getElementById("customAlert").style.display = "block";
@@ -324,17 +333,6 @@ function addNamed(){
 // open from main
 function openTableFromMain(id){ createdFromMain = false; openTable(id); }
 
-// Thay / dán nguyên hàm này
-function getTableFullName(id){
-  if (!id) return '';
-  if (id.startsWith('L')) return 'Bàn trên lầu ' + id;
-  if (id.startsWith('NT')) return 'Bàn ngoài trời ' + id;
-  if (id.startsWith('T')) return 'Bàn tường ' + id;
-  if (id.startsWith('G')) return 'Bàn giữa ' + id;
-  if (id.startsWith('N')) return 'Bàn nệm ' + id;
-  return id;
-}
-
 function openTable(id){
   // tìm xem bàn đã lưu trong TABLES chưa
   const savedIdx = TABLES.findIndex(t => t.id === id);
@@ -369,7 +367,7 @@ function openTable(id){
   // hiển thị nút X / ẩn header buttons (theo yêu cầu)
   if ($('header-buttons')) $('header-buttons').style.display = 'none';
   if ($('order-info')) $('order-info').classList.remove('hidden');
-  if ($('orderTitle')) $('orderTitle').innerText = currentTable.name || '';
+  if $('orderTitle').innerText = getTableFullName(currentTable.name);
   if ($('backBtn')) $('backBtn').classList.remove('hidden');
 
   // render danh mục, menu, giỏ hàng
@@ -659,7 +657,7 @@ function confirmPayment() {
   // ✅ Lưu vào lịch sử
   HISTORY.push({
     id: Date.now(),
-    table: currentTable.name,
+    table: getTableFullNane (currentTable.name),
     items: [...currentTable.cart],
     subtotal,
     discount,
