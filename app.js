@@ -288,6 +288,31 @@ function makeTableCard(t){
 
   return card;
 }
+// ===== Hàm lấy tên hiển thị =====
+function getTableDisplayName(id) {
+  // Bàn trên lầu
+  if (/^L\d+$/.test(id)) {
+    return "Bàn trên lầu " + id;
+  }
+  // Bàn ngoài trời
+  if (/^NT\d+$/.test(id)) {
+    return "Bàn ngoài trời " + id;
+  }
+  // Bàn tường
+  if (/^T\d+$/.test(id)) {
+    return "Bàn tường " + id;
+  }
+  // Bàn giữa
+  if (/^G\d+$/.test(id)) {
+    return "Bàn giữa " + id;
+  }
+  // Bàn nệm
+  if (/^N\d+$/.test(id)) {
+    return "Bàn nệm " + id;
+  }
+  // Mặc định: giữ nguyên
+  return id;
+}
 // add guest
 function addGuest(){
   GUEST_CNT += 1;
@@ -369,7 +394,7 @@ function openTable(id){
   // hiển thị nút X / ẩn header buttons (theo yêu cầu)
   if ($('header-buttons')) $('header-buttons').style.display = 'none';
   if ($('order-info')) $('order-info').classList.remove('hidden');
-  if ($('orderTitle')) $('orderTitle').innerText = currentTable.name || '';
+  if $('orderTitle').innerText = getTableDisplayName(currentTable.id);
   if ($('backBtn')) $('backBtn').classList.remove('hidden');
 
   // render danh mục, menu, giỏ hàng
