@@ -324,17 +324,37 @@ function addNamed(){
 // open from main
 function openTableFromMain(id){ createdFromMain = false; openTable(id); }
 
-function openTable(id){
-  // tìm trong TABLES trước
-  let found = TABLES.find(t => t.id === id);
+// Thay / dán nguyên hàm này
+function getTableFullName(id){
+  if (!id) return '';
+  if (id.startsWith('L')) return 'Bàn trên lầu ' + id;
+  if (id.startsWith('NT')) return 'Bàn ngoài trời ' + id;
+  if (id.startsWith('T')) return 'Bàn tường ' + id;
+  if (id.startsWith('G')) return 'Bàn giữa ' + id;
+  if (id.startsWith('N')) return 'Bàn nệm ' + id;
+  return id;
+}
 
-  if (found) {
-    currentTable = found;
+function openTable(id){
+  // tìm xem bàn đã lưu trong TABLES chưa
+  const savedIdx = TABLES.findIndex(t => t.id === id);
+
+  if (savedIdx >= 0){
+    // dùng object đã lưu (thao tác trực tiếp trên object trong TABLES)
+    currentTable = TABLES[savedIdx];
+    currentTable._isDraft = false;
   } else {
-    // 👉 tạo bàn nháp nhưng chưa thêm vào TABLES
-    currentTable = { id, name: id, cart: [], isDraft: true };
+    // tạo bản nháp (chưa push vào TABLES)
+    currentTable = {
+      id: id,
+      name: getTableFullName(id) || id,
+      cart: [],
+      createdAt: Date.now(),
+      _isDraft: true
+    };
   }
 
+  // hiển thị màn menu
   $('table-screen').style.display = 'none';
   $('menu-screen').style.display = 'block';
   $('settings-screen').style.display = 'none';
@@ -342,34 +362,37 @@ function openTable(id){
   $('printer-settings-screen').style.display = 'none';
   $('history-screen').style.display = 'none';
   $('payment-screen').style.display = 'none';
-  $('table-title').innerText = "";
-  $('backBtn').classList.remove('hidden'); // hiện nút X
 
-  renderCategories();
-  renderMenuList();
-  renderCart();
+  // Nếu muốn hiển thị tên ở phần giao diện chi tiết (nếu có)
+  if ($('table-title')) $('table-title').innerText = currentTable.name || '';
 
+  // hiển thị nút X / ẩn header buttons (theo yêu cầu)
+  if ($('header-buttons')) $('header-buttons').style.display = 'none';
+  if ($('order-info')) $('order-info').classList.remove('hidden');
+  if ($('orderTitle')) $('orderTitle').innerText = currentTable.name || '';
+  if ($('backBtn')) $('backBtn').classList.remove('hidden');
+
+  // render danh mục, menu, giỏ hàng
+  renderCategories && renderCategories();
+  renderMenuList && renderMenuList();
+  renderCart && renderCart();
+
+  // hiển thị primary actions (thêm món) / table actions theo flag createdFromMain nếu bạn dùng
   if (createdFromMain) {
-    $('primary-actions').style.display = 'flex';
-    $('table-actions').style.display = 'none';
-    $('menu-list').style.display = 'block';
-
+    if ($('primary-actions')) $('primary-actions').style.display = 'flex';
+    if ($('table-actions')) $('table-actions').style.display = 'none';
+    if ($('menu-list')) $('menu-list').style.display = 'block';
     if (isAddingMore) {
-      $('cancel-order-btn').style.display = 'none';
+      if ($('cancel-order-btn')) $('cancel-order-btn').style.display = 'none';
     } else {
-      $('cancel-order-btn').style.display = 'inline-block';
+      if ($('cancel-order-btn')) $('cancel-order-btn').style.display = 'inline-block';
     }
   } else {
-    $('primary-actions').style.display = 'none';
-    $('table-actions').style.display = 'flex';
-    $('menu-list').style.display = 'none';
+    if ($('primary-actions')) $('primary-actions').style.display = 'none';
+    if ($('table-actions')) $('table-actions').style.display = 'flex';
+    if ($('menu-list')) $('menu-list').style.display = 'none';
   }
-
-  $('header-buttons').style.display = 'none';     
-  $('order-info').classList.remove('hidden');     
-  $('orderTitle').innerText = currentTable.name;  
 }
-
 // back
 function backToTables() {
   $('table-screen').style.display = 'block';
@@ -385,15 +408,35 @@ function backToTables() {
   $('order-info').classList.add('hidden');
 }
 
-function goBack() {
-  // 👉 Trả header về mặc định + quay lại màn hình bàn
-  backToTables();
+function goBack(){
+  // Nếu đang không có currentTable, chỉ về main
+  if (!currentTable) {
+    hideOrderInfo();
+    backToTables && backToTables();
+    return;
+  }
 
-  // 👉 Ẩn nút X
-  $('backBtn').classList.add('hidden');
+  const idx = TABLES.findIndex(t => t.id === currentTable.id);
 
-  // 👉 Xoá trạng thái bàn hiện tại
-  currentTable = null;
+  if (idx === -1) {
+    // là bản nháp (chưa lưu) -> chỉ bỏ draft, không lưu vào TABLES
+    currentTable = null;
+  } else {
+    // là bàn đã lưu
+    const saved = TABLES[idx];
+    // chỉ xóa bàn đã lưu nếu rỗng (không có món) — theo ý bạn
+    if (!saved.cart || saved.cart.length === 0) {
+      TABLES.splice(idx,1);
+      saveAll && saveAll();
+    } else {
+      // nếu có món thì không xóa — chỉ trở về màn chính
+      // (nếu bạn muốn hiện popup xác nhận hủy order thì thêm ở đây)
+    }
+  }
+
+  hideOrderInfo();
+  renderTables && renderTables();
+  backToTables && backToTables();
 }
 // categories
 function renderCategories(){
@@ -468,32 +511,35 @@ function cancelOrder(){ if(!currentTable) return; currentTable.cart=[]; renderMe
 
 function saveOrder() {
   if (!currentTable) return;
-  if (!currentTable.cart.length) return;
+  if (!currentTable.cart || currentTable.cart.length === 0) {
+    // không lưu nếu không có món
+    return;
+  }
 
-  // ✅ Đánh dấu món đã order và lưu lại số lượng gốc (baseQty)
+  // Đánh dấu món đã được lock / lưu baseQty nếu chưa có
   currentTable.cart = currentTable.cart.map(it => ({
     ...it,
     locked: true,
-    baseQty: (it.locked && typeof it.baseQty === 'number') ? it.baseQty : it.qty
+    baseQty: (typeof it.baseQty === 'number') ? it.baseQty : it.qty
   }));
 
   const idx = TABLES.findIndex(t => t.id === currentTable.id);
-
   if (idx >= 0) {
-    TABLES[idx] = { ...currentTable };
+    // cập nhật bàn đã lưu
+    TABLES[idx] = { ...currentTable, _isDraft: false };
   } else {
-    // 👉 nếu là bàn nháp thì chỉ khi save mới ghi thật
-    currentTable.isDraft = false;
-    TABLES.push({ ...currentTable });
+    // thêm bàn mới (từ draft -> lưu)
+    TABLES.push({ ...currentTable, _isDraft: false });
   }
 
-  saveAll();
-  renderTables();
+  saveAll && saveAll();   // hàm lưu localStorage (giữ nguyên)
+  renderTables && renderTables();
 
-  // 👉 Ẩn dấu X sau khi lưu đơn
-  $('backBtn').classList.add('hidden');  
+  // ẩn order-info + hiện lại header buttons + ẩn X
+  hideOrderInfo();
 
-  backToTables();
+  // về màn hình chính
+  backToTables && backToTables();
 }
 
 // table actions
@@ -558,65 +604,95 @@ function closePayment(){ $('payment-screen').style.display='none'; $('menu-scree
 
 // Xuất bill tính tiền
 // ===================== HÀM XUẤT HÓA ĐƠN =====================
+// helper: hiện modal đơn giản (mở DOM tạm)
+function showSimpleModal(message, okText='OK', onOk){
+  // nếu đã có modal thì xóa
+  const existing = document.getElementById('bt-simple-modal');
+  if (existing) existing.remove();
+
+  const overlay = document.createElement('div');
+  overlay.id = 'bt-simple-modal';
+  overlay.style = 'position:fixed;left:0;top:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.45);z-index:9999;';
+  const box = document.createElement('div');
+  box.style = 'background:#fff;padding:22px;border-radius:10px;max-width:92%;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,0.2);';
+  const p = document.createElement('div');
+  p.style = 'margin-bottom:18px;color:#222;font-size:16px;';
+  p.innerText = message;
+  const okBtn = document.createElement('button');
+  okBtn.innerText = okText;
+  okBtn.style = 'background:#2f80ed;color:#fff;padding:8px 18px;border-radius:8px;border:0;cursor:pointer;font-weight:600;';
+  okBtn.onclick = () => {
+    overlay.remove();
+    if (typeof onOk === 'function') onOk();
+  };
+  box.appendChild(p);
+  box.appendChild(okBtn);
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+}
+
 function confirmPayment() {
   if (!currentTable || !currentTable.cart || currentTable.cart.length === 0) {
-    alert("Không có món nào để thanh toán!");
+    // không làm gì nếu rỗng
     return;
   }
 
-  // ===== Tính subtotal =====
-  const subtotal = currentTable.cart.reduce((sum, it) => {
-    return sum + (Number(it.price) || 0) * (Number(it.qty) || 0);
-  }, 0);
+  // tính subtotal
+  const subtotal = currentTable.cart.reduce((s,it) => s + (Number(it.price)||0) * (Number(it.qty)||0), 0);
 
-  // ===== Lấy chiết khấu từ input =====
+  // lấy discount
   let discount = 0;
-  const el = document.getElementById("discount");
+  const el = document.getElementById('discount');
   if (el) {
     const val = parseInt(el.value, 10) || 0;
     if (val >= 0 && val <= 100) {
-      // giảm theo %
       discount = Math.round(subtotal * val / 100);
     } else if (val >= 1000) {
-      // giảm theo số tiền
       discount = val;
     }
   }
 
-  // ===== Tính total =====
-  let total = subtotal - discount;
-  if (total < 0) total = 0;
+  const finalTotal = subtotal - discount;
 
-  // Làm tròn đến nghìn
-  const r = total % 1000;
-  total = r >= 500 ? (total - r + 1000) : (total - r);
-
-  // ===== Tạo bill =====
-  const rec = {
-    table: currentTable.name,
-    time: new Date().toLocaleString(),
-    iso: new Date().toISOString().split("T")[0],
-    items: currentTable.cart.slice(),
+  // LƯU vào HISTORY
+  if (typeof HISTORY === 'undefined') window.HISTORY = [];
+  window.HISTORY = window.HISTORY || [];
+  window.HISTORY.push({
+    id: Date.now(),
+    tableId: currentTable.id,
+    tableName: currentTable.name,
+    items: JSON.parse(JSON.stringify(currentTable.cart)),
     subtotal,
     discount,
-    total
-  };
+    total: finalTotal,
+    time: new Date().toLocaleString()
+  });
+  localStorage.setItem(KEY_HISTORY, JSON.stringify(window.HISTORY));
 
-  // ===== Lưu vào lịch sử =====
-  HISTORY.push(rec);
-  saveAll();
+  // Hiện popup "Thanh toán xong" -> khi OK: reset bàn (xóa cart), lưu và ẩn X
+  showSimpleModal('Thanh toán thành công', 'Đã xong', function(){
+    // reset bàn hiện tại (clear cart)
+    currentTable.cart = [];
+    // nếu bàn đã lưu trong TABLES, update
+    const idx = TABLES.findIndex(t => t.id === currentTable.id);
+    if (idx >= 0) {
+      TABLES[idx] = { ...currentTable, _isDraft:false };
+    }
+    saveAll && saveAll();
+    renderTables && renderTables();
 
-  // ===== Reset bàn =====
-  TABLES = TABLES.filter(t => t.id !== currentTable.id);
-  saveAll();
+    // ẩn header order info / X
+    hideOrderInfo();
 
-  // ===== Đóng màn hình thanh toán =====
-  $('payment-screen').style.display = 'none';
-  backToTables();
-
-  // ===== Render lại lịch sử =====
-  if (typeof renderHistory === "function") renderHistory();
-
+    // về màn chính
+    backToTables && backToTables();
+  });
+}
+function hideOrderInfo(){
+  if ($('header-buttons')) $('header-buttons').style.display = 'flex';
+  if ($('order-info')) $('order-info').classList.add('hidden');
+  if ($('orderTitle')) $('orderTitle').innerText = '';
+  if ($('backBtn')) $('backBtn').classList.add('hidden');
 }
 // print final bill
 function printFinalBill(rec){
