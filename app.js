@@ -133,16 +133,7 @@ let currentTable = null;
 let createdFromMain = false;
 let activeCategory = 'Cà phê';
 
-function getTableFullName(id) {
-  if (id.startsWith("L"))  return `Bàn trên lầu ${id}`;
-  if (id.startsWith("NT")) return `Bàn ngoài trời ${id}`;
-  if (id.startsWith("T"))  return `Bàn tường ${id}`;
-  if (id.startsWith("G"))  return `Bàn giữa ${id}`;
-  if (id.startsWith("N"))  return `Bàn nệm ${id}`;
-  return id;
-}
 // helpers
-
 function showCustomAlert(msg) {
   document.getElementById("customAlertMessage").innerText = msg;
   document.getElementById("customAlert").style.display = "block";
@@ -333,6 +324,17 @@ function addNamed(){
 // open from main
 function openTableFromMain(id){ createdFromMain = false; openTable(id); }
 
+// Thay / dán nguyên hàm này
+function getTableFullName(id){
+  if (!id) return '';
+  if (id.startsWith('L')) return 'Bàn trên lầu ' + id;
+  if (id.startsWith('NT')) return 'Bàn ngoài trời ' + id;
+  if (id.startsWith('T')) return 'Bàn tường ' + id;
+  if (id.startsWith('G')) return 'Bàn giữa ' + id;
+  if (id.startsWith('N')) return 'Bàn nệm ' + id;
+  return id;
+}
+
 function openTable(id){
   // tìm xem bàn đã lưu trong TABLES chưa
   const savedIdx = TABLES.findIndex(t => t.id === id);
@@ -343,10 +345,9 @@ function openTable(id){
     currentTable._isDraft = false;
   } else {
     // tạo bản nháp (chưa push vào TABLES)
-    // NOTE: để tránh phá grouping/logic gốc, lưu `name` = id (ví dụ "L4")
     currentTable = {
       id: id,
-      name: id,
+      name: getTableFullName(id) || id,
       cart: [],
       createdAt: Date.now(),
       _isDraft: true
@@ -362,13 +363,13 @@ function openTable(id){
   $('history-screen').style.display = 'none';
   $('payment-screen').style.display = 'none';
 
-  // ẩn vùng table-title (tránh lặp tên)
+  // Nếu muốn hiển thị tên ở phần giao diện chi tiết (nếu có)
   if ($('table-title')) $('table-title').innerText = "";
 
-  // hiển thị/ẩn header phù hợp
+  // hiển thị nút X / ẩn header buttons (theo yêu cầu)
   if ($('header-buttons')) $('header-buttons').style.display = 'none';
   if ($('order-info')) $('order-info').classList.remove('hidden');
-  if ($('orderTitle')) $('orderTitle').innerText = getTableFullName(currentTable.name);
+  if ($('orderTitle')) $('orderTitle').innerText = currentTable.name || '';
   if ($('backBtn')) $('backBtn').classList.remove('hidden');
 
   // render danh mục, menu, giỏ hàng
@@ -376,22 +377,6 @@ function openTable(id){
   renderMenuList && renderMenuList();
   renderCart && renderCart();
 
-  // hiển thị primary actions (thêm món) / table actions theo flag createdFromMain nếu bạn dùng
-  if (createdFromMain) {
-    if ($('primary-actions')) $('primary-actions').style.display = 'flex';
-    if ($('table-actions')) $('table-actions').style.display = 'none';
-    if ($('menu-list')) $('menu-list').style.display = 'block';
-    if (isAddingMore) {
-      if ($('cancel-order-btn')) $('cancel-order-btn').style.display = 'none';
-    } else {
-      if ($('cancel-order-btn')) $('cancel-order-btn').style.display = 'inline-block';
-    }
-  } else {
-    if ($('primary-actions')) $('primary-actions').style.display = 'none';
-    if ($('table-actions')) $('table-actions').style.display = 'flex';
-    if ($('menu-list')) $('menu-list').style.display = 'none';
-  }
-}
   // hiển thị primary actions (thêm món) / table actions theo flag createdFromMain nếu bạn dùng
   if (createdFromMain) {
     if ($('primary-actions')) $('primary-actions').style.display = 'flex';
@@ -663,35 +648,29 @@ function confirmPayment() {
   if (el) {
     const val = parseInt(el.value, 10) || 0;
     if (val >= 0 && val <= 100) {
-      discount = Math.round(subtotal * val / 100); // giảm %
+      discount = Math.round(subtotal * val / 100); // giảm theo %
     } else if (val >= 1000) {
-      discount = val; // giảm số tiền
+      discount = val; // giảm theo số tiền
     }
   }
 
   const finalTotal = subtotal - discount;
 
-  // ✅ Lưu vào lịch sử (ghi cả iso để renderHistory hoạt động)
+  // ✅ Lưu vào lịch sử
   HISTORY.push({
     id: Date.now(),
-    table: getTableFullName(currentTable.name), // hiển thị đẹp trong history
+    table: currentTable.name,
     items: [...currentTable.cart],
     subtotal,
     discount,
     total: finalTotal,
     time: new Date().toLocaleString(),
-    iso: isoDateKey(new Date())
+    iso: isoDateKey(new Date())   // cần để renderHistory nhóm theo ngày
   });
-  // dùng saveAll để đồng bộ với KEY_HISTORY (file của bạn có saveAll)
-  saveAll();
+  localStorage.setItem(KEY_HISTORY, JSON.stringify(HISTORY));
 
   // ✅ Reset bàn để tránh treo
   currentTable.cart = [];
-  const idx = TABLES.findIndex(t => t.id === currentTable.id);
-  if (idx >= 0) {
-    TABLES[idx] = { ...currentTable, cart: [] };
-  }
-
   saveAll();
   renderTables();
 
@@ -699,10 +678,15 @@ function confirmPayment() {
   hideOrderInfo();
   backToTables();
 
-  // 👉 Hiện modal xác nhận (file bạn có showSimpleModal)
-  if (typeof showSimpleModal === 'function') {
-    showSimpleModal('Xuất đơn hàng thành công', 'Đã xong');
-  }
+  // 👉 Thông báo popup
+  showPopup("Xuất đơn hàng thành công");
+}
+function hideOrderInfo(){
+  if ($('header-buttons')) $('header-buttons').style.display = 'flex';
+  if ($('order-info')) $('order-info').classList.add('hidden');
+  if ($('orderTitle')) $('orderTitle').innerText = '';
+  if ($('backBtn')) $('backBtn').classList.add('hidden');
+}
 // print final bill
 function printFinalBill(rec){
   const win = window.open("", "In hoá đơn", "width=400,height=600");
