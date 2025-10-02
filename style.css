@@ -358,12 +358,15 @@ header {
   font-weight: bold;
   cursor: pointer;
   transition: 0.2s;
+  position: relative;
+  z-index: 1001;
 }
 
+/* Khi bị ẩn thì đẩy ra khỏi màn hình thay vì hiển thị */
 #backBtn.hidden {
   position: absolute;
-  right: -9999px;  /* đẩy ra khỏi màn hình */
-  top: -9999px;    /* tránh hiện ở màn chính */
+  top: -9999px;
+  left: -9999px;
 }
 
 #backBtn:hover {
