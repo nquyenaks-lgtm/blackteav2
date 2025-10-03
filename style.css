@@ -369,3 +369,26 @@ header {
 #backBtn:hover {
   color: #ff0000;
 }
+/*  Menu chọn mon */
+#menu-categories {
+  display: flex;
+  flex-wrap: wrap;        /* tự xuống dòng nếu nhiều */
+  gap: 6px;               /* khoảng cách giữa các nút */
+}
+
+#menu-categories button {
+  padding: 6px 12px;      /* nút gọn */
+  font-size: 13px;
+  border: 1px solid #2e6ef7;   /* màu giống header */
+  border-radius: 6px;
+  background: white;
+  color: #2e6ef7;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+#menu-categories button.active {
+  background: #2e6ef7;   /* nền xanh header */
+  color: white;          /* chữ trắng */
+  border-color: #2e6ef7;
+}
