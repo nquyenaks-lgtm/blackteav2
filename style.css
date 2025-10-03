@@ -369,26 +369,34 @@ header {
 #backBtn:hover {
   color: #ff0000;
 }
-/*  Menu chọn mon */
+/* Container của các nút */
 #menu-categories {
   display: flex;
-  flex-wrap: wrap;        /* tự xuống dòng nếu nhiều */
-  gap: 6px;               /* khoảng cách giữa các nút */
+  flex-wrap: wrap;        /* nếu nhiều sẽ tự xuống dòng */
+  gap: 0;                 /* bỏ khoảng cách giữa các nút */
 }
 
+/* Nút danh mục */
 #menu-categories button {
-  padding: 6px 12px;      /* nút gọn */
-  font-size: 13px;
-  border: 1px solid #2e6ef7;   /* màu giống header */
-  border-radius: 6px;
+  border: 1px solid #3f51b5;
   background: white;
-  color: #2e6ef7;
+  color: #3f51b5;
+  font-size: 14px;
+  padding: 6px 12px;
+  border-radius: 0;        /* không bo góc */
   cursor: pointer;
   transition: all 0.2s;
+  margin: 0;               /* bỏ margin */
 }
 
+/* Hover */
+#menu-categories button:hover {
+  background: #e6ebff;
+}
+
+/* Active tab */
 #menu-categories button.active {
-  background: #2e6ef7;   /* nền xanh header */
-  color: white;          /* chữ trắng */
-  border-color: #2e6ef7;
+  background: #3f51b5;
+  color: white;
+  border: 1px solid #3f51b5;
 }
