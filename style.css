@@ -369,32 +369,26 @@ header {
 #backBtn:hover {
   color: #ff0000;
 }
-/* ===== Tabs menu (Cà phê, Trà sữa, ...) ===== */
-.category-list {
-  display: flex;
-  flex-wrap: wrap;       /* Xuống dòng nếu tràn màn hình */
-  gap: 6px;              /* Khoảng cách nhỏ giữa các tab */
-  margin: 12px 0;
-  justify-content: center;
-}
-
-.category-item {
-  border: 2px solid #4a69ad;  /* Khung xanh giống header */
-  color: #4a69ad;             /* Chữ xanh */
-  background: #fff;           /* Nền trắng */
-  padding: 6px 12px;          /* Nhỏ gọn */
+/* ===== Categories (Cà phê, Trà sữa, ...) ===== */
+.category {
+  border: 2px solid #4a69ad;   /* màu head */
+  color: #4a69ad;
+  padding: 6px 12px;
   border-radius: 6px;
-  font-size: 14px;
   font-weight: 500;
+  font-size: 14px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: 0.2s;
+  margin: 4px;
+  display: inline-block;
+  background: #fff; /* nền trắng mặc định */
 }
 
-.category-item:hover {
-  background: #ebf2ff;  /* Nền xanh nhạt khi hover */
+.category:hover {
+  background: #f0f4ff; /* hover xanh nhạt */
 }
 
-.category-item.active {
-  background: #4a69ad;  /* Nền xanh header khi chọn */
-  color: #fff;          /* Chữ trắng */
+.category.active {
+  background: #4a69ad; /* khi chọn */
+  color: #fff;         /* chữ trắng */
 }
