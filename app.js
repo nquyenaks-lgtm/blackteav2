@@ -464,7 +464,6 @@ function backToTables() {
 }
 
 function goBack(){
-  // Nếu đang không có currentTable, chỉ về main
   if (!currentTable) {
     hideOrderInfo();
     backToTables && backToTables();
@@ -473,21 +472,40 @@ function goBack(){
 
   const idx = TABLES.findIndex(t => t.id === currentTable.id);
 
-  if (idx === -1) {
-    // là bản nháp (chưa lưu) -> chỉ bỏ draft, không lưu vào TABLES
+  // Nếu là bản nháp (chưa lưu)
+  if (idx === -1 || currentTable._isDraft) {
+    // ❌ Chưa lưu mà bấm X -> bỏ luôn, không lưu
     currentTable = null;
-  } else {
-    // là bàn đã lưu
-    const saved = TABLES[idx];
-    // chỉ xóa bàn đã lưu nếu rỗng (không có món) — theo ý bạn
-    if (!saved.cart || saved.cart.length === 0) {
-      TABLES.splice(idx,1);
-      saveAll && saveAll();
-    } else {
-      // nếu có món thì không xóa — chỉ trở về màn chính
-      // (nếu bạn muốn hiện popup xác nhận hủy order thì thêm ở đây)
-    }
+    hideOrderInfo();
+    backToTables();
+    renderTables();
+    return;
   }
+
+  const saved = TABLES[idx];
+
+  if (!saved.cart || saved.cart.length === 0) {
+    // không có món -> xóa luôn
+    TABLES.splice(idx, 1);
+    saveAll();
+    renderTables();
+    hideOrderInfo();
+    backToTables();
+  } else {
+    // có món rồi -> hỏi xác nhận
+    showSimpleModal(
+      "Bàn này đã có đơn. Thầy muốn hủy đơn này luôn không?",
+      "Hủy đơn",
+      () => {
+        TABLES.splice(idx, 1);
+        saveAll();
+        renderTables();
+        hideOrderInfo();
+        backToTables();
+      }
+    );
+  }
+}
 
   hideOrderInfo();
   renderTables && renderTables();
@@ -597,9 +615,13 @@ function saveOrder() {
   backToTables && backToTables();
 }
 
-// table actions
+// table actions 
 function addMore(){ 
   if(!currentTable) return; 
+
+  // 🧠 Lưu lại bản sao cũ của cart trước khi thêm
+  currentTable._oldCart = JSON.parse(JSON.stringify(currentTable.cart));
+
   $('menu-list').style.display='block'; 
   createdFromMain = true; 
   $('primary-actions').style.display='flex'; 
