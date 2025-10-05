@@ -369,7 +369,7 @@ header {
 #backBtn:hover {
   color: #ff0000;
 }
-/* ===== DANH MỤC MENU (liền mạch, viền chuẩn, không thừa dòng) ===== */
+/* ===== DANH MỤC MENU (liền mạch, viền chuẩn, không đúp dòng) ===== */
 .category-bar {
   display: flex;
   flex-wrap: wrap;
@@ -383,6 +383,7 @@ header {
   width: 100%;
   box-sizing: border-box;
   border: 1px solid #4a69ad; /* viền bao ngoài */
+  border-bottom: none;        /* bỏ viền dưới — tránh đúp với hàng cuối */
   overflow: hidden;
 }
 
@@ -419,7 +420,7 @@ header {
   border-color: #4a69ad;
 }
 
-/* ===== Fix không đúp viền giữa các hàng ===== */
+/* Liền mạch giữa các ô */
 .category-bar .category-btn:nth-child(n+2) {
   border-left-width: 1px;
 }
@@ -427,7 +428,7 @@ header {
   border-top-width: 1px;
 }
 
-/* ===== Hàng cuối vẫn có viền dưới ===== */
+/* Hàng cuối chỉ còn 1 viền dưới mảnh, không đúp */
 .category-bar .category-btn:last-child {
   border-bottom: 1px solid #4a69ad;
 }
