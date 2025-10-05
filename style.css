@@ -369,27 +369,36 @@ header {
 #backBtn:hover {
   color: #ff0000;
 }
-/* Nút mẹnu */
+/* ==== TAB MENU (kiểu Option 2 nhỏ gọn, liền nhau) ==== */
+.category-container {
+  display: flex;
+  flex-wrap: wrap;      /* Cho phép xuống dòng khi hết chỗ */
+  gap: 0;               /* Xóa hoàn toàn khoảng cách giữa các nút */
+  justify-content: center;
+}
+
 .category-btn {
-  border: 2px solid #4a69ad;   /* màu giống header */
+  border: 1px solid #4a69ad;   /* Viền xanh cùng màu header */
   color: #4a69ad;
-  padding: 6px 12px;
-  border-radius: 6px;
+  background: #fff;
+  padding: 4px 12px;           /* Nút thấp và gọn */
+  font-size: 13px;             /* Chữ nhỏ gọn */
   font-weight: 500;
-  font-size: 14px;
+  border-radius: 0;            /* Liền nhau phẳng */
   cursor: pointer;
-  transition: 0.2s;
-  margin: 4px;
-  display: inline-block;
-  background: #fff; /* nền trắng mặc định */
+  transition: all 0.15s ease-in-out;
+  margin: 0;                   /* Không có khoảng trắng giữa các nút */
+  line-height: 1.2;
+  border-right: none;          /* Xóa viền giữa các nút ngang */
+}
+
+.category-btn:last-child {
+  border-right: 1px solid #4a69ad; /* Viền cho nút cuối cùng */
 }
 
 .category-btn:hover {
-  background: #e8efff; /* nhạt khi hover */
+  background: #eaf0ff;         /* Nền nhẹ khi hover */
 }
 
 .category-btn.active {
-  background: #4a69ad; /* màu head */
-  color: #fff;
-  border-color: #4a69ad;
-}
+  background: #4a69ad;         /* Khi
