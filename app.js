@@ -367,7 +367,7 @@ function openTable(id){
   // hiển thị nút X / ẩn header buttons (theo yêu cầu)
   if ($('header-buttons')) $('header-buttons').style.display = 'none';
   if ($('order-info')) $('order-info').classList.remove('hidden');
-  if ($('orderTitle')) $('orderTitle').innerText = currentTable.name || '';
+  if ($('orderTitle')) $('orderTitle').innerText = getTableFullName(currentTable.name || '');
   if ($('backBtn')) $('backBtn').classList.remove('hidden');
 
   // render danh mục, menu, giỏ hàng
@@ -739,7 +739,7 @@ function renderHistory(){
     grouped[k].forEach(rec=>{
       const it = document.createElement('div'); it.className='history-item';
       const left = document.createElement('div');
-      left.innerHTML = '<b>'+rec.table+'</b><div class="small">'+rec.time+'</div>';
+      left.innerHTML = '<b>'+getTableFullName(rec.table)+'</b><div class="small">'+rec.time+'</div>';
       const right = document.createElement('div'); right.className='small'; right.innerText = rec.items.length + ' món • ' + fmtV(rec.total) + ' VND';
       it.appendChild(left); it.appendChild(right);
       it.style.cursor = 'pointer';
