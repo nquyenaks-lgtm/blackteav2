@@ -464,34 +464,37 @@ function backToTables() {
 }
 
 function goBack(){
-  // Nếu đang không có currentTable, chỉ về main
   if (!currentTable) {
     hideOrderInfo();
-    backToTables && backToTables();
+    backToTables();
     return;
   }
 
   const idx = TABLES.findIndex(t => t.id === currentTable.id);
 
-  if (idx === -1) {
-    // là bản nháp (chưa lưu) -> chỉ bỏ draft, không lưu vào TABLES
+  // Nếu bàn chưa lưu (bản nháp)
+  if (idx === -1 || currentTable._isDraft) {
     currentTable = null;
-  } else {
-    // là bàn đã lưu
-    const saved = TABLES[idx];
-    // chỉ xóa bàn đã lưu nếu rỗng (không có món) — theo ý bạn
-    if (!saved.cart || saved.cart.length === 0) {
-      TABLES.splice(idx,1);
-      saveAll && saveAll();
-    } else {
-      // nếu có món thì không xóa — chỉ trở về màn chính
-      // (nếu bạn muốn hiện popup xác nhận hủy order thì thêm ở đây)
-    }
+    hideOrderInfo();
+    backToTables();
+    renderTables();
+    return;
   }
 
+  // Đơn đã lưu
+  const saved = TABLES[idx];
+
+  // 👉 Nếu có giỏ cũ (_oldCart) thì khôi phục lại
+  if (currentTable._oldCart) {
+    saved.cart = JSON.parse(JSON.stringify(currentTable._oldCart));
+    delete currentTable._oldCart;
+  }
+
+  // Không hỏi gì hết, không xoá gì hết — chỉ quay lại
+  saveAll();
+  renderTables();
   hideOrderInfo();
-  renderTables && renderTables();
-  backToTables && backToTables();
+  backToTables();
 }
 // categories
 function renderCategories(){
@@ -600,12 +603,15 @@ function saveOrder() {
 // table actions
 function addMore(){ 
   if(!currentTable) return; 
+
+  // 👉 Lưu bản sao giỏ hàng cũ
+  currentTable._oldCart = JSON.parse(JSON.stringify(currentTable.cart));
+
   $('menu-list').style.display='block'; 
   createdFromMain = true; 
   $('primary-actions').style.display='flex'; 
   $('table-actions').style.display='none'; 
 
-  // Ẩn nút Hủy đơn khi bấm Thêm món
   const cancelBtn = $('cancel-order-btn');
   if (cancelBtn) cancelBtn.style.display = 'none';
 
