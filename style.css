@@ -442,13 +442,13 @@ header {
 }
 // Màu chữ menu
 .item-name {
-  color: #4a69ad !important;   /* ép màu đậm */
+  color: #4a69ad !important;   /* màu đậm */
   font-weight: 600;
   font-size: 16px;
 }
 
 .item-price {
-  color: #7d8fd0 !important;   /* ép màu nhạt hơn */
+  color: #7d8fd0 !important;   /* xanh nhạt hơn */
   font-weight: 500;
   font-size: 14px;
 }
