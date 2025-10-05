@@ -409,12 +409,19 @@ function backToTables() {
 }
 
 function goBack() {
-  // ✅ Chỉ ẩn giao diện order và quay về màn chính, không lưu gì cả
+  // ✅ Nếu đang trong bàn đã lưu (không phải bản nháp)
+  if (currentTable && !currentTable._isDraft) {
+    // Tìm lại bàn gốc trong TABLES để khôi phục dữ liệu cũ
+    const idx = TABLES.findIndex(t => t.id === currentTable.id);
+    if (idx >= 0) {
+      // Làm mới currentTable theo dữ liệu gốc (bỏ thay đổi chưa lưu)
+      currentTable.cart = JSON.parse(JSON.stringify(TABLES[idx].cart));
+    }
+  }
 
-  // Ẩn phần thông tin order
+  // Ẩn phần order và quay về màn hình chính
   hideOrderInfo();
 
-  // Hiển thị lại màn hình chính
   $('table-screen').style.display = 'block';
   $('menu-screen').style.display = 'none';
   $('settings-screen').style.display = 'none';
@@ -423,12 +430,12 @@ function goBack() {
   $('history-screen').style.display = 'none';
   $('payment-screen').style.display = 'none';
 
-  // Ẩn luôn order info và hiện lại các nút ở header
+  // Ẩn order info / hiện lại header
   if ($('order-info')) $('order-info').classList.add('hidden');
   if ($('header-buttons')) $('header-buttons').style.display = 'flex';
   if ($('backBtn')) $('backBtn').classList.add('hidden');
 
-  // Xoá tham chiếu bàn hiện tại để tránh auto save
+  // Xoá tham chiếu tạm
   currentTable = null;
 }
 // categories
