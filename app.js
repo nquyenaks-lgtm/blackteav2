@@ -323,7 +323,16 @@ function addGuest() {
   renderTables();
 
   currentTable = tableObj;
-  openTable(currentTable.id); // mở luôn menu order
+  openTable(currentTable.id); 
+  currentTable = tableObj;
+openTable(currentTable.id);
+addMore(); // mở luôn menu order
+
+// ✅ Hiện lại nút "Đặt lại" cho khách mang đi
+setTimeout(() => {
+  const tableActions = $('table-actions');
+  if (tableActions) tableActions.style.display = 'flex';
+}, 200); 
 }
 
 function addGuestVisit(){
