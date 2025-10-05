@@ -532,6 +532,12 @@ function saveOrder() {
     TABLES.push({ ...currentTable, _isDraft: false });
   }
 
+  // ✅ Chỉ tăng số thứ tự khách khi lưu thành công
+  if (currentTable.name && currentTable.name.includes('Khách mang đi')) {
+    GUEST_CNT += 1;
+    localStorage.setItem(KEY_GUEST, String(GUEST_CNT));
+  }
+
   saveAll && saveAll();   // hàm lưu localStorage (giữ nguyên)
   renderTables && renderTables();
 
