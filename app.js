@@ -409,7 +409,6 @@ function backToTables() {
 }
 
 function goBack(){
-  // Nếu đang không có currentTable, chỉ về main
   if (!currentTable) {
     hideOrderInfo();
     backToTables && backToTables();
@@ -418,25 +417,20 @@ function goBack(){
 
   const idx = TABLES.findIndex(t => t.id === currentTable.id);
 
-  if (idx === -1) {
-    // là bản nháp (chưa lưu) -> chỉ bỏ draft, không lưu vào TABLES
-    currentTable = null;
-  } else {
-    // là bàn đã lưu
-    const saved = TABLES[idx];
-    // chỉ xóa bàn đã lưu nếu rỗng (không có món) — theo ý bạn
-    if (!saved.cart || saved.cart.length === 0) {
-      TABLES.splice(idx,1);
-    } else {
-      // nếu có món thì không xóa — chỉ trở về màn chính
-      // (nếu bạn muốn hiện popup xác nhận hủy order thì thêm ở đây)
-    }
+  // ✅ Nếu tìm thấy bàn hiện tại → xoá luôn, không lưu
+  if (idx !== -1) {
+    TABLES.splice(idx, 1);
   }
 
+  // ✅ Xoá cả currentTable trong bộ nhớ tạm
+  currentTable = null;
+
+  // ❌ KHÔNG gọi saveAll — không lưu xuống localStorage
   hideOrderInfo();
   renderTables && renderTables();
   backToTables && backToTables();
 }
+
 // categories
 function renderCategories(){
   const bar = $('category-bar'); bar.innerHTML = '';
