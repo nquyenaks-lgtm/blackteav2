@@ -369,64 +369,53 @@ header {
 #backBtn:hover {
   color: #ff0000;
 }
-/* ===== DANH MỤC MENU (liền mạch, phóng to 10%, không thừa viền hai bên) ===== */
+/* ===== DANH MỤC MENU (liền mạch, cân hai bên, không thừa viền) ===== */
 .category-bar {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  align-items: stretch;
+  justify-content: center;       /* căn giữa đều 2 bên */
+  align-items: center;
   margin: 10px 0;
   padding: 0;
   gap: 0;
-  transform: scale(1.1);              /* phóng to 10% */
+  transform: scale(1.1);         /* phóng to 10% */
   transform-origin: top center;
+  overflow: hidden;              /* cắt viền thừa ở mép ngoài */
 }
 
 /* ===== Nút danh mục ===== */
 .category-btn {
   background: #fff;
-  color: #4a69ad;                     /* màu header */
+  color: #4a69ad;                /* màu giống header */
   border: 1px solid #4a69ad;
-  padding: 4px 10px;
+  padding: 4px 10px;             /* sát chữ */
   font-size: 14px;
   font-weight: 500;
   text-align: center;
   cursor: pointer;
   transition: background 0.15s, color 0.15s, transform 0.1s;
   user-select: none;
-  border-radius: 0;
+  border-radius: 0;              /* bỏ bo tròn */
   line-height: 1.3;
   margin: 0;
 }
 
-/* Khi rê chuột */
+/* Hover */
 .category-btn:hover {
   background: #eaf0ff;
 }
 
-/* Khi nhấn giữ */
-.category-btn:active {
-  transform: translateY(1px);
-}
-
-/* Khi đang chọn */
+/* Đang chọn */
 .category-btn.active {
   background: #4a69ad;
   color: #fff;
   border-color: #4a69ad;
 }
 
-/* Liền viền giữa các nút */
+/* Liền mạch giữa các ô */
 .category-bar .category-btn {
-  margin-right: -1px;   /* liền nhau ngang */
-  margin-bottom: -1px;  /* liền nhau dọc */
-}
-
-/* ✅ Ẩn viền thừa ở cuối hàng */
-.category-bar {
-  overflow: hidden;     /* cắt phần viền thừa hai bên */
-  border: 1px solid #4a69ad;  /* giữ khung tổng thể mảnh */
-  border-bottom: none;  /* không vạch kép ở cuối */
+  margin-right: -1px;            /* liền nhau ngang */
+  margin-bottom: -1px;           /* liền nhau dọc */
 }
 
 /* Responsive */
