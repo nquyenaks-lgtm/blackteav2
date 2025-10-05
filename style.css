@@ -380,58 +380,57 @@ header {
   padding: 0;
 }
 
-/* ===== DANH MỤC MENU (liền mạch, không bo, tự căn giữa hàng cuối) ===== */
+/* ===== DANH MỤC MENU (liền mạch, căn giữa, có hiệu ứng nhấn) ===== */
 .category-bar {
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start;
+  justify-content: center; /* căn giữa toàn bộ hàng */
   align-items: stretch;
-  border: 1px solid #4a69ad;
-  overflow: hidden;
   margin: 8px 0;
+  padding: 0;
   gap: 0;
+  border-bottom: 1px solid #4a69ad; /* viền tổng dưới cùng */
 }
 
-/* Nút danh mục */
+/* ===== Nút danh mục ===== */
 .category-btn {
   background: #fff;
-  color: #4a69ad;
+  color: #4a69ad;              /* màu xanh header */
   border: 1px solid #4a69ad;
-  border-width: 0 1px 1px 0;
   padding: 4px 10px;
   font-size: 14px;
   font-weight: 500;
   text-align: center;
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
+  transition: background 0.15s, color 0.15s, transform 0.1s, box-shadow 0.1s;
   user-select: none;
-  min-width: 80px;
+  border-radius: 0;
+  line-height: 1.3;
   margin: 0;
-  border-radius: 0 !important;
-  flex: 0 0 auto; /* không co giãn bất thường */
 }
 
-/* Hover */
+/* Khi rê chuột */
 .category-btn:hover {
   background: #eaf0ff;
 }
 
-/* Khi được chọn */
+/* Khi nhấn xuống */
+.category-btn:active {
+  transform: translateY(1px);
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.15);
+}
+
+/* Khi đang chọn */
 .category-btn.active {
   background: #4a69ad;
   color: #fff;
   border-color: #4a69ad;
 }
 
-/* Nhấn xuống */
-.category-btn:active {
-  background: #3d5fa3;
-}
-
-/* ===== Căn giữa hàng cuối (nếu chưa đủ chiều rộng) ===== */
-.category-bar::after {
-  content: "";
-  flex: auto;
+/* Liền viền ngang và dọc */
+.category-btn {
+  margin-right: -1px;
+  margin-bottom: -1px;
 }
 
 /* Responsive */
@@ -439,6 +438,5 @@ header {
   .category-btn {
     font-size: 13px;
     padding: 3px 8px;
-    min-width: 60px;
   }
 }
