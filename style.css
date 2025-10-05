@@ -369,59 +369,55 @@ header {
 #backBtn:hover {
   color: #ff0000;
 }
-/* ===== Compact category layout (no rounded corners, tightly packed) ===== */
+/* ===== DANH MỤC MENU NHỎ GỌN & LIỀN MẠCH ===== */
 .category-bar {
   display: flex;
-  flex-wrap: wrap;            /* cho phép xuống dòng */
+  flex-wrap: wrap;
   justify-content: flex-start;
   align-items: center;
-  align-content: flex-start;  /* khi container cao hơn, các hàng sẽ gom lên trên */
-  gap: 6px 6px;               /* gap: row-gap column-gap (chỉnh nếu cần) */
-  margin: 6px 0;
+  gap: 0 !important;             /* không khoảng cách giữa các nút */
+  margin: 0;
   padding: 0;
 }
 
-/* nút nhỏ gọn, không bo góc, cùng chiều cao để hàng luôn đều */
+/* Nút danh mục */
 .category-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 6px 10px;          /* chỉnh nhỏ/gọn */
-  height: 36px;               /* cố định chiều cao để các hàng đều nhau */
-  line-height: 1;
-  font-size: 13px;
-  white-space: nowrap;        /* không xuống dòng trong 1 nút */
-  border-radius: 0;           /* không bo tròn */
-  border: 1.2px solid #4a69ad;/* màu viền giống header */
-  background: #fff;
-  color: #4a69ad;
-  box-shadow: none;
-  margin: 0;                  /* quan trọng: xóa margin riêng từng nút */
-  box-sizing: border-box;
-  cursor: pointer;
-  transition: background .12s, color .12s, transform .08s;
-  flex: 0 1 auto;             /* cho phép co/giãn nhẹ để lấp hàng */
-}
-
-/* khi chọn (active) — nền xanh header, chữ trắng */
-.category-btn.active {
-  background: #4a69ad;
+  background: #4a69ad;           /* màu giống header */
   color: #fff;
-  border-color: #4a69ad;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  border: 1px solid #4a69ad;
+  padding: 2px 6px !important;   /* ô gọn, sát chữ */
+  margin: 0 !important;
+  border-radius: 0 !important;   /* bỏ bo tròn cho liền mạch */
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  user-select: none;
 }
 
-/* hover effect nhẹ */
-.category-btn:hover { background: rgba(74,105,173,0.08); }
+/* Nút khi hover */
+.category-btn:hover {
+  background: #5d8be8;           /* sáng hơn nhẹ khi hover */
+  color: #fff;
+}
 
-/* nếu cần các hàng hoàn toàn liền nhau (bỏ row-gap) : */
-.category-bar.no-row-gap { row-gap: 0; gap: 6px 6px; }
+/* Nút đang được chọn (active) */
+.category-btn.active {
+  background: #1e40af;           /* xanh đậm hơn khi được chọn */
+  color: #fff;
+  border-color: #1e40af;
+}
 
-/* responsive: điện thoại bé hơn — giảm padding/height */
-@media (max-width:480px) {
+/* Tạo cảm giác các nút liền khối */
+.category-bar .category-btn {
+  margin-right: -1px;            /* dính viền ngang */
+  margin-bottom: -1px;           /* dính viền dọc */
+}
+
+/* Khi màn hình nhỏ, các nút tự xuống dòng */
+@media (max-width: 768px) {
   .category-btn {
-    padding: 5px 8px;
-    height: 34px;
-    font-size: 12.5px;
+    font-size: 13px;
+    padding: 2px 4px;
   }
 }
