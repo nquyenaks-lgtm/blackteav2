@@ -369,36 +369,45 @@ header {
 #backBtn:hover {
   color: #ff0000;
 }
-/* ========== CATEGORY MENU (Compact Option 2 Style) ========== */
+/* ========== MENU CATEGORY - COMPACT & MATCH HEADER COLOR ========== */
 .category-list {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
-  gap: 0; /* Không có khoảng cách giữa các nút */
+  gap: 0;
+  row-gap: 0;
+  margin: 0;
+  padding: 0;
 }
 
 .category-btn {
-  background: #fff;
-  color: #2c56d4; /* Màu header */
+  background: #ffffff;
+  color: #2c56d4; /* màu như header */
   border: 1px solid #2c56d4;
   border-radius: 4px;
   font-size: 14px;
   font-weight: 500;
-  padding: 3px 8px; /* Gọn, sát chữ */
-  margin: 0; /* Không có khoảng trống */
+  padding: 4px 8px;
+  margin: 0;
   height: auto;
-  line-height: 1.2;
-  white-space: nowrap; /* Giữ chữ trên 1 dòng */
+  line-height: 1.1;
+  white-space: nowrap;
   transition: all 0.15s ease-in-out;
 }
 
+/* Khi nút được chọn */
 .category-btn.active {
-  background: #2c56d4;
+  background: #2c56d4; /* màu nền như header */
   color: #fff;
   border-color: #2c56d4;
 }
 
-/* Khi xuống dòng, sát hàng trên */
-.category-list button {
-  margin-bottom: 0;
+/* Làm sát hàng trên dưới */
+.category-list .category-btn {
+  margin-bottom: -1px; /* ép viền dính nhau */
+}
+
+/* Tăng hiệu ứng bấm */
+.category-btn:active {
+  transform: scale(0.97);
 }
