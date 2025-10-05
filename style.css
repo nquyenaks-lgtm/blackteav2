@@ -369,52 +369,54 @@ header {
 #backBtn:hover {
   color: #ff0000;
 }
-/* ==== TAB MENU NHỎ GỌN LIỀN HÀNG (Option 2 style) ==== */
+/* ==== MENU DANH MỤC (option 2 compact & liền hàng) ==== */
 .category-container {
   display: flex;
-  flex-wrap: wrap;          /* Cho phép xuống dòng khi hết chỗ */
+  flex-wrap: wrap;
   justify-content: center;
   align-items: stretch;
-  gap: 0;                   /* Không có khoảng hở giữa các nút */
-  margin: 0;
-  padding: 0;
+  gap: 0 !important;            /* Không có khoảng cách giữa nút */
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 .category-btn {
-  flex: 1 1 auto;
-  border: 1px solid #4a69ad;     /* Viền xanh cùng màu header */
+  border: 1px solid #4a69ad;   /* viền xanh cùng màu header */
   color: #4a69ad;
   background: #fff;
-  padding: 4px 10px;             /* Giảm chiều cao */
+  padding: 4px 12px;           /* nút thấp hơn */
   font-size: 13px;
   font-weight: 500;
   border-radius: 0;
   cursor: pointer;
   transition: all 0.15s ease-in-out;
-  margin: 0;
+  margin: 0 !important;
   line-height: 1.2;
-  border-right: none;            /* Không viền giữa các nút */
-  border-bottom: none;           /* Không viền giữa các hàng */
+  flex: 1 1 auto;
+  min-width: 80px;              /* độ rộng tối thiểu cho mobile */
 }
 
-/* Thêm viền cho nút cuối cùng mỗi hàng */
-.category-btn:nth-child(3n) {
-  border-right: 1px solid #4a69ad;
+/* Bỏ khoảng hở giữa hàng trên và hàng dưới */
+.category-container > * {
+  margin: 0 !important;
+  border-collapse: collapse;
 }
 
-/* Thêm viền dưới cho hàng cuối */
-.category-container::after {
-  content: "";
-  display: block;
-  width: 100%;
-  border-bottom: 1px solid #4a69ad;
-}
-
+/* Nút đang chọn */
 .category-btn.active {
   background: #4a69ad;
   color: #fff;
 }
 
+/* Hiệu ứng hover */
 .category-btn:hover {
   background: #eaf0ff;
+}
+
+/* Gộp hàng liền nhau — bỏ khoảng cách giữa các dòng */
+.category-container {
+  line-height: 0;
+}
+.category-container button {
+  line-height: normal;
 }
