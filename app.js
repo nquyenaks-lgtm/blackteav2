@@ -323,10 +323,10 @@ function addGuest() {
   renderTables();
 
   currentTable = TABLES[TABLES.length - 1];
-  openTable(currentTable.id);
+openTable(currentTable.id);
 
-  // 👉 Mở luôn menu chọn món khi vừa tạo khách mang đi
-  if ($('menu-screen')) showMenuScreen();
+// 👉 Mở luôn menu chọn món (giống như bấm "Thêm món")
+addMore();
 }
 
 function addGuestVisit(){
