@@ -324,6 +324,9 @@ function addGuest() {
 
   currentTable = TABLES[TABLES.length - 1];
   openTable(currentTable.id);
+
+  // 👉 Mở luôn menu chọn món khi vừa tạo khách mang đi
+  if ($('menu-screen')) showMenuScreen();
 }
 
 function addGuestVisit(){
