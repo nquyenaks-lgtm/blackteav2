@@ -6,8 +6,6 @@ const KEY_CATS = 'BT8_CATS';
 const KEY_TABLES = 'BT8_TABLES';
 const KEY_HISTORY = 'BT8_HISTORY';
 const KEY_GUEST = 'BT8_GUEST_CNT';
-localStorage.removeItem(KEY_MENU);
-localStorage.removeItem(KEY_CATS);
 const FIXED_TABLES = [
   "L1","L2","L3","L4",
   "NT1","NT2",
@@ -303,7 +301,7 @@ function addGuestVisit(){
   GUEST_CNT += 1;
   const name = 'Khách ghé quán ' + GUEST_CNT;
   const id = Date.now();
-  TABLES.push({ id, name, cart: [], createdAt: new Date().toISOString() }); // thêm createdAt
+  TABLES.push({ id, name, cart: [], createdAt: Date.now() }); // thêm createdAt
   saveAll();
   createdFromMain = true;
   openTable(id);
@@ -633,52 +631,28 @@ function showSimpleModal(message, okText='OK', onOk){
 
 // ===== THANH TOÁN / XUẤT HÓA ĐƠN =====
 function confirmPayment() {
-  if (!currentTable || !currentTable.cart || currentTable.cart.length === 0) {
-    return; // không có món thì thôi
-  }
+  if (!currentTable || !currentTable.cart || currentTable.cart.length === 0) return;
 
-  // ===== Tính subtotal =====
-  const subtotal = currentTable.cart.reduce((sum, it) => {
-    return sum + (Number(it.price) || 0) * (Number(it.qty) || 0);
-  }, 0);
+  const { subtotal, discount, final } = updateFinalTotal(); // dùng chung parser
 
-  // ===== Lấy chiết khấu từ input =====
-  let discount = 0;
-  const el = document.getElementById("discount");
-  if (el) {
-    const val = parseInt(el.value, 10) || 0;
-    if (val >= 0 && val <= 100) {
-      discount = Math.round(subtotal * val / 100); // giảm theo %
-    } else if (val >= 1000) {
-      discount = val; // giảm theo số tiền
-    }
-  }
-
-  const finalTotal = subtotal - discount;
-
-  // ✅ Lưu vào lịch sử
   HISTORY.push({
     id: Date.now(),
     table: currentTable.name,
-    items: [...currentTable.cart],
+    items: JSON.parse(JSON.stringify(currentTable.cart)),
     subtotal,
-    discount,
-    total: finalTotal,
+    discount: Math.round(discount),
+    total: final,
     time: new Date().toLocaleString(),
-    iso: isoDateKey(new Date())   // cần để renderHistory nhóm theo ngày
+    iso: isoDateKey(new Date())
   });
+
   localStorage.setItem(KEY_HISTORY, JSON.stringify(HISTORY));
 
-  // ✅ Reset bàn để tránh treo
   currentTable.cart = [];
   saveAll();
   renderTables();
-
-  // ✅ Ẩn cụm BlackTea | Bàn L1 ❌
   hideOrderInfo();
   backToTables();
-
-  // 👉 Thông báo popup
   showPopup("Xuất đơn hàng thành công");
 }
 function hideOrderInfo(){
@@ -958,7 +932,7 @@ function openTableModal() {
 }
 
     const id = Date.now();
-    TABLES.push({ id, name, cart: [], createdAt: new Date().toISOString() });
+    TABLES.push({ id, name, cart: [], createdAt: Date.now() });
     saveAll();
     closeModal();
     createdFromMain = true;
