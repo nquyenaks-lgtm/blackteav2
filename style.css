@@ -369,45 +369,70 @@ header {
 #backBtn:hover {
   color: #ff0000;
 }
-/* ========== MENU CATEGORY - COMPACT & MATCH HEADER COLOR ========== */
-.category-list {
+/* =============================
+   COMPACT CATEGORY MENU STYLE
+   ============================= */
+
+.category-bar {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
-  gap: 0;
-  row-gap: 0;
-  margin: 0;
-  padding: 0;
+  align-items: center;
+  gap: 4px; /* khoảng cách giữa các nút */
+  margin: 6px 0;
 }
 
+/* Nút thường */
 .category-btn {
-  background: #ffffff;
-  color: #2c56d4; /* màu như header */
-  border: 1px solid #2c56d4;
-  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 10px;              /* nhỏ gọn, sát chữ */
   font-size: 14px;
-  font-weight: 500;
-  padding: 4px 8px;
-  margin: 0;
-  height: auto;
-  line-height: 1.1;
-  white-space: nowrap;
-  transition: all 0.15s ease-in-out;
+  line-height: 1.2;
+  border-radius: 8px;
+  border: 1.5px solid #4a69ad;   /* màu giống header */
+  background: #fff;
+  color: #4a69ad;
+  cursor: pointer;
+  white-space: nowrap;            /* không cho chữ xuống dòng */
+  box-shadow: none;
+  transition: all 0.15s ease;
 }
 
-/* Khi nút được chọn */
+/* Khi hover */
+.category-btn:hover {
+  background: rgba(74, 105, 173, 0.1);
+}
+
+/* Khi đang được chọn */
 .category-btn.active {
-  background: #2c56d4; /* màu nền như header */
+  background: #4a69ad;
   color: #fff;
-  border-color: #2c56d4;
+  border-color: #4a69ad;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
 }
 
-/* Làm sát hàng trên dưới */
-.category-list .category-btn {
-  margin-bottom: -1px; /* ép viền dính nhau */
+/* Khi xuống dòng thì các hàng liền nhau */
+.category-bar > .category-btn {
+  margin: 0;
 }
 
-/* Tăng hiệu ứng bấm */
-.category-btn:active {
-  transform: scale(0.97);
+/* Giảm khoảng trống giữa các hàng (nếu có wrap) */
+.category-bar {
+  row-gap: 2px;
+}
+
+/* Responsive nhỏ hơn thì nút gọn hơn chút */
+@media (max-width: 480px) {
+  .category-btn {
+    font-size: 13px;
+    padding: 4px 8px;
+    border-radius: 6px;
+  }
+}
+
+/* Giữ đồng bộ với màu header */
+.header, .guest-btn.active, .category-btn.active {
+  background-color: #4a69ad;
 }
