@@ -472,9 +472,8 @@ function goBack(){
 
   const idx = TABLES.findIndex(t => t.id === currentTable.id);
 
-  // 👉 Nếu là bàn nháp (chưa lưu) hoặc bàn mới mà chưa có món thì bỏ luôn
+  // 🧠 Nếu bàn mới hoặc chưa lưu -> xoá luôn
   if (idx === -1 || currentTable._isDraft || !currentTable.cart || currentTable.cart.length === 0) {
-    // Xóa nếu có trong danh sách TABLES
     if (idx >= 0) TABLES.splice(idx, 1);
     currentTable = null;
     saveAll();
@@ -484,16 +483,15 @@ function goBack(){
     return;
   }
 
-  // 👉 Đơn đã lưu
   const saved = TABLES[idx];
 
-  // Nếu có bản giỏ hàng cũ (_oldCart) → khôi phục lại
+  // 🧠 Nếu đang ở chế độ thêm món (có bản sao cũ) -> khôi phục lại giỏ cũ
   if (currentTable._oldCart) {
     saved.cart = JSON.parse(JSON.stringify(currentTable._oldCart));
     delete currentTable._oldCart;
   }
 
-  // Không thông báo — chỉ quay về
+  // ✅ Không hỏi gì hết, chỉ quay về và lưu trạng thái
   saveAll();
   renderTables();
   hideOrderInfo();
