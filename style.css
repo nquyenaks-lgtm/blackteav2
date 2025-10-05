@@ -440,14 +440,15 @@ header {
     padding: 3px 8px;
   }
 }
+// Màu chữ menu
 .item-name {
-  color: #4a69ad;   /* xanh đậm như header */
+  color: #4a69ad !important;   /* ép màu đậm */
   font-weight: 600;
-  font-size: 16px;  /*  kích thước */
+  font-size: 16px;
 }
 
 .item-price {
-  color: #7d8fd0;   /*  xanh nhạt hơn cho giá tiền */
+  color: #7d8fd0 !important;   /* ép màu nhạt hơn */
   font-weight: 500;
-  font-size: 14px;  /* kích thước */
+  font-size: 14px;
 }
