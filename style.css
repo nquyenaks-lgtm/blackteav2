@@ -369,9 +369,9 @@ header {
 #backBtn:hover {
   color: #ff0000;
 }
-/* ===== Categories (Cà phê, Trà sữa, ...) ===== */
-.category {
-  border: 2px solid #4a69ad;   /* màu head */
+/* Nút mẹnu */
+.category-btn {
+  border: 2px solid #4a69ad;   /* màu giống header */
   color: #4a69ad;
   padding: 6px 12px;
   border-radius: 6px;
@@ -384,11 +384,12 @@ header {
   background: #fff; /* nền trắng mặc định */
 }
 
-.category:hover {
-  background: #f0f4ff; /* hover xanh nhạt */
+.category-btn:hover {
+  background: #e8efff; /* nhạt khi hover */
 }
 
-.category.active {
-  background: #4a69ad; /* khi chọn */
-  color: #fff;         /* chữ trắng */
+.category-btn.active {
+  background: #4a69ad; /* màu head */
+  color: #fff;
+  border-color: #4a69ad;
 }
