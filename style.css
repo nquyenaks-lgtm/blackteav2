@@ -452,3 +452,20 @@ header {
   font-weight: 500;
   font-size: 14px;
 }
+/* 💙 Nút khách mang đi & khách ghé quán */
+#guestTakeAway,
+#guestAtShop {
+  background-color: #4a69ad !important;  /* 💙 màu xanh đậm chính */
+  color: #fff !important;                /* chữ trắng nổi bật */
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+#guestTakeAway:hover,
+#guestAtShop:hover {
+  background-color: #3d5b99 !important;  /* 💙 đậm hơn chút khi hover */
+}
