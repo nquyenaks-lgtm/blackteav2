@@ -288,19 +288,15 @@ function makeTableCard(t){
 }
 // add guest
 function addGuest() {
-  // Lấy ngày hiện tại
   const today = new Date().toISOString().split('T')[0];
-
-  // Lấy dữ liệu số cuối cùng đã dùng
   let savedData = localStorage.getItem('LAST_TAKEAWAY_INFO');
   let lastInfo = savedData ? JSON.parse(savedData) : { date: today, num: 0 };
 
-  // Nếu qua ngày mới => reset về 0
   if (lastInfo.date !== today) {
     lastInfo = { date: today, num: 0 };
   }
 
-  // Xóa các bàn trống (chưa có món)
+  // Xóa bàn trống
   const emptyGuests = TABLES.filter(
     t => t.name.startsWith('Khách mang đi') && (!t.cart || t.cart.length === 0)
   );
@@ -309,52 +305,26 @@ function addGuest() {
     saveAll();
   }
 
-  // Lấy số cao nhất hiện có
+  // Tìm số tiếp theo
   const takeawayTables = TABLES.filter(t => t.name.startsWith('Khách mang đi'));
   const maxNum = takeawayTables.reduce((max, t) => {
     const m = t.name.match(/\d+/);
     return m ? Math.max(max, parseInt(m[0])) : max;
   }, 0);
 
-  // Tính số kế tiếp (cao nhất giữa bàn còn lại và số lưu)
   const nextNum = Math.max(maxNum, lastInfo.num) + 1;
 
-  // Tạo bàn mới
   const id = Date.now();
   const name = 'Khách mang đi ' + nextNum;
 
-  const tableObj = {
-    id,
-    name,
-    cart: [],
-    createdAt: Date.now(),
-  };
-
+  const tableObj = { id, name, cart: [], createdAt: Date.now() };
   TABLES.push(tableObj);
   saveAll();
   renderTables();
 
   currentTable = tableObj;
   openTable(currentTable.id);
-  addMore(); // mở menu order luôn
-
-  // 👇 Lắng nghe sự kiện thêm món đầu tiên
-  const observer = new MutationObserver(() => {
-    // nếu bàn có món => ghi lại số này, rồi ngắt theo dõi
-    if (currentTable.cart && currentTable.cart.length > 0) {
-      localStorage.setItem(
-        'LAST_TAKEAWAY_INFO',
-        JSON.stringify({ date: today, num: nextNum })
-      );
-      observer.disconnect();
-    }
-  });
-
-  // Theo dõi thay đổi trong DOM order-list (khi món được thêm)
-  const orderList = document.getElementById('order-list');
-  if (orderList) {
-    observer.observe(orderList, { childList: true, subtree: true });
-  }
+  addMore(); // mở luôn menu order
 }
 
 function addGuestVisit(){
