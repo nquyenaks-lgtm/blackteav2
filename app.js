@@ -288,13 +288,14 @@ function makeTableCard(t){
 
   return card;
 }
-// Them đơn hàng
-function addGuest(){
-  const tempGuestNo = GUEST_CNT + 1; // dự kiến số thứ tự tiếp theo
-  const name = 'Khách mang đi ' + tempGuestNo;
+// Them đơn hàng mang đi
+function addGuest() {
+  // Lấy số thứ tự hiện tại, nhưng chưa tăng
+  const nextGuest = GUEST_CNT + 1;
+  const name = 'Khách mang đi ' + nextGuest;
   const id = Date.now();
 
-  // tạo bản nháp, chưa tăng GUEST_CNT, chưa lưu
+  // ✅ Tạo bàn tạm (draft), không lưu TABLES, không saveAll
   currentTable = {
     id,
     name,
@@ -303,6 +304,7 @@ function addGuest(){
     _isDraft: true
   };
 
+  // Mở giao diện order cho bàn tạm này
   createdFromMain = true;
   openTable(id);
 }
