@@ -369,36 +369,52 @@ header {
 #backBtn:hover {
   color: #ff0000;
 }
-/* ==== TAB MENU (kiểu Option 2 nhỏ gọn, liền nhau) ==== */
+/* ==== TAB MENU NHỎ GỌN LIỀN HÀNG (Option 2 style) ==== */
 .category-container {
   display: flex;
-  flex-wrap: wrap;      /* Cho phép xuống dòng khi hết chỗ */
-  gap: 0;               /* Xóa hoàn toàn khoảng cách giữa các nút */
+  flex-wrap: wrap;          /* Cho phép xuống dòng khi hết chỗ */
   justify-content: center;
+  align-items: stretch;
+  gap: 0;                   /* Không có khoảng hở giữa các nút */
+  margin: 0;
+  padding: 0;
 }
 
 .category-btn {
-  border: 1px solid #4a69ad;   /* Viền xanh cùng màu header */
+  flex: 1 1 auto;
+  border: 1px solid #4a69ad;     /* Viền xanh cùng màu header */
   color: #4a69ad;
   background: #fff;
-  padding: 4px 12px;           /* Nút thấp và gọn */
-  font-size: 13px;             /* Chữ nhỏ gọn */
+  padding: 4px 10px;             /* Giảm chiều cao */
+  font-size: 13px;
   font-weight: 500;
-  border-radius: 0;            /* Liền nhau phẳng */
+  border-radius: 0;
   cursor: pointer;
   transition: all 0.15s ease-in-out;
-  margin: 0;                   /* Không có khoảng trắng giữa các nút */
+  margin: 0;
   line-height: 1.2;
-  border-right: none;          /* Xóa viền giữa các nút ngang */
+  border-right: none;            /* Không viền giữa các nút */
+  border-bottom: none;           /* Không viền giữa các hàng */
 }
 
-.category-btn:last-child {
-  border-right: 1px solid #4a69ad; /* Viền cho nút cuối cùng */
+/* Thêm viền cho nút cuối cùng mỗi hàng */
+.category-btn:nth-child(3n) {
+  border-right: 1px solid #4a69ad;
 }
 
-.category-btn:hover {
-  background: #eaf0ff;         /* Nền nhẹ khi hover */
+/* Thêm viền dưới cho hàng cuối */
+.category-container::after {
+  content: "";
+  display: block;
+  width: 100%;
+  border-bottom: 1px solid #4a69ad;
 }
 
 .category-btn.active {
-  background: #4a69ad;         /* Khi
+  background: #4a69ad;
+  color: #fff;
+}
+
+.category-btn:hover {
+  background: #eaf0ff;
+}
