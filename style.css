@@ -369,7 +369,7 @@ header {
 #backBtn:hover {
   color: #ff0000;
 }
-/* ===== DANH MỤC MENU (full chiều ngang, bỏ viền trùng cả ngang + dọc) ===== */
+/* ===== DANH MỤC MENU (sát, dàn đều, không thừa viền dưới) ===== */
 .category-bar {
   display: flex;
   flex-wrap: wrap;
@@ -382,10 +382,7 @@ header {
   transform-origin: top center;
   width: 100%;
   box-sizing: border-box;
-  border-top: 1px solid #4a69ad;
-  border-left: 1px solid #4a69ad;
-  border-right: 1px solid #4a69ad;
-  border-bottom: 1px solid #4a69ad; /* viền ngoài cùng */
+  border: 1px solid #4a69ad; /* chỉ 1 viền bao ngoài */
 }
 
 /* ===== Nút danh mục ===== */
@@ -393,8 +390,9 @@ header {
   background: #fff;
   color: #4a69ad;
   border: 1px solid #4a69ad;
-  border-top: none; /* bỏ viền trên để liền hàng dọc */
-  border-left: none; /* bỏ viền trái để liền hàng ngang */
+  border-top: none;     /* liền hàng dọc */
+  border-left: none;    /* liền hàng ngang */
+  border-bottom: none;  /* bỏ viền dưới để không đúp */
   padding: 4px 10px;
   font-size: 14px;
   font-weight: 500;
