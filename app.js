@@ -472,25 +472,28 @@ function goBack(){
 
   const idx = TABLES.findIndex(t => t.id === currentTable.id);
 
-  // Nếu bàn chưa lưu (bản nháp)
-  if (idx === -1 || currentTable._isDraft) {
+  // 👉 Nếu là bàn nháp (chưa lưu) hoặc bàn mới mà chưa có món thì bỏ luôn
+  if (idx === -1 || currentTable._isDraft || !currentTable.cart || currentTable.cart.length === 0) {
+    // Xóa nếu có trong danh sách TABLES
+    if (idx >= 0) TABLES.splice(idx, 1);
     currentTable = null;
+    saveAll();
     hideOrderInfo();
-    backToTables();
     renderTables();
+    backToTables();
     return;
   }
 
-  // Đơn đã lưu
+  // 👉 Đơn đã lưu
   const saved = TABLES[idx];
 
-  // 👉 Nếu có giỏ cũ (_oldCart) thì khôi phục lại
+  // Nếu có bản giỏ hàng cũ (_oldCart) → khôi phục lại
   if (currentTable._oldCart) {
     saved.cart = JSON.parse(JSON.stringify(currentTable._oldCart));
     delete currentTable._oldCart;
   }
 
-  // Không hỏi gì hết, không xoá gì hết — chỉ quay lại
+  // Không thông báo — chỉ quay về
   saveAll();
   renderTables();
   hideOrderInfo();
