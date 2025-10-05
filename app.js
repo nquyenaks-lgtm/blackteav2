@@ -288,26 +288,17 @@ function makeTableCard(t){
 
   return card;
 }
-// Them đơn hàng mang đi
-function addGuest() {
-  // Lấy số thứ tự hiện tại, nhưng chưa tăng
-  const nextGuest = GUEST_CNT + 1;
-  const name = 'Khách mang đi ' + nextGuest;
+// add guest
+function addGuest(){
+  GUEST_CNT += 1;
+  const name = 'Khách mang đi ' + GUEST_CNT;
   const id = Date.now();
-
-  // ✅ Tạo bàn tạm (draft), không lưu TABLES, không saveAll
-  currentTable = {
-    id,
-    name,
-    cart: [],
-    createdAt: Date.now(),
-    _isDraft: true
-  };
-
-  // Mở giao diện order cho bàn tạm này
+  TABLES.push({ id, name, cart: [], createdAt: Date.now() });
+  saveAll();
   createdFromMain = true;
   openTable(id);
 }
+
 function addGuestVisit(){
   GUEST_CNT += 1;
   const name = 'Khách ghé quán ' + GUEST_CNT;
@@ -417,35 +408,35 @@ function backToTables() {
   $('order-info').classList.add('hidden');
 }
 
-function goBack() {
-  // ✅ Nếu đang trong bàn đã lưu (không phải bản nháp)
-  if (currentTable && !currentTable._isDraft) {
-    // Tìm lại bàn gốc trong TABLES để khôi phục dữ liệu cũ
-    const idx = TABLES.findIndex(t => t.id === currentTable.id);
-    if (idx >= 0) {
-      // Làm mới currentTable theo dữ liệu gốc (bỏ thay đổi chưa lưu)
-      currentTable.cart = JSON.parse(JSON.stringify(TABLES[idx].cart));
+function goBack(){
+  // Nếu đang không có currentTable, chỉ về main
+  if (!currentTable) {
+    hideOrderInfo();
+    backToTables && backToTables();
+    return;
+  }
+
+  const idx = TABLES.findIndex(t => t.id === currentTable.id);
+
+  if (idx === -1) {
+    // là bản nháp (chưa lưu) -> chỉ bỏ draft, không lưu vào TABLES
+    currentTable = null;
+  } else {
+    // là bàn đã lưu
+    const saved = TABLES[idx];
+    // chỉ xóa bàn đã lưu nếu rỗng (không có món) — theo ý bạn
+    if (!saved.cart || saved.cart.length === 0) {
+      TABLES.splice(idx,1);
+      saveAll && saveAll();
+    } else {
+      // nếu có món thì không xóa — chỉ trở về màn chính
+      // (nếu bạn muốn hiện popup xác nhận hủy order thì thêm ở đây)
     }
   }
 
-  // Ẩn phần order và quay về màn hình chính
   hideOrderInfo();
-
-  $('table-screen').style.display = 'block';
-  $('menu-screen').style.display = 'none';
-  $('settings-screen').style.display = 'none';
-  $('menu-settings-screen').style.display = 'none';
-  $('printer-settings-screen').style.display = 'none';
-  $('history-screen').style.display = 'none';
-  $('payment-screen').style.display = 'none';
-
-  // Ẩn order info / hiện lại header
-  if ($('order-info')) $('order-info').classList.add('hidden');
-  if ($('header-buttons')) $('header-buttons').style.display = 'flex';
-  if ($('backBtn')) $('backBtn').classList.add('hidden');
-
-  // Xoá tham chiếu tạm
-  currentTable = null;
+  renderTables && renderTables();
+  backToTables && backToTables();
 }
 // categories
 function renderCategories(){
@@ -539,12 +530,6 @@ function saveOrder() {
   } else {
     // thêm bàn mới (từ draft -> lưu)
     TABLES.push({ ...currentTable, _isDraft: false });
-  }
-
-  // ✅ Chỉ tăng số thứ tự khách khi lưu thành công
-  if (currentTable.name && currentTable.name.includes('Khách mang đi')) {
-    GUEST_CNT += 1;
-    localStorage.setItem(KEY_GUEST, String(GUEST_CNT));
   }
 
   saveAll && saveAll();   // hàm lưu localStorage (giữ nguyên)
