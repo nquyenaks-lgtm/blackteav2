@@ -288,17 +288,24 @@ function makeTableCard(t){
 
   return card;
 }
-// add guest
+// Them đơn hàng
 function addGuest(){
-  GUEST_CNT += 1;
-  const name = 'Khách mang đi ' + GUEST_CNT;
+  const tempGuestNo = GUEST_CNT + 1; // dự kiến số thứ tự tiếp theo
+  const name = 'Khách mang đi ' + tempGuestNo;
   const id = Date.now();
-  TABLES.push({ id, name, cart: [], createdAt: Date.now() });
-  saveAll();
+
+  // tạo bản nháp, chưa tăng GUEST_CNT, chưa lưu
+  currentTable = {
+    id,
+    name,
+    cart: [],
+    createdAt: Date.now(),
+    _isDraft: true
+  };
+
   createdFromMain = true;
   openTable(id);
 }
-
 function addGuestVisit(){
   GUEST_CNT += 1;
   const name = 'Khách ghé quán ' + GUEST_CNT;
