@@ -427,7 +427,6 @@ function goBack(){
     // chỉ xóa bàn đã lưu nếu rỗng (không có món) — theo ý bạn
     if (!saved.cart || saved.cart.length === 0) {
       TABLES.splice(idx,1);
-      saveAll && saveAll();
     } else {
       // nếu có món thì không xóa — chỉ trở về màn chính
       // (nếu bạn muốn hiện popup xác nhận hủy order thì thêm ở đây)
