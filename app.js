@@ -291,27 +291,26 @@ function addGuest() {
   // Lấy tất cả bàn "Khách mang đi"
   let takeawayTables = TABLES.filter(t => t.name.startsWith('Khách mang đi'));
 
-  // Lọc ra bàn nào thực sự đang dùng (có món)
-  const activeTakeaways = takeawayTables.filter(t => t.cart && t.cart.length > 0);
-
-  // Xóa các bàn trống (chưa có order)
+  // Xóa bàn trống (chưa có món)
   const emptyTakeaways = takeawayTables.filter(t => !t.cart || t.cart.length === 0);
   if (emptyTakeaways.length > 0) {
     TABLES = TABLES.filter(t => !emptyTakeaways.includes(t));
     saveAll();
   }
 
-  // Nếu đã có bàn mang đi đang dùng => mở bàn đó luôn
-  if (activeTakeaways.length > 0) {
-    const first = activeTakeaways.sort((a, b) => a.name.localeCompare(b.name))[0];
-    currentTable = first;
-    openTable(currentTable.id);
-    return;
-  }
+  // Cập nhật lại danh sách sau khi xóa bàn trống
+  takeawayTables = TABLES.filter(t => t.name.startsWith('Khách mang đi'));
 
-  // Nếu chưa có bàn nào => tạo mới bàn "Khách mang đi 1"
+  // Lấy số lớn nhất của các bàn còn lại (chỉ tính bàn có món)
+  const maxNum = takeawayTables.reduce((max, t) => {
+    const m = t.name.match(/\d+/);
+    return m ? Math.max(max, parseInt(m[0])) : max;
+  }, 0);
+
+  // Tạo bàn mới kế tiếp
+  const nextNum = maxNum + 1;
   const id = Date.now();
-  const name = 'Khách mang đi 1';
+  const name = 'Khách mang đi ' + nextNum;
 
   TABLES.push({
     id,
