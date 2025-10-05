@@ -408,27 +408,14 @@ function backToTables() {
   $('order-info').classList.add('hidden');
 }
 
-function goBack(){
-  if (!currentTable) {
-    hideOrderInfo();
-    backToTables && backToTables();
-    return;
-  }
-
-  const idx = TABLES.findIndex(t => t.id === currentTable.id);
-
-  // ✅ Nếu tìm thấy bàn hiện tại → xoá luôn, không lưu
-  if (idx !== -1) {
-    TABLES.splice(idx, 1);
-  }
-
-  // ✅ Xoá cả currentTable trong bộ nhớ tạm
-  currentTable = null;
-
-  // ❌ KHÔNG gọi saveAll — không lưu xuống localStorage
+function goBack() {
+  // Ẩn phần order và quay về màn hình chính
   hideOrderInfo();
   renderTables && renderTables();
   backToTables && backToTables();
+
+  // Không xoá, không lưu gì cả
+  currentTable = null;
 }
 
 // categories
