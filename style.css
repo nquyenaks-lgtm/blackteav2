@@ -369,33 +369,24 @@ header {
 #backBtn:hover {
   color: #ff0000;
 }
-/* ===== DANH MỤC MENU (đồng bộ màu header) ===== */
+/* ===== DANH MỤC MENU (liền mạch, căn giữa, không thừa viền, to hơn 10%) ===== */
 .category-bar {
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 0 !important;             /* không khoảng cách giữa các nút */
-  margin: 0;
-  padding: 0;
-}
-
-/* ===== DANH MỤC MENU (liền mạch, căn giữa, có hiệu ứng nhấn) ===== */
-.category-bar {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center; /* căn giữa toàn bộ hàng */
+  justify-content: center;
   align-items: stretch;
-  margin: 8px 0;
+  margin: 10px 0;
   padding: 0;
   gap: 0;
-  border-bottom: 1px solid #4a69ad; /* viền tổng dưới cùng */
+  border-bottom: 1px solid #4a69ad;
+  transform: scale(1.1);              /* ✅ phóng to 10% */
+  transform-origin: top center;       /* phóng to đều từ giữa */
 }
 
 /* ===== Nút danh mục ===== */
 .category-btn {
   background: #fff;
-  color: #4a69ad;              /* màu xanh header */
+  color: #4a69ad;                     /* xanh header */
   border: 1px solid #4a69ad;
   padding: 4px 10px;
   font-size: 14px;
@@ -431,6 +422,13 @@ header {
 .category-btn {
   margin-right: -1px;
   margin-bottom: -1px;
+}
+
+/* ✅ Xóa viền ngoài cùng hai bên dòng cuối */
+.category-bar::before,
+.category-bar::after {
+  content: "";
+  display: none;
 }
 
 /* Responsive */
