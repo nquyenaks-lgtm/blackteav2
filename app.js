@@ -1024,6 +1024,9 @@ window.addEventListener('load', ()=>{
   if($('addmore-btn')) $('addmore-btn').addEventListener('click', addMore);
   if($('pay-btn')) $('pay-btn').addEventListener('click', payTable);
   if($('history-date')) $('history-date').addEventListener('change', ()=> renderHistory());
-  const brand = document.getElementById('brand'); if(brand) brand.addEventListener('click', ()=> backToTables());
+  const brand = document.getElementById('brand'); if (brand) brand.addEventListener('click', ()=>{
+  hideOrderInfo();   // ✅ ẩn nút X và phần tiêu đề đơn
+  backToTables();    // quay về màn hình chính
+});
   renderTables(); renderCategories(); populateCatSelect(); renderMenuSettings(); saveAll();
 });
