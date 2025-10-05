@@ -323,13 +323,8 @@ function addGuest() {
   renderTables();
 
   currentTable = tableObj;
-  openTable(currentTable.id); 
-  currentTable = tableObj;
-openTable(currentTable.id);
-addMore(); // mở luôn menu order
-// ✅ Hiển thị đúng nút cho "Khách mang đi"
-if ($('primary-actions')) $('primary-actions').style.display = 'none'; // Ẩn nút thêm món / thanh toán
-if ($('table-actions')) $('table-actions').style.display = 'flex';     // Hiện nút Đặt lại + Lưu đơn
+  openTable(currentTable.id);
+  addMore(); // mở luôn menu order
 }
 
 function addGuestVisit(){
