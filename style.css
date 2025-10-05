@@ -380,21 +380,24 @@ header {
   padding: 0;
 }
 
-/* ===== DANH MỤC MENU (liền mạch, không bo góc, cùng màu header) ===== */
+/* ===== DANH MỤC MENU (liền mạch, không bo, tự căn giữa hàng cuối) ===== */
 .category-bar {
   display: flex;
   flex-wrap: wrap;
-  border: 1px solid #4a69ad;   /* khung ngoài */
-  overflow: hidden;            /* ẩn viền tràn */
+  justify-content: flex-start;
+  align-items: stretch;
+  border: 1px solid #4a69ad;
+  overflow: hidden;
   margin: 8px 0;
+  gap: 0;
 }
 
 /* Nút danh mục */
 .category-btn {
-  background: #fff;             /* nền trắng mặc định */
-  color: #4a69ad;               /* chữ xanh header */
+  background: #fff;
+  color: #4a69ad;
   border: 1px solid #4a69ad;
-  border-width: 0 1px 1px 0;    /* chỉ vẽ viền trong để dính nhau */
+  border-width: 0 1px 1px 0;
   padding: 4px 10px;
   font-size: 14px;
   font-weight: 500;
@@ -404,7 +407,8 @@ header {
   user-select: none;
   min-width: 80px;
   margin: 0;
-  border-radius: 0 !important;  /* bỏ bo góc */
+  border-radius: 0 !important;
+  flex: 0 0 auto; /* không co giãn bất thường */
 }
 
 /* Hover */
@@ -419,9 +423,15 @@ header {
   border-color: #4a69ad;
 }
 
-/* Hiệu ứng khi bấm xuống */
+/* Nhấn xuống */
 .category-btn:active {
   background: #3d5fa3;
+}
+
+/* ===== Căn giữa hàng cuối (nếu chưa đủ chiều rộng) ===== */
+.category-bar::after {
+  content: "";
+  flex: auto;
 }
 
 /* Responsive */
