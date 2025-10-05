@@ -288,61 +288,73 @@ function makeTableCard(t){
 }
 // add guest
 function addGuest() {
-  // Lấy ngày hiện tại ở dạng YYYY-MM-DD
+  // Lấy ngày hiện tại
   const today = new Date().toISOString().split('T')[0];
 
-  // Lấy dữ liệu đã lưu trong localStorage (nếu có)
+  // Lấy dữ liệu số cuối cùng đã dùng
   let savedData = localStorage.getItem('LAST_TAKEAWAY_INFO');
   let lastInfo = savedData ? JSON.parse(savedData) : { date: today, num: 0 };
 
-  // Nếu qua ngày mới => reset lại số về 0
+  // Nếu qua ngày mới => reset về 0
   if (lastInfo.date !== today) {
     lastInfo = { date: today, num: 0 };
   }
 
-  // Lấy tất cả bàn "Khách mang đi"
-  let takeawayTables = TABLES.filter(t => t.name.startsWith('Khách mang đi'));
-
-  // Xóa bàn trống (chưa có order)
-  const emptyTakeaways = takeawayTables.filter(t => !t.cart || t.cart.length === 0);
-  if (emptyTakeaways.length > 0) {
-    TABLES = TABLES.filter(t => !emptyTakeaways.includes(t));
+  // Xóa các bàn trống (chưa có món)
+  const emptyGuests = TABLES.filter(
+    t => t.name.startsWith('Khách mang đi') && (!t.cart || t.cart.length === 0)
+  );
+  if (emptyGuests.length > 0) {
+    TABLES = TABLES.filter(t => !emptyGuests.includes(t));
     saveAll();
   }
 
-  // Cập nhật lại danh sách sau khi xóa bàn trống
-  takeawayTables = TABLES.filter(t => t.name.startsWith('Khách mang đi'));
-
-  // Tính số lớn nhất hiện có trong danh sách bàn còn lại (nếu có)
-  const maxNumCurrent = takeawayTables.reduce((max, t) => {
+  // Lấy số cao nhất hiện có
+  const takeawayTables = TABLES.filter(t => t.name.startsWith('Khách mang đi'));
+  const maxNum = takeawayTables.reduce((max, t) => {
     const m = t.name.match(/\d+/);
     return m ? Math.max(max, parseInt(m[0])) : max;
   }, 0);
 
-  // Lấy số tiếp theo (cao nhất giữa số đang có và số đã lưu)
-  const nextNum = Math.max(maxNumCurrent, lastInfo.num) + 1;
-
-  // Lưu lại vào localStorage (ngày + số cuối cùng)
-  localStorage.setItem('LAST_TAKEAWAY_INFO', JSON.stringify({ date: today, num: nextNum }));
+  // Tính số kế tiếp (cao nhất giữa bàn còn lại và số lưu)
+  const nextNum = Math.max(maxNum, lastInfo.num) + 1;
 
   // Tạo bàn mới
   const id = Date.now();
   const name = 'Khách mang đi ' + nextNum;
 
-  TABLES.push({
+  const tableObj = {
     id,
     name,
     cart: [],
-    createdAt: Date.now()
-  });
+    createdAt: Date.now(),
+  };
 
+  TABLES.push(tableObj);
   saveAll();
   renderTables();
 
-  // Mở bàn vừa tạo và tự động chuyển sang menu order
-  currentTable = TABLES[TABLES.length - 1];
+  currentTable = tableObj;
   openTable(currentTable.id);
-  addMore();
+  addMore(); // mở menu order luôn
+
+  // 👇 Lắng nghe sự kiện thêm món đầu tiên
+  const observer = new MutationObserver(() => {
+    // nếu bàn có món => ghi lại số này, rồi ngắt theo dõi
+    if (currentTable.cart && currentTable.cart.length > 0) {
+      localStorage.setItem(
+        'LAST_TAKEAWAY_INFO',
+        JSON.stringify({ date: today, num: nextNum })
+      );
+      observer.disconnect();
+    }
+  });
+
+  // Theo dõi thay đổi trong DOM order-list (khi món được thêm)
+  const orderList = document.getElementById('order-list');
+  if (orderList) {
+    observer.observe(orderList, { childList: true, subtree: true });
+  }
 }
 
 function addGuestVisit(){
