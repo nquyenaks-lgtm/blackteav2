@@ -408,35 +408,28 @@ function backToTables() {
   $('order-info').classList.add('hidden');
 }
 
-function goBack(){
-  // Nếu đang không có currentTable, chỉ về main
-  if (!currentTable) {
-    hideOrderInfo();
-    backToTables && backToTables();
-    return;
-  }
+function goBack() {
+  // ✅ Chỉ ẩn giao diện order và quay về màn chính, không lưu gì cả
 
-  const idx = TABLES.findIndex(t => t.id === currentTable.id);
-
-  if (idx === -1) {
-    // là bản nháp (chưa lưu) -> chỉ bỏ draft, không lưu vào TABLES
-    currentTable = null;
-  } else {
-    // là bàn đã lưu
-    const saved = TABLES[idx];
-    // chỉ xóa bàn đã lưu nếu rỗng (không có món) — theo ý bạn
-    if (!saved.cart || saved.cart.length === 0) {
-      TABLES.splice(idx,1);
-      saveAll && saveAll();
-    } else {
-      // nếu có món thì không xóa — chỉ trở về màn chính
-      // (nếu bạn muốn hiện popup xác nhận hủy order thì thêm ở đây)
-    }
-  }
-
+  // Ẩn phần thông tin order
   hideOrderInfo();
-  renderTables && renderTables();
-  backToTables && backToTables();
+
+  // Hiển thị lại màn hình chính
+  $('table-screen').style.display = 'block';
+  $('menu-screen').style.display = 'none';
+  $('settings-screen').style.display = 'none';
+  $('menu-settings-screen').style.display = 'none';
+  $('printer-settings-screen').style.display = 'none';
+  $('history-screen').style.display = 'none';
+  $('payment-screen').style.display = 'none';
+
+  // Ẩn luôn order info và hiện lại các nút ở header
+  if ($('order-info')) $('order-info').classList.add('hidden');
+  if ($('header-buttons')) $('header-buttons').style.display = 'flex';
+  if ($('backBtn')) $('backBtn').classList.add('hidden');
+
+  // Xoá tham chiếu bàn hiện tại để tránh auto save
+  currentTable = null;
 }
 // categories
 function renderCategories(){
