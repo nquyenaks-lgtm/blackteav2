@@ -288,10 +288,22 @@ function makeTableCard(t){
 }
 // add guest
 function addGuest() {
+  // Lấy ngày hiện tại ở dạng YYYY-MM-DD
+  const today = new Date().toISOString().split('T')[0];
+
+  // Lấy dữ liệu đã lưu trong localStorage (nếu có)
+  let savedData = localStorage.getItem('LAST_TAKEAWAY_INFO');
+  let lastInfo = savedData ? JSON.parse(savedData) : { date: today, num: 0 };
+
+  // Nếu qua ngày mới => reset lại số về 0
+  if (lastInfo.date !== today) {
+    lastInfo = { date: today, num: 0 };
+  }
+
   // Lấy tất cả bàn "Khách mang đi"
   let takeawayTables = TABLES.filter(t => t.name.startsWith('Khách mang đi'));
 
-  // Xóa bàn trống (chưa có món)
+  // Xóa bàn trống (chưa có order)
   const emptyTakeaways = takeawayTables.filter(t => !t.cart || t.cart.length === 0);
   if (emptyTakeaways.length > 0) {
     TABLES = TABLES.filter(t => !emptyTakeaways.includes(t));
@@ -301,14 +313,19 @@ function addGuest() {
   // Cập nhật lại danh sách sau khi xóa bàn trống
   takeawayTables = TABLES.filter(t => t.name.startsWith('Khách mang đi'));
 
-  // Lấy số lớn nhất của các bàn còn lại (chỉ tính bàn có món)
-  const maxNum = takeawayTables.reduce((max, t) => {
+  // Tính số lớn nhất hiện có trong danh sách bàn còn lại (nếu có)
+  const maxNumCurrent = takeawayTables.reduce((max, t) => {
     const m = t.name.match(/\d+/);
     return m ? Math.max(max, parseInt(m[0])) : max;
   }, 0);
 
-  // Tạo bàn mới kế tiếp
-  const nextNum = maxNum + 1;
+  // Lấy số tiếp theo (cao nhất giữa số đang có và số đã lưu)
+  const nextNum = Math.max(maxNumCurrent, lastInfo.num) + 1;
+
+  // Lưu lại vào localStorage (ngày + số cuối cùng)
+  localStorage.setItem('LAST_TAKEAWAY_INFO', JSON.stringify({ date: today, num: nextNum }));
+
+  // Tạo bàn mới
   const id = Date.now();
   const name = 'Khách mang đi ' + nextNum;
 
@@ -322,11 +339,10 @@ function addGuest() {
   saveAll();
   renderTables();
 
+  // Mở bàn vừa tạo và tự động chuyển sang menu order
   currentTable = TABLES[TABLES.length - 1];
-openTable(currentTable.id);
-
-// 👉 Mở luôn menu chọn món (giống như bấm "Thêm món")
-addMore();
+  openTable(currentTable.id);
+  addMore();
 }
 
 function addGuestVisit(){
@@ -354,7 +370,7 @@ function addNamed(){
 // open from main
 function openTableFromMain(id){ createdFromMain = false; openTable(id); }
 
-// Thay / dán nguyên hàm này
+// Tên bàn mang đi
 function getTableFullName(id){
   if (!id) return '';
   if (id.startsWith('L')) return 'Bàn trên lầu ' + id;
