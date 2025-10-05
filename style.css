@@ -369,7 +369,7 @@ header {
 #backBtn:hover {
   color: #ff0000;
 }
-/* ===== DANH MỤC MENU (full chiều ngang, bỏ viền giữa) ===== */
+/* ===== DANH MỤC MENU (full chiều ngang, bỏ viền trùng cả ngang + dọc) ===== */
 .category-bar {
   display: flex;
   flex-wrap: wrap;
@@ -382,6 +382,10 @@ header {
   transform-origin: top center;
   width: 100%;
   box-sizing: border-box;
+  border-top: 1px solid #4a69ad;
+  border-left: 1px solid #4a69ad;
+  border-right: 1px solid #4a69ad;
+  border-bottom: 1px solid #4a69ad; /* viền ngoài cùng */
 }
 
 /* ===== Nút danh mục ===== */
@@ -389,27 +393,20 @@ header {
   background: #fff;
   color: #4a69ad;
   border: 1px solid #4a69ad;
+  border-top: none; /* bỏ viền trên để liền hàng dọc */
+  border-left: none; /* bỏ viền trái để liền hàng ngang */
   padding: 4px 10px;
   font-size: 14px;
   font-weight: 500;
   text-align: center;
   cursor: pointer;
-  transition: background 0.15s, color 0.15s, transform 0.1s;
+  transition: background 0.15s, color 0.15s;
   user-select: none;
   border-radius: 0;
   line-height: 1.3;
   margin: 0;
   flex-grow: 1;
   min-width: max-content;
-  position: relative;
-}
-
-/* Bỏ viền trùng giữa các nút liền nhau */
-.category-btn:not(:last-child) {
-  border-right: none;
-}
-.category-btn:nth-last-child(-n+5) {
-  border-bottom: 1px solid #4a69ad; /* đảm bảo hàng cuối vẫn có viền dưới */
 }
 
 /* Hover */
