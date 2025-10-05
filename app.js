@@ -327,12 +327,9 @@ function addGuest() {
   currentTable = tableObj;
 openTable(currentTable.id);
 addMore(); // mở luôn menu order
-
-// ✅ Hiện lại nút "Đặt lại" cho khách mang đi
-setTimeout(() => {
-  const tableActions = $('table-actions');
-  if (tableActions) tableActions.style.display = 'flex';
-}, 200); 
+// ✅ Hiển thị đúng nút cho "Khách mang đi"
+if ($('primary-actions')) $('primary-actions').style.display = 'none'; // Ẩn nút thêm món / thanh toán
+if ($('table-actions')) $('table-actions').style.display = 'flex';     // Hiện nút Đặt lại + Lưu đơn
 }
 
 function addGuestVisit(){
