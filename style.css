@@ -369,7 +369,7 @@ header {
 #backBtn:hover {
   color: #ff0000;
 }
-/* ===== DANH MỤC MENU (sát, dàn đều, không thừa viền dưới) ===== */
+/* ===== DANH MỤC MENU (liền mạch, viền chuẩn, không thừa dòng) ===== */
 .category-bar {
   display: flex;
   flex-wrap: wrap;
@@ -382,7 +382,8 @@ header {
   transform-origin: top center;
   width: 100%;
   box-sizing: border-box;
-  border: 1px solid #4a69ad; /* chỉ 1 viền bao ngoài */
+  border: 1px solid #4a69ad; /* viền bao ngoài */
+  overflow: hidden;
 }
 
 /* ===== Nút danh mục ===== */
@@ -390,9 +391,8 @@ header {
   background: #fff;
   color: #4a69ad;
   border: 1px solid #4a69ad;
-  border-top: none;     /* liền hàng dọc */
-  border-left: none;    /* liền hàng ngang */
-  border-bottom: none;  /* bỏ viền dưới để không đúp */
+  border-left: none;  /* liền hàng ngang */
+  border-top: none;   /* liền hàng dọc */
   padding: 4px 10px;
   font-size: 14px;
   font-weight: 500;
@@ -417,6 +417,19 @@ header {
   background: #4a69ad;
   color: #fff;
   border-color: #4a69ad;
+}
+
+/* ===== Fix không đúp viền giữa các hàng ===== */
+.category-bar .category-btn:nth-child(n+2) {
+  border-left-width: 1px;
+}
+.category-bar .category-btn:nth-child(n+5) {
+  border-top-width: 1px;
+}
+
+/* ===== Hàng cuối vẫn có viền dưới ===== */
+.category-bar .category-btn:last-child {
+  border-bottom: 1px solid #4a69ad;
 }
 
 /* Responsive */
