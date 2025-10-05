@@ -323,8 +323,7 @@ function addGuest() {
   renderTables();
 
   currentTable = tableObj;
-  openTable(currentTable.id);
-  addMore(); // mở luôn menu order
+  openTable(currentTable.id); // mở luôn menu order
 }
 
 function addGuestVisit(){
