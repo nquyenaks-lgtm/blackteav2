@@ -441,13 +441,13 @@ header {
   }
 }
 .item-name {
-  color: #3f51b5;   /* xanh đậm như header */
+  color: #4a69ad;   /* xanh đậm như header */
   font-weight: 600;
   font-size: 16px;  /*  kích thước */
 }
 
 .item-price {
-  color: #4a69ad;   /*  xanh nhạt hơn cho giá tiền */
+  color: #7d8fd0;   /*  xanh nhạt hơn cho giá tiền */
   font-weight: 500;
   font-size: 14px;  /* kích thước */
 }
