@@ -287,14 +287,44 @@ function makeTableCard(t){
   return card;
 }
 // add guest
-function addGuest(){
-  GUEST_CNT += 1;
-  const name = 'Khách mang đi ' + GUEST_CNT;
+function addGuest() {
+  // Lấy tất cả bàn "Khách mang đi"
+  let takeawayTables = TABLES.filter(t => t.name.startsWith('Khách mang đi'));
+
+  // Lọc ra bàn nào thực sự đang dùng (có món)
+  const activeTakeaways = takeawayTables.filter(t => t.cart && t.cart.length > 0);
+
+  // Xóa các bàn trống (chưa có order)
+  const emptyTakeaways = takeawayTables.filter(t => !t.cart || t.cart.length === 0);
+  if (emptyTakeaways.length > 0) {
+    TABLES = TABLES.filter(t => !emptyTakeaways.includes(t));
+    saveAll();
+  }
+
+  // Nếu đã có bàn mang đi đang dùng => mở bàn đó luôn
+  if (activeTakeaways.length > 0) {
+    const first = activeTakeaways.sort((a, b) => a.name.localeCompare(b.name))[0];
+    currentTable = first;
+    openTable(currentTable.id);
+    return;
+  }
+
+  // Nếu chưa có bàn nào => tạo mới bàn "Khách mang đi 1"
   const id = Date.now();
-  TABLES.push({ id, name, cart: [], createdAt: Date.now() });
+  const name = 'Khách mang đi 1';
+
+  TABLES.push({
+    id,
+    name,
+    cart: [],
+    createdAt: Date.now()
+  });
+
   saveAll();
-  createdFromMain = true;
-  openTable(id);
+  renderTables();
+
+  currentTable = TABLES[TABLES.length - 1];
+  openTable(currentTable.id);
 }
 
 function addGuestVisit(){
