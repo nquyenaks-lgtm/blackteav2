@@ -423,6 +423,33 @@ function openTable(id){
 }
 // back
 function backToTables() {
+  // 🧠 --- Thêm logic xử lý bàn "Khách mang đi" ---
+  const today = new Date().toISOString().split('T')[0];
+  let savedData = localStorage.getItem('LAST_TAKEAWAY_INFO');
+  let lastInfo = savedData ? JSON.parse(savedData) : { date: today, num: 0 };
+
+  if (lastInfo.date !== today) {
+    lastInfo = { date: today, num: 0 };
+  }
+
+  if (currentTable && currentTable.name.startsWith('Khách mang đi')) {
+    // Nếu bàn trống (chưa order gì) → xoá bàn, không lưu số
+    if (!currentTable.cart || currentTable.cart.length === 0) {
+      TABLES = TABLES.filter(t => t.id !== currentTable.id);
+      saveAll();
+    } 
+    // Nếu bàn có món (tức đã order hoặc thanh toán xong) → cập nhật số bàn mới nhất
+    else {
+      const m = currentTable.name.match(/\d+/);
+      const currentNum = m ? parseInt(m[0]) : 0;
+      if (currentNum > lastInfo.num) {
+        lastInfo = { date: today, num: currentNum };
+        localStorage.setItem('LAST_TAKEAWAY_INFO', JSON.stringify(lastInfo));
+      }
+    }
+  }
+
+  // 👇 --- Phần UI bạn đang có (giữ nguyên hoàn toàn) ---
   $('table-screen').style.display = 'block';
   $('menu-screen').style.display = 'none';
   $('settings-screen').style.display = 'none';
