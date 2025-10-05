@@ -369,7 +369,7 @@ header {
 #backBtn:hover {
   color: #ff0000;
 }
-/* ===== DANH MỤC MENU (liền mạch, căn giữa, không thừa viền, to hơn 10%) ===== */
+/* ===== DANH MỤC MENU (liền mạch, phóng to 10%, không thừa viền hai bên) ===== */
 .category-bar {
   display: flex;
   flex-wrap: wrap;
@@ -378,22 +378,21 @@ header {
   margin: 10px 0;
   padding: 0;
   gap: 0;
-  border-bottom: 1px solid #4a69ad;
-  transform: scale(1.1);              /* ✅ phóng to 10% */
-  transform-origin: top center;       /* phóng to đều từ giữa */
+  transform: scale(1.1);              /* phóng to 10% */
+  transform-origin: top center;
 }
 
 /* ===== Nút danh mục ===== */
 .category-btn {
   background: #fff;
-  color: #4a69ad;                     /* xanh header */
+  color: #4a69ad;                     /* màu header */
   border: 1px solid #4a69ad;
   padding: 4px 10px;
   font-size: 14px;
   font-weight: 500;
   text-align: center;
   cursor: pointer;
-  transition: background 0.15s, color 0.15s, transform 0.1s, box-shadow 0.1s;
+  transition: background 0.15s, color 0.15s, transform 0.1s;
   user-select: none;
   border-radius: 0;
   line-height: 1.3;
@@ -405,10 +404,9 @@ header {
   background: #eaf0ff;
 }
 
-/* Khi nhấn xuống */
+/* Khi nhấn giữ */
 .category-btn:active {
   transform: translateY(1px);
-  box-shadow: inset 0 1px 2px rgba(0,0,0,0.15);
 }
 
 /* Khi đang chọn */
@@ -418,17 +416,17 @@ header {
   border-color: #4a69ad;
 }
 
-/* Liền viền ngang và dọc */
-.category-btn {
-  margin-right: -1px;
-  margin-bottom: -1px;
+/* Liền viền giữa các nút */
+.category-bar .category-btn {
+  margin-right: -1px;   /* liền nhau ngang */
+  margin-bottom: -1px;  /* liền nhau dọc */
 }
 
-/* ✅ Xóa viền ngoài cùng hai bên dòng cuối */
-.category-bar::before,
-.category-bar::after {
-  content: "";
-  display: none;
+/* ✅ Ẩn viền thừa ở cuối hàng */
+.category-bar {
+  overflow: hidden;     /* cắt phần viền thừa hai bên */
+  border: 1px solid #4a69ad;  /* giữ khung tổng thể mảnh */
+  border-bottom: none;  /* không vạch kép ở cuối */
 }
 
 /* Responsive */
