@@ -440,3 +440,15 @@ header {
     padding: 3px 8px;
   }
 }
+/*  Màu món và giá giống tông thanh header */
+.item-name {
+  color: #3f51b5;        /* xanh header */
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.item-price {
+  color: #6c7bd9;        /* xanh nhạt hơn một chút */
+  font-weight: 500;
+  font-size: 14px;
+}
