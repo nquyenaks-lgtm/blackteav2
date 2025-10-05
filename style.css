@@ -380,7 +380,7 @@ header {
   padding: 0;
 }
 
-/* ===== DANH MỤC MENU (đồng bộ màu header, viền liền mạch) ===== */
+/* ===== DANH MỤC MENU (đồng bộ màu header, liền mạch, đủ viền) ===== */
 .category-bar {
   display: flex;
   flex-wrap: wrap;
@@ -394,9 +394,8 @@ header {
 /* Nút danh mục mặc định */
 .category-btn {
   background: #fff;
-  color: #4a69ad;
+  color: #4a69ad;                  /* màu chữ như header */
   border: 1px solid #4a69ad;
-  border-right: none;             /* bỏ viền phải để tránh dày */
   padding: 2px 8px !important;
   margin: 0 !important;
   border-radius: 0 !important;
@@ -405,11 +404,8 @@ header {
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
   user-select: none;
-}
-
-/* Nút cuối cùng vẫn cần viền phải */
-.category-btn:last-child {
-  border-right: 1px solid #4a69ad;
+  margin-right: -1px;              /* chồng viền ngang */
+  margin-bottom: -1px;             /* chồng viền dọc */
 }
 
 /* Hover */
@@ -424,15 +420,12 @@ header {
   border-color: #4a69ad;
 }
 
-/* Gộp hàng, không bị viền dày giữa các dòng */
+/* Tự xuống dòng nhưng vẫn liền mạch */
 .category-bar {
-  border-bottom: 1px solid #4a69ad;
-}
-.category-btn {
-  border-bottom: none;
+  border: 1px solid #4a69ad;       /* tạo khung tổng bao quanh */
 }
 
-/* Tự xuống dòng */
+/* Màn nhỏ */
 @media (max-width: 768px) {
   .category-btn {
     font-size: 13px;
