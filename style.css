@@ -369,55 +369,36 @@ header {
 #backBtn:hover {
   color: #ff0000;
 }
-/* ==== MENU DANH MỤC - COMPACT, DÍNH HÀNG, OPTION 2 STYLE ==== */
-.category-container {
+/* ========== CATEGORY MENU (Compact Option 2 Style) ========== */
+.category-list {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
-  align-items: stretch;
-  margin: 0;
-  padding: 0;
-  gap: 0; /* không cách giữa các nút */
-  line-height: 0;
+  gap: 0; /* Không có khoảng cách giữa các nút */
 }
 
 .category-btn {
   background: #fff;
-  color: #3b63a8;                /* cùng màu header */
-  border: 1px solid #3b63a8;
-  border-radius: 0;
-  padding: 3px 10px;             /* nhỏ gọn */
-  font-size: 13px;
+  color: #2c56d4; /* Màu header */
+  border: 1px solid #2c56d4;
+  border-radius: 4px;
+  font-size: 14px;
   font-weight: 500;
-  line-height: 1.1;
-  cursor: pointer;
-  margin: 0;                     /* loại bỏ khoảng trống mặc định */
+  padding: 3px 8px; /* Gọn, sát chữ */
+  margin: 0; /* Không có khoảng trống */
+  height: auto;
+  line-height: 1.2;
+  white-space: nowrap; /* Giữ chữ trên 1 dòng */
   transition: all 0.15s ease-in-out;
-  flex-grow: 1;
-  white-space: nowrap;
 }
 
-/* Dính sát giữa các hàng - loại bỏ khoảng trống dòng */
-.category-container button {
-  margin: 0;
-  border-collapse: collapse;
-  display: inline-block;
-  vertical-align: top; /* giữ hàng thẳng hàng, ko bị giãn */
-}
-
-/* Khi active (được chọn) */
 .category-btn.active {
-  background: #3b63a8;
+  background: #2c56d4;
   color: #fff;
+  border-color: #2c56d4;
 }
 
-/* Hover nhẹ */
-.category-btn:hover {
-  background: #e6ecff;
-}
-
-/* Giảm luôn khoảng cách dưới container */
-#menu-categories {
-  margin-bottom: 0 !important;
-  padding-bottom: 0 !important;
+/* Khi xuống dòng, sát hàng trên */
+.category-list button {
+  margin-bottom: 0;
 }
