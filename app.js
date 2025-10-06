@@ -495,13 +495,24 @@ function goBack(){
   backToTables();
 }
 // categories
-function renderCategories(){
-  const bar = $('category-bar'); bar.innerHTML = '';
-  CATEGORIES.forEach(cat=>{
-    const b = document.createElement('button'); b.className='category-btn' + (cat===activeCategory ? ' active' : '');
-    b.innerText = cat;
-    b.onclick = ()=>{ activeCategory = cat; renderMenuList(); renderCategories(); };
-    bar.appendChild(b);
+
+function renderCategories() {
+  const bar = document.getElementById("category-bar");
+  bar.innerHTML = "";
+
+  let cats = [...new Set(MENU.map(m => m.category))];
+
+  cats.sort((a, b) => {
+    const ia = CATEGORY_ORDER.indexOf(a);
+    const ib = CATEGORY_ORDER.indexOf(b);
+    return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
+  });
+
+  cats.forEach(cat => {
+    const btn = document.createElement("button");
+    btn.textContent = cat;
+    btn.onclick = () => renderMenuList(cat);
+    bar.appendChild(btn);
   });
 }
 
