@@ -452,4 +452,31 @@ header {
   cursor: pointer;
   transition: 0.2s ease;
 }
+// Ô tìm kiếm
+.category-search-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;   /* khi màn nhỏ thì tab rớt xuống dòng dưới */
+  margin: 8px 0;
+}
 
+.search-wrap {
+  width: 200px;      /* chỉnh theo ý, ví dụ 180–250px */
+  flex-shrink: 0;    /* không cho co nhỏ thêm */
+}
+
+.search-input {
+  width: 100%;
+  padding: 8px 10px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.category-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  flex: 1;           /* chiếm hết không gian còn lại bên phải */
+}
