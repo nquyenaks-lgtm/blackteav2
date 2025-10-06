@@ -411,8 +411,6 @@ function openTable(id){
     };
     window.currentTable = currentTable;   // ✅ thêm dòng này
   }
-  }
- }
 
   // hiển thị màn menu
   $('table-screen').style.display = 'none';
