@@ -16,7 +16,6 @@ const FIXED_TABLES = [
 ];
 
 let MENU = [
-let MENU = [
   // ===== Cà phê (nhóm 1) =====
   {
     id: 101,
