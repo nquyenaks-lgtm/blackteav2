@@ -17,35 +17,34 @@ const FIXED_TABLES = [
 
 let MENU = [
   {
-    id: "cf-may",
+    id: 1,
     name: "Cà phê pha máy",
     cat: "Cà phê",
     variants: [
-      { id: "cf-may-den-nong", name: "Cà phê máy đen nóng", price: 15000 },
-      { id: "cf-may-sua-nong", name: "Cà phê máy sữa nóng", price: 15000 },
-      { id: "cf-may-den-da",   name: "Cà phê máy đen đá",   price: 15000 },
-      { id: "cf-may-sua-da",   name: "Cà phê máy sữa đá",   price: 15000 }
+      { id: 2, name: "Cà phê máy đen nóng", price: 15000 },
+      { id: 3, name: "Cà phê máy sữa nóng", price: 15000 },
+      { id: 4, name: "Cà phê máy đen đá",   price: 15000 },
+      { id: 5, name: "Cà phê máy sữa đá",   price: 15000 }
     ]
   },
   {
-    id: "cf-phin",
+    id: 6,
     name: "Cà phê pha phin",
     cat: "Cà phê",
     variants: [
-      { id: "cf-phin-den-nong", name: "Cà phê phin đen nóng", price: 15000 },
-      { id: "cf-phin-sua-nong", name: "Cà phê phin sữa nóng", price: 15000 },
-      { id: "cf-phin-den-da",   name: "Cà phê phin đen đá",   price: 15000 },
-      { id: "cf-phin-sua-da",   name: "Cà phê phin sữa đá",   price: 15000 }
+      { id: 7,  name: "Cà phê phin đen nóng", price: 15000 },
+      { id: 8,  name: "Cà phê phin sữa nóng", price: 15000 },
+      { id: 9,  name: "Cà phê phin đen đá",   price: 15000 },
+      { id: 10, name: "Cà phê phin sữa đá",   price: 15000 }
     ]
   },
-  { id: "cf-saigon",   name: "Cà phê Sài Gòn",   price: 18000, cat: "Cà phê" },
-  { id: "cf-kemmuoi",  name: "Cà phê kem muối",  price: 20000, cat: "Cà phê" },
-  { id: "cf-kemtrung", name: "Cà phê kem trứng", price: 20000, cat: "Cà phê" },
-  { id: "cf-cotdua",   name: "Cà phê cốt dừa",   price: 20000, cat: "Cà phê" },
-  { id: "bac-xiu",     name: "Bạc xỉu đá",       price: 20000, cat: "Cà phê" },
-  { id: "ca-cao",      name: "Ca cao đá",        price: 20000, cat: "Cà phê" }
+  { id: 11, name: "Cà phê Sài Gòn",   price: 18000, cat: "Cà phê" },
+  { id: 12, name: "Cà phê kem muối",  price: 20000, cat: "Cà phê" },
+  { id: 13, name: "Cà phê kem trứng", price: 20000, cat: "Cà phê" },
+  { id: 14, name: "Cà phê cốt dừa",   price: 20000, cat: "Cà phê" },
+  { id: 15, name: "Bạc xỉu đá",       price: 20000, cat: "Cà phê" },
+  { id: 16, name: "Ca cao đá",        price: 20000, cat: "Cà phê" }
 ];
-
 let CATEGORIES = ["Cà phê","Trà sữa","Sinh tố","Sữa chua","Giải khát","Trà & Nước ép","Matcha","Ăn vặt","Topping"];
 let TABLES = [];
 
