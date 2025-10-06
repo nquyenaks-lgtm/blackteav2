@@ -518,10 +518,11 @@ function renderCategories(){
 
 // menu list
 function renderMenuList(category) {
+function renderMenuList(category = activeCategory) {
   const container = document.getElementById("menu-list");
   container.innerHTML = "";
 
-  const items = MENU.filter(m => m.category === category);
+  const items = MENU.filter(m => m.cat === category);
 
   items.forEach(item => {
     if (item.variants) {
@@ -529,7 +530,6 @@ function renderMenuList(category) {
       const groupDiv = document.createElement("div");
       groupDiv.className = "menu-group-title";
 
-      // tiêu đề nhóm + icon
       const arrow = document.createElement("span");
       arrow.textContent = "▶";
       arrow.style.marginRight = "6px";
@@ -561,7 +561,6 @@ function renderMenuList(category) {
         variantsDiv.appendChild(div);
       });
 
-      // toggle xổ/ẩn khi bấm tiêu đề nhóm
       groupDiv.onclick = () => {
         if (variantsDiv.style.display === "none") {
           variantsDiv.style.display = "block";
@@ -575,7 +574,6 @@ function renderMenuList(category) {
       container.appendChild(groupDiv);
       container.appendChild(variantsDiv);
     } else {
-      // 👉 Món đơn
       const div = document.createElement("div");
       div.className = "menu-item";
       div.innerHTML = `
