@@ -518,51 +518,42 @@ function renderCategories() {
 
 // 
 //  renderMenuList hỗ trợ category 
-function renderMenuList(cat) {
-  const list = $('menu-list'); 
-  list.innerHTML = '';
+function renderMenuList(category) {
+  const container = document.getElementById("menu-list");
+  container.innerHTML = "";
 
-  const items = MENU
-    .filter(m => !cat || m.category === cat)  // dùng category thay vì cat
-    .sort((a, b) => (a.order || 999) - (b.order || 999));
+  MENU.filter(item => item.category === category).forEach(item => {
+    // Nhóm món
+    const groupDiv = document.createElement("div");
+    groupDiv.className = "menu-group";
+    groupDiv.innerHTML = `<div class="menu-group-title">${item.name}</div>`;
 
-  items.forEach(item => {
-    const row = document.createElement('div'); 
-    row.className = 'menu-row';
+    // Danh sách biến thể (ẩn lúc đầu)
+    const variantsDiv = document.createElement("div");
+    variantsDiv.className = "menu-variants";
+    variantsDiv.style.display = "none";
 
-    if (item.variants) { 
-      // nhóm món có nhiều biến thể
-      const title = document.createElement('div');
-      title.className = 'menu-group';
-      title.innerText = item.name;
-      row.appendChild(title);
-
-      const sub = document.createElement('div');
-      sub.className = 'menu-variants';
-      item.variants
-        .sort((a, b) => (a.order || 999) - (b.order || 999))
-        .forEach(v => {
-          const vRow = document.createElement('div');
-          vRow.className = 'menu-variant';
-          vRow.innerHTML = `
-            <span>${v.label}</span>
-            <span>${fmtV(v.price)} VND</span>
-          `;
-          vRow.onclick = () => changeQty(item.name + ' - ' + v.label, +1, v.price);
-          sub.appendChild(vRow);
-        });
-      row.appendChild(sub);
-
-    } else {
-      // món đơn lẻ
-      row.innerHTML = `
-        <div class="menu-name">${item.name}</div>
-        <div class="menu-price">${fmtV(item.price)} VND</div>
-      `;
-      row.onclick = () => changeQty(item.name, +1, item.price);
+    if (item.variants) {
+      item.variants.forEach(v => {
+        const vDiv = document.createElement("div");
+        vDiv.className = "menu-variant";
+        vDiv.innerHTML = `
+          <span>${v.name}</span>
+          <span>${v.price.toLocaleString()} VND</span>
+          <button onclick="changeQty('${item.id}_${v.name}', ${v.price}, '${item.name} - ${v.name}', 1)">+</button>
+          <button onclick="changeQty('${item.id}_${v.name}', ${v.price}, '${item.name} - ${v.name}', -1)">-</button>
+        `;
+        variantsDiv.appendChild(vDiv);
+      });
     }
 
-    list.appendChild(row);
+    // Toggle xổ ra / ẩn
+    groupDiv.querySelector(".menu-group-title").onclick = () => {
+      variantsDiv.style.display = variantsDiv.style.display === "none" ? "block" : "none";
+    };
+
+    container.appendChild(groupDiv);
+    container.appendChild(variantsDiv);
   });
 }
 
