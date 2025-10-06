@@ -553,18 +553,48 @@ function renderCategories(){
 
 // menu list
 function renderMenuList(){
-  const list = $('menu-list'); list.innerHTML = '';
-  const items = MENU.filter(m=> activeCategory==='Tất cả' ? true : m.cat===activeCategory);
-  items.forEach(item=>{
-    const row = document.createElement('div'); row.className='menu-row';
-    const left = document.createElement('div'); left.className='menu-left';
+  const list = $('menu-list');
+  list.innerHTML = '';
+
+  const items = MENU.filter(m => {
+    const matchCat = activeCategory === 'Tất cả' ? true : m.cat === activeCategory;
+    const normalizedName = removeVietnameseTones(m.name);
+    const normalizedSearch = removeVietnameseTones(searchKeyword);
+    const matchSearch = !normalizedSearch || normalizedName.includes(normalizedSearch);
+    return matchCat && matchSearch;
+  });
+
+  items.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'menu-row';
+
+    const left = document.createElement('div');
+    left.className = 'menu-left';
     left.innerHTML = '<div class="menu-name">'+item.name+'</div><div class="menu-price">'+fmtV(item.price)+' VND</div>';
-    const controls = document.createElement('div'); controls.className='qty-controls';
-    const minus = document.createElement('button'); minus.className='btn btn-secondary'; minus.innerText='-'; minus.onclick=(e)=>{ e.stopPropagation(); changeQty(item.id,-1); };
-    const qty = document.createElement('span'); qty.id='qty-'+item.id; qty.innerText = getQty(item.id);
-    const plus = document.createElement('button'); plus.className='btn btn-secondary'; plus.innerText='+'; plus.onclick=(e)=>{ e.stopPropagation(); changeQty(item.id,1); };
-    controls.appendChild(minus); controls.appendChild(qty); controls.appendChild(plus);
-    row.appendChild(left); row.appendChild(controls);
+
+    const controls = document.createElement('div');
+    controls.className = 'qty-controls';
+
+    const minus = document.createElement('button');
+    minus.className = 'btn btn-secondary';
+    minus.innerText = '-';
+    minus.onclick = (e) => { e.stopPropagation(); changeQty(item.id,-1); };
+
+    const qty = document.createElement('span');
+    qty.id = 'qty-'+item.id;
+    qty.innerText = getQty(item.id);
+
+    const plus = document.createElement('button');
+    plus.className = 'btn btn-secondary';
+    plus.innerText = '+';
+    plus.onclick = (e) => { e.stopPropagation(); changeQty(item.id,1); };
+
+    controls.appendChild(minus);
+    controls.appendChild(qty);
+    controls.appendChild(plus);
+
+    row.appendChild(left);
+    row.appendChild(controls);
     list.appendChild(row);
   });
 }
