@@ -115,7 +115,7 @@ let GUEST_CNT = 0;
 
 let currentTable = null;
 let createdFromMain = false;
-let activeCategory = 'Cà phê';
+let activeCategory = 'Tìm kiếm';
 let searchKeyword = "";
 // helpers
 function showCustomAlert(msg) {
@@ -540,7 +540,6 @@ function goBack(){
   backToTables();
 }
 // categories
-function renderCategories(){
 function renderCategories() {
   const bar = $('category-bar'); 
   bar.innerHTML = '';
