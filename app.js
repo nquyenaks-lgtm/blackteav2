@@ -625,7 +625,6 @@ function changeQty(id, price, name, delta){
     }); 
   } 
 
-  renderMenuList(); 
   renderCart(); 
 }
 
