@@ -399,6 +399,7 @@ function openTable(id){
     // dùng object đã lưu (thao tác trực tiếp trên object trong TABLES)
     currentTable = TABLES[savedIdx];
     currentTable._isDraft = false;
+    window.currentTable = currentTable;   // ✅ thêm dòng này
   } else {
     // tạo bản nháp (chưa push vào TABLES)
     currentTable = {
@@ -408,7 +409,9 @@ function openTable(id){
       createdAt: Date.now(),
       _isDraft: true
     };
+    window.currentTable = currentTable;   // ✅ thêm dòng này
   }
+}
 
   // hiển thị màn menu
   $('table-screen').style.display = 'none';
