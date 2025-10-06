@@ -97,7 +97,7 @@ let MENU =  [
   { id: 78, name: "Kem lăng dừa", price: 15000, cat: "Topping" }
 ];
 
-let CATEGORIES = ["🔍 Tìm kiếm","Cà phê","Trà sữa","Sinh tố","Sữa chua","Giải khát","Trà & Nước ép","Matcha","Ăn vặt","Topping"];
+let CATEGORIES = ["Tìm kiếm","Cà phê","Trà sữa","Sinh tố","Sữa chua","Giải khát","Trà & Nước ép","Matcha","Ăn vặt","Topping"];
 
 // ✅ Migration: đảm bảo mỗi item trong cart có locked và baseQty
 TABLES = TABLES.map(t => ({
