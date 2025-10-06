@@ -66,7 +66,20 @@ let currentTable = null;
 let createdFromMain = false;
 let activeCategory = 'Cà phê';
 
+// Tìm món theo id (hỗ trợ cả món cha và variants)
+function findMenuItemById(id) {
+  for (const m of MENU) {
+    if (m.id === id) return m;   // Nếu id trùng cha
+    if (m.variants) {
+      const v = m.variants.find(x => x.id === id);
+      if (v) return v;           // Nếu id trùng variant con
+    }
+  }
+  return null;
+}
+
 // helpers
+
 function showCustomAlert(msg) {
   document.getElementById("customAlertMessage").innerText = msg;
   document.getElementById("customAlert").style.display = "block";
@@ -557,7 +570,7 @@ function getQty(id){ if(!currentTable) return 0; const it = currentTable.cart.fi
 
 function changeQty(id, delta){ 
   if(!currentTable) return; 
-  const item = MENU.find(m=>m.id===id); 
+  const item = findMenuItemById(id);   
   if(!item) return; 
   let it = currentTable.cart.find(c=>c.id===id); 
 
