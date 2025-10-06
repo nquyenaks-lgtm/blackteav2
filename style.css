@@ -455,17 +455,19 @@ header {
 /* ===== Ô tìm kiếm trong thanh danh mục ===== */
 .search-tab {
   display: flex;
-  align-items: center;
+  align-items: stretch;     /* ✅ canh theo chiều cao thật, không theo text */
   justify-content: center;
-  flex: 0 0 45%;          /* ✅ tăng chiều dài thêm 20% so với bản 37% trước */
+  flex: 0 0 45%;            /* dài hơn 20% như thầy muốn */
   margin: 0;
   padding: 0;
   border: 1px solid #4a69ad;
   border-top: none;
   border-left: none;
-  height: 28px;           /* ✅ bằng chính xác nút danh mục */
+  height: 28px;
   box-sizing: border-box;
   background: #fff;
+  position: relative;
+  top: -1px;                /* ✅ đẩy ô lên 1px để khớp đường viền hàng trên */
 }
 
 .search-tab input {
@@ -475,10 +477,11 @@ header {
   outline: none;
   padding: 0 8px;
   font-size: 14px;
-  line-height: 1;          /* ✅ tránh chữ làm phình ô */
+  line-height: 1;
   color: #4a69ad;
   background: #fff;
   box-sizing: border-box;
+  display: block;
 }
 
 .search-tab input::placeholder {
@@ -487,5 +490,5 @@ header {
 }
 
 .search-tab input:focus {
-  background: #fff;        /* ✅ không đổi màu khi bấm */
+  background: #fff;
 }
