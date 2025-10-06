@@ -541,21 +541,21 @@ function goBack(){
 }
 // categories
 function renderCategories(){
+function renderCategories() {
   const bar = $('category-bar'); 
   bar.innerHTML = '';
 
-  CATEGORIES.forEach(cat=>{
-    if (cat === "🔍 Tìm kiếm") {
-      // Tab đặc biệt: input tìm kiếm
+  CATEGORIES.forEach(cat => {
+    if (cat === "Tìm kiếm") {
+      // Tab đặc biệt: input search
       const searchTab = document.createElement('div');
       searchTab.className = 'search-tab';
 
       const searchInput = document.createElement('input');
       searchInput.id = 'menu-search';
       searchInput.type = 'text';
-      searchInput.placeholder = '🔍 Nhập món cần tìm...';
-
-      // Cập nhật kết quả khi nhập
+      searchInput.placeholder = 'Nhập món cần tìm...'; // bỏ icon 🔍
+      
       searchInput.addEventListener('input', (e) => {
         searchKeyword = e.target.value;
         renderMenuList();
@@ -565,11 +565,11 @@ function renderCategories(){
       bar.appendChild(searchTab);
 
     } else {
-      // Tab bình thường
+      // Tab danh mục bình thường
       const b = document.createElement('button'); 
-      b.className = 'category-btn' + (cat===activeCategory ? ' active' : '');
+      b.className = 'category-btn' + (cat === activeCategory ? ' active' : '');
       b.innerText = cat;
-      b.onclick = ()=>{ 
+      b.onclick = () => { 
         activeCategory = cat; 
         renderMenuList(); 
         renderCategories(); 
@@ -578,7 +578,6 @@ function renderCategories(){
     }
   });
 }
-
 // menu list
 function renderMenuList(){
   const list = $('menu-list');
