@@ -516,60 +516,91 @@ function renderCategories() {
   });
 }
 
-// menu list
-function renderMenuList(){
-  const list = $('menu-list'); list.innerHTML = '';
-  const items = MENU.filter(m=> activeCategory==='Tất cả' ? true : m.cat===activeCategory);
-  items.forEach(item=>{
-    const row = document.createElement('div'); row.className='menu-row';
-    const left = document.createElement('div'); left.className='menu-left';
-    left.innerHTML = '<div class="menu-name">'+item.name+'</div><div class="menu-price">'+fmtV(item.price)+' VND</div>';
-    const controls = document.createElement('div'); controls.className='qty-controls';
-    const minus = document.createElement('button'); minus.className='btn btn-secondary'; minus.innerText='-'; minus.onclick=(e)=>{ e.stopPropagation(); changeQty(item.id,-1); };
-    const qty = document.createElement('span'); qty.id='qty-'+item.id; qty.innerText = getQty(item.id);
-    const plus = document.createElement('button'); plus.className='btn btn-secondary'; plus.innerText='+'; plus.onclick=(e)=>{ e.stopPropagation(); changeQty(item.id,1); };
-    controls.appendChild(minus); controls.appendChild(qty); controls.appendChild(plus);
-    row.appendChild(left); row.appendChild(controls);
+// 
+//  renderMenuList hỗ trợ category 
+function renderMenuList(cat) {
+  const list = $('menu-list'); 
+  list.innerHTML = '';
+
+  const items = MENU
+    .filter(m => !cat || m.category === cat)  // dùng category thay vì cat
+    .sort((a, b) => (a.order || 999) - (b.order || 999));
+
+  items.forEach(item => {
+    const row = document.createElement('div'); 
+    row.className = 'menu-row';
+
+    if (item.variants) { 
+      // nhóm món có nhiều biến thể
+      const title = document.createElement('div');
+      title.className = 'menu-group';
+      title.innerText = item.name;
+      row.appendChild(title);
+
+      const sub = document.createElement('div');
+      sub.className = 'menu-variants';
+      item.variants
+        .sort((a, b) => (a.order || 999) - (b.order || 999))
+        .forEach(v => {
+          const vRow = document.createElement('div');
+          vRow.className = 'menu-variant';
+          vRow.innerHTML = `
+            <span>${v.label}</span>
+            <span>${fmtV(v.price)} VND</span>
+          `;
+          vRow.onclick = () => changeQty(item.name + ' - ' + v.label, +1, v.price);
+          sub.appendChild(vRow);
+        });
+      row.appendChild(sub);
+
+    } else {
+      // món đơn lẻ
+      row.innerHTML = `
+        <div class="menu-name">${item.name}</div>
+        <div class="menu-price">${fmtV(item.price)} VND</div>
+      `;
+      row.onclick = () => changeQty(item.name, +1, item.price);
+    }
+
     list.appendChild(row);
   });
 }
 
 function getQty(id){ if(!currentTable) return 0; const it = currentTable.cart.find(c=>c.id===id); return it ? it.qty : 0; }
 
-function changeQty(id, delta){ 
-  if(!currentTable) return; 
-  const item = MENU.find(m=>m.id===id); 
-  if(!item) return; 
-  let it = currentTable.cart.find(c=>c.id===id); 
+// sửa - changeQty hỗ trợ biến thể, vẫn giữ logic locked/baseQty
+function changeQty(id, delta, price) {
+  if (!currentTable) return; 
+  let it = currentTable.cart.find(c => c.id === id); 
 
-  if(it){ 
-    if(it.locked){ 
+  if (it) { 
+    if (it.locked) { 
       // ✅ Nếu là món đã order, không cho giảm thấp hơn baseQty
-      if(delta < 0 && it.qty <= (it.baseQty ?? 0)) return;  
+      if (delta < 0 && it.qty <= (it.baseQty ?? 0)) return;  
     }
 
     it.qty += delta; 
 
     // ✅ Chỉ xoá nếu là món mới và qty <= 0
-    if(!it.locked && it.qty <= 0) {
-      currentTable.cart = currentTable.cart.filter(c=>c.id!==id); 
+    if (!it.locked && it.qty <= 0) {
+      currentTable.cart = currentTable.cart.filter(c => c.id !== id); 
     }
-  } else if(delta > 0){ 
+
+  } else if (delta > 0) { 
     // ✅ Món mới thêm
     currentTable.cart.push({ 
-      id: item.id, 
-      name: item.name, 
-      price: item.price, 
+      id,            // id đã truyền từ renderMenuList (có thể là "Cà phê máy - Đen nóng")
+      name: id,      // lưu luôn tên hiển thị
+      price, 
       qty: 1, 
       locked: false,
       baseQty: 0 
     }); 
   } 
 
-  renderMenuList(); 
+  renderMenuList(activeCategory); 
   renderCart(); 
 }
-
 
 // cart
 function renderCart(){ const ul = $('cart-list'); ul.innerHTML = ''; if(!currentTable || !currentTable.cart.length){ ul.innerHTML = '<div class="small">Chưa có món</div>'; $('total').innerText='0'; return; } let total=0; currentTable.cart.forEach(it=>{ total += it.price*it.qty; const li=document.createElement('li'); li.innerHTML = '<div><div style="font-weight:700">'+it.name+'</div><div class="small">'+fmtV(it.price)+' x '+it.qty+'</div></div><div style="font-weight:700">'+fmtV(it.price*it.qty)+'</div>'; ul.appendChild(li); }); $('total').innerText = fmtV(total); }
