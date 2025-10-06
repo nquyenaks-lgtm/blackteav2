@@ -20,7 +20,7 @@ let MENU = [
   {
     id: 101,
     name: "Cà phê pha máy",
-    category: "Cà phê",
+    cat: "Cà phê",
     variants: [
       { id: 1011, name: "Đen nóng", price: 15000 },
       { id: 1012, name: "Sữa nóng", price: 15000 },
@@ -31,7 +31,7 @@ let MENU = [
   {
     id: 102,
     name: "Cà phê pha phin",
-    category: "Cà phê",
+    cat: "Cà phê",
     variants: [
       { id: 1021, name: "Đen nóng", price: 15000 },
       { id: 1022, name: "Sữa nóng", price: 15000 },
@@ -39,24 +39,24 @@ let MENU = [
       { id: 1024, name: "Sữa đá", price: 15000 },
     ]
   },
-  { id: 103, name: "Cà phê sài gòn", category: "Cà phê", price: 20000 },
-  { id: 104, name: "Cà phê kem muối", category: "Cà phê", price: 25000 },
-  { id: 105, name: "Cà phê cốt dừa", category: "Cà phê", price: 25000 },
+  { id: 103, name: "Cà phê sài gòn", cat: "Cà phê", price: 20000 },
+  { id: 104, name: "Cà phê kem muối", cat: "Cà phê", price: 25000 },
+  { id: 105, name: "Cà phê cốt dừa", cat: "Cà phê", price: 25000 },
 
   // ===== Trà nóng (nhóm 2) =====
-  { id: 201, name: "Trà gừng", category: "Trà nóng", price: 15000 },
-  { id: 202, name: "Trà cam quế", category: "Trà nóng", price: 15000 },
-  { id: 203, name: "Cacao nóng", category: "Trà nóng", price: 20000 },
-  { id: 204, name: "Cacao chuối", category: "Trà nóng", price: 20000 },
-  { id: 205, name: "Bạc xỉu nóng", category: "Trà nóng", price: 20000 },
-  { id: 206, name: "Trà lip ton ngũ sắc", category: "Trà nóng", price: 20000 },
-  { id: 207, name: "Trà đào cam quế", category: "Trà nóng", price: 20000 },
-  { id: 208, name: "Trà cúc long nhãn", category: "Trà nóng", price: 20000 },
-  { id: 209, name: "Trà la hán sen vàng", category: "Trà nóng", price: 20000 },
-  { id: 210, name: "Trà chanh gừng ô mai", category: "Trà nóng", price: 20000 },
-  { id: 211, name: "Trà atiso", category: "Trà nóng", price: 20000 },
-  { id: 212, name: "Trà thảo mộc", category: "Trà nóng", price: 25000 },
-  { id: 213, name: "Matcha latte", category: "Trà nóng", price: 25000 },
+  { id: 201, name: "Trà gừng", cat: "Trà nóng", price: 15000 },
+  { id: 202, name: "Trà cam quế", cat: "Trà nóng", price: 15000 },
+  { id: 203, name: "Cacao nóng", cat: "Trà nóng", price: 20000 },
+  { id: 204, name: "Cacao chuối", cat: "Trà nóng", price: 20000 },
+  { id: 205, name: "Bạc xỉu nóng", cat: "Trà nóng", price: 20000 },
+  { id: 206, name: "Trà lip ton ngũ sắc", cat: "Trà nóng", price: 20000 },
+  { id: 207, name: "Trà đào cam quế", cat: "Trà nóng", price: 20000 },
+  { id: 208, name: "Trà cúc long nhãn", cat: "Trà nóng", price: 20000 },
+  { id: 209, name: "Trà la hán sen vàng", cat: "Trà nóng", price: 20000 },
+  { id: 210, name: "Trà chanh gừng ô mai", cat: "Trà nóng", price: 20000 },
+  { id: 211, name: "Trà atiso", cat: "Trà nóng", price: 20000 },
+  { id: 212, name: "Trà thảo mộc", cat: "Trà nóng", price: 25000 },
+  { id: 213, name: "Matcha latte", cat: "Trà nóng", price: 25000 },
 ];
 let CATEGORIES = ["Cà phê","Trà nóng"];
 let TABLES = [];
