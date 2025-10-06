@@ -517,7 +517,6 @@ function renderCategories(){
 }
 
 // menu list
-function renderMenuList(category) {
 function renderMenuList(category = activeCategory) {
   const container = document.getElementById("menu-list");
   container.innerHTML = "";
