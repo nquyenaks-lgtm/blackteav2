@@ -322,41 +322,7 @@
     <button onclick="closeCustomAlert()">Xác nhận</button>
   </div>
 </div>
-<!-- Firebase App (luôn cần thiết) -->
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<!-- Firestore -->
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-<!-- Nếu cần Analytics -->
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-analytics.js"></script>
 
-<script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyAv7Ba3I6E-aF-3ZPlcoabAlxynxfc1cEA",
-    authDomain: "blackteapos-9016e.firebaseapp.com",
-    projectId: "blackteapos-9016e",
-    storageBucket: "blackteapos-9016e.appspot.com",
-    messagingSenderId: "133051542981",
-    appId: "1:133051542981:web:9f4937c264fa956a456fac",
-    measurementId: "G-GVRBHCSPWM"
-  };
-
-  // Khởi tạo Firebase
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
-
-  // Bật offline persistence (lưu dữ liệu vào IndexedDB)
-  db.enablePersistence()
-    .catch(function(err) {
-      if (err.code == 'failed-precondition') {
-        console.warn("❌ Persistence failed (có thể do mở nhiều tab song song).");
-      } else if (err.code == 'unimplemented') {
-        console.warn("❌ Trình duyệt không hỗ trợ persistence.");
-      }
-    });
-</script>
-
-<!-- Sau khi Firebase đã khởi tạo, mới load app.js -->
-<script src="app.js"></script>
 
 
 </body>
