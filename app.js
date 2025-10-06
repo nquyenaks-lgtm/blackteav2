@@ -543,20 +543,65 @@ function renderCategories(){
 }
 
 // menu list
-function renderMenuList(){
-  const list = $('menu-list'); list.innerHTML = '';
-  const items = MENU.filter(m=> activeCategory==='Tất cả' ? true : m.cat===activeCategory);
-  items.forEach(item=>{
-    const row = document.createElement('div'); row.className='menu-row';
-    const left = document.createElement('div'); left.className='menu-left';
-    left.innerHTML = '<div class="menu-name">'+item.name+'</div><div class="menu-price">'+fmtV(item.price)+' VND</div>';
-    const controls = document.createElement('div'); controls.className='qty-controls';
-    const minus = document.createElement('button'); minus.className='btn btn-secondary'; minus.innerText='-'; minus.onclick=(e)=>{ e.stopPropagation(); changeQty(item.id,-1); };
-    const qty = document.createElement('span'); qty.id='qty-'+item.id; qty.innerText = getQty(item.id);
-    const plus = document.createElement('button'); plus.className='btn btn-secondary'; plus.innerText='+'; plus.onclick=(e)=>{ e.stopPropagation(); changeQty(item.id,1); };
-    controls.appendChild(minus); controls.appendChild(qty); controls.appendChild(plus);
-    row.appendChild(left); row.appendChild(controls);
-    list.appendChild(row);
+function renderMenuList(category) {
+  const container = document.getElementById("menu-list");
+  container.innerHTML = "";
+
+  const items = MENU.filter(m => m.cat === category);
+
+  items.forEach(item => {
+    if (item.variants) {
+      // 👉 Nhóm có biến thể
+      const groupDiv = document.createElement("div");
+      groupDiv.className = "menu-group-title";
+      groupDiv.innerText = item.name;
+
+      const variantsDiv = document.createElement("div");
+      variantsDiv.className = "menu-variants";
+      variantsDiv.style.display = "none";
+
+      // render từng biến thể y hệt món cũ
+      item.variants.forEach(v => {
+        const div = document.createElement("div");
+        div.className = "menu-item";
+        div.innerHTML = `
+          <div class="menu-info">
+            <span>${v.name}</span>
+            <span>${v.price.toLocaleString()} VND</span>
+          </div>
+          <div class="menu-actions">
+            <button onclick="changeQty('${v.id}', ${v.price}, '${v.name}', -1)">-</button>
+            <span id="qty-${v.id}">0</span>
+            <button onclick="changeQty('${v.id}', ${v.price}, '${v.name}', 1)">+</button>
+          </div>
+        `;
+        variantsDiv.appendChild(div);
+      });
+
+      // toggle xổ/ẩn khi bấm tiêu đề nhóm
+      groupDiv.onclick = () => {
+        variantsDiv.style.display = (variantsDiv.style.display === "none" ? "block" : "none");
+      };
+
+      container.appendChild(groupDiv);
+      container.appendChild(variantsDiv);
+    } else {
+      // 👉 Món đơn (giữ nguyên style cũ)
+      const div = document.createElement("div");
+      div.className = "menu-item";
+      div.innerHTML = `
+        <div class="menu-info">
+          <span>${item.name}</span>
+          <span>${item.price.toLocaleString()} VND</span>
+        </div>
+        <div class="menu-actions">
+          <button onclick="changeQty('${item.id}', ${item.price}, '${item.name}', -1)">-</button>
+          <span id="qty-${item.id}">0</span>
+          <button onclick="changeQty('${item.id}', ${item.price}, '${item.name}', 1)">+</button>
+        </div>
+      `;
+      container.appendChild(div);
+    }
   });
 }
 
