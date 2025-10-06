@@ -541,42 +541,43 @@ function goBack(){
 }
 // categories
 function renderCategories() {
-const bar = $('category-bar'); 
-bar.innerHTML = '';
+  const bar = $('category-bar'); 
+  bar.innerHTML = '';
 
-CATEGORIES.forEach(cat => {
-  if (cat === "Tìm kiếm") {
-    // Tab đặc biệt: input search
-    const searchTab = document.createElement('div');
-    searchTab.className = 'search-tab';
+  CATEGORIES.forEach(cat => {
+    if (cat === "Tìm kiếm") {
+      // Tab đặc biệt: input search
+      const searchTab = document.createElement('div');
+      searchTab.className = 'search-tab';
 
-    const searchInput = document.createElement('input');
-    searchInput.id = 'menu-search';
-    searchInput.type = 'text';
-    searchInput.placeholder = 'Nhập món cần tìm...'; // bỏ icon 🔍
-    
-    searchInput.addEventListener('input', (e) => {
-      activeCategory = "Tìm kiếm";   // ✅ luôn chuyển về tab Tìm kiếm khi gõ
-      searchKeyword = e.target.value;
-      renderMenuList();
-    });
+      const searchInput = document.createElement('input');
+      searchInput.id = 'menu-search';
+      searchInput.type = 'text';
+      searchInput.placeholder = 'Nhập món cần tìm...'; // bỏ icon 🔍
+      
+      searchInput.addEventListener('input', (e) => {
+        activeCategory = "Tìm kiếm";   // ✅ luôn chuyển về tab Tìm kiếm khi gõ
+        searchKeyword = e.target.value;
+        renderMenuList();
+        renderCategories();            // ✅ cập nhật lại thanh danh mục → nút cũ trắng lại
+      });
 
-    searchTab.appendChild(searchInput);
-    bar.appendChild(searchTab);
+      searchTab.appendChild(searchInput);
+      bar.appendChild(searchTab);
 
-  } else {
-    // Tab danh mục bình thường
-    const b = document.createElement('button'); 
-    b.className = 'category-btn' + (cat === activeCategory ? ' active' : '');
-    b.innerText = cat;
-    b.onclick = () => { 
-      activeCategory = cat; 
-      renderMenuList(); 
-      renderCategories(); 
-    };
-    bar.appendChild(b);
-  }
-});
+    } else {
+      // Tab danh mục bình thường
+      const b = document.createElement('button'); 
+      b.className = 'category-btn' + (cat === activeCategory ? ' active' : '');
+      b.innerText = cat;
+      b.onclick = () => { 
+        activeCategory = cat; 
+        renderMenuList(); 
+        renderCategories(); 
+      };
+      bar.appendChild(b);
+    }
+  });
 }
 // menu list
 function renderMenuList(){
