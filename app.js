@@ -553,16 +553,20 @@ function renderCategories() {
       const searchInput = document.createElement('input');
       searchInput.id = 'menu-search';
       searchInput.type = 'text';
-      searchInput.placeholder = 'Nhập món cần tìm...'; // bỏ icon 🔍
+      searchInput.placeholder = 'Nhập món cần tìm...';
 
-      // ✅ Khi click vào ô tìm kiếm, chỉ đổi trạng thái, không render lại
+      // ✅ Khi click vào ô tìm kiếm
       searchInput.addEventListener('focus', () => {
         if (activeCategory !== "Tìm kiếm") {
           activeCategory = "Tìm kiếm";
-          // Không gọi renderCategories() ở đây để tránh mất focus
-          renderMenuList(); // chỉ cập nhật menu
-          // Cập nhật lại thanh sau 100ms để tránh mất focus
-          setTimeout(() => renderCategories(), 100);
+          renderMenuList();
+
+          // ✅ Render lại thanh và focus lại ô mới sau 50ms
+          setTimeout(() => {
+            renderCategories();
+            const newInput = $('menu-search');
+            if (newInput) newInput.focus(); // tự focus lại
+          }, 50);
         }
       });
 
