@@ -32,7 +32,7 @@ h2,h3,h4{margin:8px 0}
 /* Hóa đơn: hiển thị 6 dòng rồi cuộn */
 .cart-list{
   list-style:none;
-  max-height:280px;   /* ~ 6 món */
+  max-height:240px;   /* ~ 5 món */
   overflow-y:auto;
   margin-top:8px;
   padding-left:0;
@@ -68,11 +68,11 @@ h2,h3,h4{margin:8px 0}
 /* Các nút & chung */
 .settings-line{width:100%;text-align:left;padding:12px;border-radius:8px}
 .btn{padding:8px 12px;border-radius:8px;border:0;cursor:pointer;font-weight:600}
-.btn-primary{background:#2b6ef6;color:#fff}
+.btn-primary{background:#4a69ad;color:#fff}
 .btn-secondary{background:#dfe7fb;color:#222}
 .btn-light{background:transparent;border:1px solid transparent;padding:6px 8px;border-radius:6px;cursor:pointer}
 .btn-action{background:#cfe0ff;color:#0b2b5a}
-.btn-action.primary{background:#2b6ef6;color:#fff}
+.btn-action.primary{background:#4a69ad;color:#fff}
 input,select{padding:8px;border:1px solid #ccc;border-radius:6px}
 .small{font-size:13px;color:#666}
 .history-day{background:#fff;border:1px solid #e6e9ef;padding:8px;border-radius:8px;margin-bottom:8px}
@@ -440,18 +440,6 @@ header {
     padding: 3px 8px;
   }
 }
-// Màu chữ menu
-.item-name {
-  color: #4a69ad !important;   /* màu đậm */
-  font-weight: 600;
-  font-size: 16px;
-}
-
-.item-price {
-  color: #7d8fd0 !important;   /* xanh nhạt hơn */
-  font-weight: 500;
-  font-size: 14px;
-}
 /* 💙 Nút khách mang đi & khách ghé quán */
 #guestTakeAway,
 #guestAtShop {
@@ -465,31 +453,3 @@ header {
   transition: 0.2s ease;
 }
 
-#guestTakeAway:hover,
-#guestAtShop:hover {
-  background-color: #3d5b99 !important;  /* 💙 đậm hơn chút khi hover */
-}
-
-/* // menu group có biến thể */
-.menu-group {
-  font-weight: bold;
-  padding: 6px 8px;
-  background: #f0f0f0;
-  border-bottom: 1px solid #ddd;
-}
-
-.menu-variants {
-  padding-left: 10px;
-}
-
-.menu-variant {
-  display: flex;
-  justify-content: space-between;
-  padding: 6px 8px;
-  border-bottom: 1px solid #eee;
-  cursor: pointer;
-}
-
-.menu-variant:hover {
-  background: #eaf4ff;
-}
