@@ -387,23 +387,13 @@ header {
   overflow: hidden;
 }
 
-/* ===== Khối chứa toàn bộ thanh danh mục và ô tìm kiếm ===== */
-.category-bar {
-  display: flex;
-  flex-wrap: wrap;
-  border: 1px solid #4a69ad;
-  border-radius: 0;
-  overflow: hidden;
-  box-sizing: border-box;
-}
-
 /* ===== Nút danh mục ===== */
 .category-btn {
   background: #fff;
   color: #4a69ad;
-  border: none;              /* viền do .category-bar bao quanh */
-  border-left: 1px solid #4a69ad;
-  border-top: 1px solid #4a69ad;
+  border: 1px solid #4a69ad;
+  border-left: none;  /* liền hàng ngang */
+  border-top: none;   /* liền hàng dọc */
   padding: 4px 10px;
   font-size: 14px;
   font-weight: 500;
@@ -411,13 +401,12 @@ header {
   cursor: pointer;
   transition: background 0.15s, color 0.15s;
   user-select: none;
-  flex: 1;
+  border-radius: 0;
   line-height: 1.3;
-  height: 32px;              /* ✅ Chiều cao cố định toàn hàng */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
+  margin: 0;
+  flex-grow: 1;
+  min-width: max-content;
+  height: 30px; /* thêm để cố định chiều cao đồng nhất */
 }
 
 /* Hover */
@@ -429,19 +418,34 @@ header {
 .category-btn.active {
   background: #4a69ad;
   color: #fff;
+  border-color: #4a69ad;
 }
 
-/* ===== Ô tìm kiếm nằm chung khối ===== */
+/* Liền mạch giữa các ô */
+.category-bar .category-btn:nth-child(n+2) {
+  border-left-width: 1px;
+}
+.category-bar .category-btn:nth-child(n+5) {
+  border-top-width: 1px;
+}
+
+/* Hàng cuối chỉ còn 1 viền dưới mảnh, không đúp */
+.category-bar .category-btn:last-child {
+  border-bottom: 1px solid #4a69ad;
+}
+
+/* ===== Ô tìm kiếm nằm chung hàng ===== */
 .search-tab {
-  flex: 0 0 40%;             /* ✅ chiếm 40% chiều ngang */
-  height: 32px;
-  border-left: 1px solid #4a69ad;
-  border-top: 1px solid #4a69ad;
+  flex: 0 0 40%;            /* ✅ chiếm 40% chiều ngang */
+  border: 1px solid #4a69ad;
+  border-left: none;
+  border-top: none;
+  height: 30px;             /* ✅ cùng chiều cao nút danh mục */
+  box-sizing: border-box;
   background: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-sizing: border-box;
 }
 
 .search-tab input {
@@ -449,23 +453,16 @@ header {
   height: 100%;
   border: none;
   outline: none;
-  padding: 0 10px;
+  padding: 0 8px;
   font-size: 14px;
   color: #4a69ad;
   background: #fff;
-  line-height: 1.3;
   box-sizing: border-box;
 }
 
 .search-tab input::placeholder {
   color: #9bb0d6;
   font-style: italic;
-}
-
-/* Hover / focus không đổi màu */
-.search-tab:hover,
-.search-tab input:focus {
-  background: #fff;
 }
 
 /* Responsive */
