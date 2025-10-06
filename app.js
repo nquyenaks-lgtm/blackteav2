@@ -577,6 +577,7 @@ CATEGORIES.forEach(cat => {
     bar.appendChild(b);
   }
 });
+}
 // menu list
 function renderMenuList(){
   const list = $('menu-list');
