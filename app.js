@@ -15,50 +15,89 @@ const FIXED_TABLES = [
   "T4","G4","N4"
 ];
 
-let MENU = [
-  // ===== Cà phê (nhóm 1) =====
-  {
-    id: 101,
-    name: "Cà phê pha máy",
-    cat: "Cà phê",
-    variants: [
-      { id: 1011, name: "Đen nóng", price: 15000 },
-      { id: 1012, name: "Sữa nóng", price: 15000 },
-      { id: 1013, name: "Đen đá", price: 15000 },
-      { id: 1014, name: "Sữa đá", price: 15000 },
-    ]
-  },
-  {
-    id: 102,
-    name: "Cà phê pha phin",
-    cat: "Cà phê",
-    variants: [
-      { id: 1021, name: "Đen nóng", price: 15000 },
-      { id: 1022, name: "Sữa nóng", price: 15000 },
-      { id: 1023, name: "Đen đá", price: 15000 },
-      { id: 1024, name: "Sữa đá", price: 15000 },
-    ]
-  },
-  { id: 103, name: "Cà phê sài gòn", cat: "Cà phê", price: 20000 },
-  { id: 104, name: "Cà phê kem muối", cat: "Cà phê", price: 25000 },
-  { id: 105, name: "Cà phê cốt dừa", cat: "Cà phê", price: 25000 },
+let MENU =  [
+  // --- Cà phê ---
+  { id: 1, name: "Cà phê sữa nóng (Pha phin)", price: 15000, cat: "Cà phê" },
+  { id: 2, name: "Cà phê sữa đá (Pha phin)", price: 15000, cat: "Cà phê" },
+  { id: 3, name: "Cà phê đen nóng (Pha phin)", price: 15000, cat: "Cà phê" },
+  { id: 4, name: "Cà phê đen đá (Pha phin)", price: 15000, cat: "Cà phê" },
+  { id: 5, name: "Cà phê sữa nóng (Pha máy)", price: 15000, cat: "Cà phê" },
+  { id: 6, name: "Cà phê sữa đá (Pha máy)", price: 15000, cat: "Cà phê" },
+  { id: 7, name: "Cà phê đen nóng (Pha máy)", price: 15000, cat: "Cà phê" },
+  { id: 8, name: "Cà phê đen đá (Pha máy)", price: 15000, cat: "Cà phê" },
+  { id: 9, name: "Cà phê Sài Gòn", price: 18000, cat: "Cà phê" },
+  { id: 10, name: "Bạc xỉu", price: 20000, cat: "Cà phê" },
+  { id: 11, name: "Cà phê kem trứng", price: 20000, cat: "Cà phê" },
+  { id: 12, name: "Cà phê cốt dừa", price: 20000, cat: "Cà phê" },
+  { id: 13, name: "Cacao nóng", price: 20000, cat: "Cà phê" },
+  { id: 14, name: "Cacao đá", price: 20000, cat: "Cà phê" },
 
-  // ===== Trà nóng (nhóm 2) =====
-  { id: 201, name: "Trà gừng", cat: "Trà nóng", price: 15000 },
-  { id: 202, name: "Trà cam quế", cat: "Trà nóng", price: 15000 },
-  { id: 203, name: "Cacao nóng", cat: "Trà nóng", price: 20000 },
-  { id: 204, name: "Cacao chuối", cat: "Trà nóng", price: 20000 },
-  { id: 205, name: "Bạc xỉu nóng", cat: "Trà nóng", price: 20000 },
-  { id: 206, name: "Trà lip ton ngũ sắc", cat: "Trà nóng", price: 20000 },
-  { id: 207, name: "Trà đào cam quế", cat: "Trà nóng", price: 20000 },
-  { id: 208, name: "Trà cúc long nhãn", cat: "Trà nóng", price: 20000 },
-  { id: 209, name: "Trà la hán sen vàng", cat: "Trà nóng", price: 20000 },
-  { id: 210, name: "Trà chanh gừng ô mai", cat: "Trà nóng", price: 20000 },
-  { id: 211, name: "Trà atiso", cat: "Trà nóng", price: 20000 },
-  { id: 212, name: "Trà thảo mộc", cat: "Trà nóng", price: 25000 },
-  { id: 213, name: "Matcha latte", cat: "Trà nóng", price: 25000 },
+  // --- Trà sữa (M/L) ---
+  { id: 15, name: "Trà sữa truyền thống (Size L)", price: 20000, cat: "Trà sữa" },
+  { id: 16, name: "Trà sữa khoai môn (Size M)", price: 20000, cat: "Trà sữa" },
+  { id: 17, name: "Trà sữa khoai môn (Size L)", price: 25000, cat: "Trà sữa" },
+  { id: 18, name: "Trà sữa socola (Size M)", price: 20000, cat: "Trà sữa" },
+  { id: 19, name: "Trà sữa socola (Size L)", price: 25000, cat: "Trà sữa" },
+  { id: 20, name: "Chân châu đường đen (Size M)", price: 20000, cat: "Trà sữa" },
+  { id: 21, name: "Chân châu đường đen (Size L)", price: 25000, cat: "Trà sữa" },
+
+  // --- Sinh tố ---
+  { id: 35, name: "Sinh tố Dứa", price: 25000, cat: "Sinh tố" },
+  { id: 36, name: "Sinh tố Dâu", price: 25000, cat: "Sinh tố" },
+  { id: 37, name: "Sinh tố Nho", price: 25000, cat: "Sinh tố" },
+  { id: 38, name: "Sinh tố Kiwi", price: 25000, cat: "Sinh tố" },
+  { id: 39, name: "Sinh tố Việt quất", price: 25000, cat: "Sinh tố" },
+  { id: 40, name: "Sinh tố Xoài", price: 25000, cat: "Sinh tố" },
+
+  // --- Sữa chua ---
+  { id: 41, name: "Sữa chua thuần khiết", price: 20000, cat: "Sữa chua" },
+  { id: 42, name: "Sữa chua Việt quất", price: 25000, cat: "Sữa chua" },
+  { id: 43, name: "Sữa chua Nho", price: 25000, cat: "Sữa chua" },
+  { id: 44, name: "Sữa chua Dâu", price: 25000, cat: "Sữa chua" },
+  { id: 45, name: "Sữa chua Kiwi", price: 25000, cat: "Sữa chua" },
+  { id: 46, name: "Sữa chua Xoài", price: 25000, cat: "Sữa chua" },
+
+  // --- Giải khát ---
+  { id: 47, name: "Bò húc", price: 18000, cat: "Giải khát" },
+  { id: 48, name: "Nước các loại", price: 15000, cat: "Giải khát" },
+  { id: 49, name: "Soda gum", price: 25000, cat: "Giải khát" },
+  { id: 50, name: "Cocktail", price: 15000, cat: "Giải khát" },
+  { id: 51, name: "Chanh đá", price: 15000, cat: "Giải khát" },
+  { id: 52, name: "Chanh muối", price: 15000, cat: "Giải khát" },
+
+  // --- Trà & Nước ép ---
+  { id: 53, name: "Trà gừng", price: 15000, cat: "Trà & Nước ép" },
+  { id: 54, name: "Trà Lipton ngũ sắc", price: 20000, cat: "Trà & Nước ép" },
+  { id: 55, name: "Trà thảo mộc", price: 25000, cat: "Trà & Nước ép" },
+  { id: 56, name: "Trà đào (Size M)", price: 15000, cat: "Trà & Nước ép" },
+  { id: 57, name: "Trà đào (Size L)", price: 20000, cat: "Trà & Nước ép" },
+  { id: 58, name: "Rau má đậu xanh (Size M)", price: 15000, cat: "Trà & Nước ép" },
+  { id: 59, name: "Rau má đậu xanh (Size L)", price: 20000, cat: "Trà & Nước ép" },
+  { id: 60, name: "Đậu xanh cốt dừa (Size M)", price: 20000, cat: "Trà & Nước ép" },
+  { id: 61, name: "Đậu xanh cốt dừa (Size L)", price: 25000, cat: "Trà & Nước ép" },
+  { id: 62, name: "Nước ép cà rốt ", price: 25000, cat: "Trà & Nước ép" },
+  { id: 63, name: "Nước ép cam", price: 25000, cat: "Trà & Nước ép" },
+  { id: 64, name: "Nước ép táo", price: 25000, cat: "Trà & Nước ép" },
+  { id: 65, name: "Nước ép cam + cà rốt ", price: 25000, cat: "Trà & Nước ép" },
+  { id: 66, name: "Nước ép cam + dừa", price: 25000, cat: "Trà & Nước ép" },
+  { id: 67, name: "Nước ép cà rốt + dừa", price: 25000, cat: "Trà & Nước ép" },
+  // --- Matcha ---
+  { id: 68, name: "Matcha sữa xoài ", price: 25000, cat: "Matcha" },
+  { id: 69, name: "Matcha khoai môn", price: 25000, cat: "Matcha" },
+  { id: 70, name: "Matcha sữa dừa", price: 25000, cat: "Matcha" },
+  // --- Ăn vặt ---
+  { id: 71, name: "Bánh tráng ruốc nhỏ ", price: 17000, cat: "Ăn vặt" },
+  { id: 72, name: "Bánh tráng ruốc lớn", price: 30000, cat: "Ăn vặt" },
+  { id: 73, name: "Bánh tráng chấm", price: 15000, cat: "Ăn vặt" },
+  // --- Topping ---
+  { id: 74, name: "Thêm topping", price: 5000, cat: "Topping" },
+  { id: 75, name: "Kem cheese", price: 5000, cat: "Topping" },
+  { id: 76, name: "Trứng nướng", price: 5000, cat: "Topping" },
+  { id: 77, name: "Kem lăng", price: 5000, cat: "Topping" },
+  { id: 78, name: "Kem lăng dừa", price: 15000, cat: "Topping" }
 ];
-let CATEGORIES = ["Cà phê","Trà nóng"];
+
+let CATEGORIES = ["Cà phê","Trà sữa","Sinh tố","Sữa chua","Giải khát","Trà & Nước ép","Matcha","Ăn vặt","Topping"];
 let TABLES = [];
 
 // ✅ Migration: đảm bảo mỗi item trong cart có locked và baseQty
@@ -79,20 +118,7 @@ let currentTable = null;
 let createdFromMain = false;
 let activeCategory = 'Cà phê';
 
-// Tìm món theo id (hỗ trợ cả món cha và variants)
-function findMenuItemById(id) {
-  for (const m of MENU) {
-    if (m.id === id) return m;   // Nếu id trùng cha
-    if (m.variants) {
-      const v = m.variants.find(x => x.id === id);
-      if (v) return v;           // Nếu id trùng variant con
-    }
-  }
-  return null;
-}
-
 // helpers
-
 function showCustomAlert(msg) {
   document.getElementById("customAlertMessage").innerText = msg;
   document.getElementById("customAlert").style.display = "block";
@@ -399,7 +425,6 @@ function openTable(id){
     // dùng object đã lưu (thao tác trực tiếp trên object trong TABLES)
     currentTable = TABLES[savedIdx];
     currentTable._isDraft = false;
-    window.currentTable = currentTable;   // ✅ thêm dòng này
   } else {
     // tạo bản nháp (chưa push vào TABLES)
     currentTable = {
@@ -409,7 +434,6 @@ function openTable(id){
       createdAt: Date.now(),
       _isDraft: true
     };
-    window.currentTable = currentTable;   // ✅ thêm dòng này
   }
 
   // hiển thị màn menu
@@ -519,85 +543,28 @@ function renderCategories(){
 }
 
 // menu list
-function renderMenuList(category = activeCategory) {
-  const container = document.getElementById("menu-list");
-  container.innerHTML = "";
-
-  const items = MENU.filter(m => m.cat === category);
-
-  items.forEach(item => {
-    if (item.variants) {
-      // 👉 Nhóm có biến thể
-      const groupDiv = document.createElement("div");
-      groupDiv.className = "menu-group-title";
-
-      const arrow = document.createElement("span");
-      arrow.textContent = "▶";
-      arrow.style.marginRight = "6px";
-
-      const text = document.createElement("span");
-      text.textContent = item.name;
-
-      groupDiv.appendChild(arrow);
-      groupDiv.appendChild(text);
-
-      const variantsDiv = document.createElement("div");
-      variantsDiv.className = "menu-variants";
-      variantsDiv.style.display = "none";
-
-      item.variants.forEach(v => {
-        const div = document.createElement("div");
-        div.className = "menu-item";
-        div.innerHTML = `
-          <div class="menu-info">
-            <span>${v.name}</span>
-            <span>${v.price.toLocaleString()} VND</span>
-          </div>
-          <div class="menu-actions">
-            <button onclick="changeQty('${v.id}', ${v.price}, '${v.name.replace(/'/g, "\\'")}', -1)">-</button>
-            <span id="qty-${v.id}">${getQty(v.id)}</span>
-            <button onclick="changeQty('${v.id}', ${v.price}, '${v.name.replace(/'/g, "\\'")}', 1)">+</button>
-          </div>
-        `;
-        variantsDiv.appendChild(div);
-      });
-
-      groupDiv.onclick = () => {
-        if (variantsDiv.style.display === "none") {
-          variantsDiv.style.display = "block";
-          arrow.textContent = "▼";
-        } else {
-          variantsDiv.style.display = "none";
-          arrow.textContent = "▶";
-        }
-      };
-
-      container.appendChild(groupDiv);
-      container.appendChild(variantsDiv);
-    } else {
-      // 👉 Món không có biến thể
-      const div = document.createElement("div");
-      div.className = "menu-item";
-      div.innerHTML = `
-        <div class="menu-info">
-          <span>${item.name}</span>
-          <span>${item.price.toLocaleString()} VND</span>
-        </div>
-        <div class="menu-actions">
-          <button onclick="changeQty('${item.id}', ${item.price}, '${item.name.replace(/'/g, "\\'")}', -1)">-</button>
-          <span id="qty-${item.id}">${getQty(item.id)}</span>
-          <button onclick="changeQty('${item.id}', ${item.price}, '${item.name.replace(/'/g, "\\'")}', 1)">+</button>
-        </div>
-      `;
-      container.appendChild(div);
-    }
+function renderMenuList(){
+  const list = $('menu-list'); list.innerHTML = '';
+  const items = MENU.filter(m=> activeCategory==='Tất cả' ? true : m.cat===activeCategory);
+  items.forEach(item=>{
+    const row = document.createElement('div'); row.className='menu-row';
+    const left = document.createElement('div'); left.className='menu-left';
+    left.innerHTML = '<div class="menu-name">'+item.name+'</div><div class="menu-price">'+fmtV(item.price)+' VND</div>';
+    const controls = document.createElement('div'); controls.className='qty-controls';
+    const minus = document.createElement('button'); minus.className='btn btn-secondary'; minus.innerText='-'; minus.onclick=(e)=>{ e.stopPropagation(); changeQty(item.id,-1); };
+    const qty = document.createElement('span'); qty.id='qty-'+item.id; qty.innerText = getQty(item.id);
+    const plus = document.createElement('button'); plus.className='btn btn-secondary'; plus.innerText='+'; plus.onclick=(e)=>{ e.stopPropagation(); changeQty(item.id,1); };
+    controls.appendChild(minus); controls.appendChild(qty); controls.appendChild(plus);
+    row.appendChild(left); row.appendChild(controls);
+    list.appendChild(row);
   });
 }
+
 function getQty(id){ if(!currentTable) return 0; const it = currentTable.cart.find(c=>c.id===id); return it ? it.qty : 0; }
 
-function changeQty(id, price, name, delta){ 
+function changeQty(id, delta){ 
   if(!currentTable) return; 
-  const item = findMenuItemById(id);   
+  const item = MENU.find(m=>m.id===id); 
   if(!item) return; 
   let it = currentTable.cart.find(c=>c.id===id); 
 
@@ -625,8 +592,10 @@ function changeQty(id, price, name, delta){
     }); 
   } 
 
+  renderMenuList(); 
   renderCart(); 
 }
+
 
 // cart
 function renderCart(){ const ul = $('cart-list'); ul.innerHTML = ''; if(!currentTable || !currentTable.cart.length){ ul.innerHTML = '<div class="small">Chưa có món</div>'; $('total').innerText='0'; return; } let total=0; currentTable.cart.forEach(it=>{ total += it.price*it.qty; const li=document.createElement('li'); li.innerHTML = '<div><div style="font-weight:700">'+it.name+'</div><div class="small">'+fmtV(it.price)+' x '+it.qty+'</div></div><div style="font-weight:700">'+fmtV(it.price*it.qty)+'</div>'; ul.appendChild(li); }); $('total').innerText = fmtV(total); }
