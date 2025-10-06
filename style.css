@@ -452,3 +452,40 @@ header {
   cursor: pointer;
   transition: 0.2s ease;
 }
+/* ===== Ô tìm kiếm trong thanh danh mục ===== */
+.search-tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+  margin: 0;
+  padding: 0;
+  border: 1px solid #4a69ad;
+  border-top: none;
+  border-left: none;
+  height: 32px; /* cùng chiều cao với nút danh mục */
+  box-sizing: border-box;
+  background: #fff; /* luôn trắng, không đổi màu */
+}
+
+.search-tab input {
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+  padding: 0 10px;
+  font-size: 14px;
+  color: #4a69ad;
+  background: #fff; /* nền trắng tĩnh */
+  box-sizing: border-box;
+}
+
+.search-tab input::placeholder {
+  color: #9bb0d6;
+  font-style: italic;
+}
+
+/* Khi focus không đổi màu */
+.search-tab input:focus {
+  background: #fff;
+}
