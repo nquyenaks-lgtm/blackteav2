@@ -522,20 +522,29 @@ function renderMenuList(category) {
   const container = document.getElementById("menu-list");
   container.innerHTML = "";
 
-  const items = MENU.filter(m => m.cat === category);
+  const items = MENU.filter(m => m.category === category);
 
   items.forEach(item => {
     if (item.variants) {
       // 👉 Nhóm có biến thể
       const groupDiv = document.createElement("div");
       groupDiv.className = "menu-group-title";
-      groupDiv.innerText = item.name;
+
+      // tiêu đề nhóm + icon
+      const arrow = document.createElement("span");
+      arrow.textContent = "▶";
+      arrow.style.marginRight = "6px";
+
+      const text = document.createElement("span");
+      text.textContent = item.name;
+
+      groupDiv.appendChild(arrow);
+      groupDiv.appendChild(text);
 
       const variantsDiv = document.createElement("div");
       variantsDiv.className = "menu-variants";
       variantsDiv.style.display = "none";
 
-      // render từng biến thể y hệt món cũ
       item.variants.forEach(v => {
         const div = document.createElement("div");
         div.className = "menu-item";
@@ -546,7 +555,7 @@ function renderMenuList(category) {
           </div>
           <div class="menu-actions">
             <button onclick="changeQty('${v.id}', ${v.price}, '${v.name}', -1)">-</button>
-            <span id="qty-${v.id}">0</span>
+            <span id="qty-${v.id}">${getQty(v.id)}</span>
             <button onclick="changeQty('${v.id}', ${v.price}, '${v.name}', 1)">+</button>
           </div>
         `;
@@ -555,13 +564,19 @@ function renderMenuList(category) {
 
       // toggle xổ/ẩn khi bấm tiêu đề nhóm
       groupDiv.onclick = () => {
-        variantsDiv.style.display = (variantsDiv.style.display === "none" ? "block" : "none");
+        if (variantsDiv.style.display === "none") {
+          variantsDiv.style.display = "block";
+          arrow.textContent = "▼";
+        } else {
+          variantsDiv.style.display = "none";
+          arrow.textContent = "▶";
+        }
       };
 
       container.appendChild(groupDiv);
       container.appendChild(variantsDiv);
     } else {
-      // 👉 Món đơn (giữ nguyên style cũ)
+      // 👉 Món đơn
       const div = document.createElement("div");
       div.className = "menu-item";
       div.innerHTML = `
@@ -571,7 +586,7 @@ function renderMenuList(category) {
         </div>
         <div class="menu-actions">
           <button onclick="changeQty('${item.id}', ${item.price}, '${item.name}', -1)">-</button>
-          <span id="qty-${item.id}">0</span>
+          <span id="qty-${item.id}">${getQty(item.id)}</span>
           <button onclick="changeQty('${item.id}', ${item.price}, '${item.name}', 1)">+</button>
         </div>
       `;
@@ -579,7 +594,6 @@ function renderMenuList(category) {
     }
   });
 }
-
 function getQty(id){ if(!currentTable) return 0; const it = currentTable.cart.find(c=>c.id===id); return it ? it.qty : 0; }
 
 function changeQty(id, delta){ 
