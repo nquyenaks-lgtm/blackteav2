@@ -16,36 +16,50 @@ const FIXED_TABLES = [
 ];
 
 let MENU = [
+let MENU = [
+  // ===== Cà phê (nhóm 1) =====
   {
-    id: 1,
+    id: 101,
     name: "Cà phê pha máy",
-    cat: "Cà phê",
+    category: "Cà phê",
     variants: [
-      { id: 2, name: "Cà phê máy đen nóng", price: 15000 },
-      { id: 3, name: "Cà phê máy sữa nóng", price: 15000 },
-      { id: 4, name: "Cà phê máy đen đá",   price: 15000 },
-      { id: 5, name: "Cà phê máy sữa đá",   price: 15000 }
+      { id: 1011, name: "Đen nóng", price: 15000 },
+      { id: 1012, name: "Sữa nóng", price: 15000 },
+      { id: 1013, name: "Đen đá", price: 15000 },
+      { id: 1014, name: "Sữa đá", price: 15000 },
     ]
   },
   {
-    id: 6,
+    id: 102,
     name: "Cà phê pha phin",
-    cat: "Cà phê",
+    category: "Cà phê",
     variants: [
-      { id: 7,  name: "Cà phê phin đen nóng", price: 15000 },
-      { id: 8,  name: "Cà phê phin sữa nóng", price: 15000 },
-      { id: 9,  name: "Cà phê phin đen đá",   price: 15000 },
-      { id: 10, name: "Cà phê phin sữa đá",   price: 15000 }
+      { id: 1021, name: "Đen nóng", price: 15000 },
+      { id: 1022, name: "Sữa nóng", price: 15000 },
+      { id: 1023, name: "Đen đá", price: 15000 },
+      { id: 1024, name: "Sữa đá", price: 15000 },
     ]
   },
-  { id: 11, name: "Cà phê Sài Gòn",   price: 18000, cat: "Cà phê" },
-  { id: 12, name: "Cà phê kem muối",  price: 20000, cat: "Cà phê" },
-  { id: 13, name: "Cà phê kem trứng", price: 20000, cat: "Cà phê" },
-  { id: 14, name: "Cà phê cốt dừa",   price: 20000, cat: "Cà phê" },
-  { id: 15, name: "Bạc xỉu đá",       price: 20000, cat: "Cà phê" },
-  { id: 16, name: "Ca cao đá",        price: 20000, cat: "Cà phê" }
+  { id: 103, name: "Cà phê sài gòn", category: "Cà phê", price: 20000 },
+  { id: 104, name: "Cà phê kem muối", category: "Cà phê", price: 25000 },
+  { id: 105, name: "Cà phê cốt dừa", category: "Cà phê", price: 25000 },
+
+  // ===== Trà nóng (nhóm 2) =====
+  { id: 201, name: "Trà gừng", category: "Trà nóng", price: 15000 },
+  { id: 202, name: "Trà cam quế", category: "Trà nóng", price: 15000 },
+  { id: 203, name: "Cacao nóng", category: "Trà nóng", price: 20000 },
+  { id: 204, name: "Cacao chuối", category: "Trà nóng", price: 20000 },
+  { id: 205, name: "Bạc xỉu nóng", category: "Trà nóng", price: 20000 },
+  { id: 206, name: "Trà lip ton ngũ sắc", category: "Trà nóng", price: 20000 },
+  { id: 207, name: "Trà đào cam quế", category: "Trà nóng", price: 20000 },
+  { id: 208, name: "Trà cúc long nhãn", category: "Trà nóng", price: 20000 },
+  { id: 209, name: "Trà la hán sen vàng", category: "Trà nóng", price: 20000 },
+  { id: 210, name: "Trà chanh gừng ô mai", category: "Trà nóng", price: 20000 },
+  { id: 211, name: "Trà atiso", category: "Trà nóng", price: 20000 },
+  { id: 212, name: "Trà thảo mộc", category: "Trà nóng", price: 25000 },
+  { id: 213, name: "Matcha latte", category: "Trà nóng", price: 25000 },
 ];
-let CATEGORIES = ["Cà phê","Trà sữa","Sinh tố","Sữa chua","Giải khát","Trà & Nước ép","Matcha","Ăn vặt","Topping"];
+let CATEGORIES = ["Cà phê","Trà nóng"];
 let TABLES = [];
 
 // ✅ Migration: đảm bảo mỗi item trong cart có locked và baseQty
