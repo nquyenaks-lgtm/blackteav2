@@ -574,18 +574,17 @@ function renderMenuList(category = activeCategory) {
       container.appendChild(variantsDiv);
     } else {
       const div = document.createElement("div");
-      div.className = "menu-item";
       div.innerHTML = `
-        <div class="menu-info">
-          <span>${item.name}</span>
-          <span>${item.price.toLocaleString()} VND</span>
-        </div>
-        <div class="menu-actions">
-          <button onclick="changeQty('${item.id}', ${item.price}, '${item.name}', -1)">-</button>
-          <span id="qty-${item.id}">${getQty(item.id)}</span>
-          <button onclick="changeQty('${item.id}', ${item.price}, '${item.name}', 1)">+</button>
-        </div>
-      `;
+  <div class="menu-info">
+    <span>${v.name}</span>
+    <span>${v.price.toLocaleString()} VND</span>
+  </div>
+  <div class="menu-actions">
+    <button onclick="changeQty('${v.id}', ${v.price}, '${v.name.replace(/'/g, "\\'")}', -1)">-</button>
+    <span id="qty-${v.id}">${getQty(v.id)}</span>
+    <button onclick="changeQty('${v.id}', ${v.price}, '${v.name.replace(/'/g, "\\'")}', 1)">+</button>
+  </div>
+`;
       container.appendChild(div);
     }
   });
