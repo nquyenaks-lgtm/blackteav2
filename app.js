@@ -542,12 +542,41 @@ function goBack(){
 }
 // categories
 function renderCategories(){
-  const bar = $('category-bar'); bar.innerHTML = '';
+  const bar = $('category-bar'); 
+  bar.innerHTML = '';
+
   CATEGORIES.forEach(cat=>{
-    const b = document.createElement('button'); b.className='category-btn' + (cat===activeCategory ? ' active' : '');
-    b.innerText = cat;
-    b.onclick = ()=>{ activeCategory = cat; renderMenuList(); renderCategories(); };
-    bar.appendChild(b);
+    if (cat === "🔍 Tìm kiếm") {
+      // Tab đặc biệt: input tìm kiếm
+      const searchTab = document.createElement('div');
+      searchTab.className = 'search-tab';
+
+      const searchInput = document.createElement('input');
+      searchInput.id = 'menu-search';
+      searchInput.type = 'text';
+      searchInput.placeholder = '🔍 Nhập món cần tìm...';
+
+      // Cập nhật kết quả khi nhập
+      searchInput.addEventListener('input', (e) => {
+        searchKeyword = e.target.value;
+        renderMenuList();
+      });
+
+      searchTab.appendChild(searchInput);
+      bar.appendChild(searchTab);
+
+    } else {
+      // Tab bình thường
+      const b = document.createElement('button'); 
+      b.className = 'category-btn' + (cat===activeCategory ? ' active' : '');
+      b.innerText = cat;
+      b.onclick = ()=>{ 
+        activeCategory = cat; 
+        renderMenuList(); 
+        renderCategories(); 
+      };
+      bar.appendChild(b);
+    }
   });
 }
 
