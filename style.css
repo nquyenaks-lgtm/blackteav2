@@ -457,15 +457,15 @@ header {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex: 0 0 37%; /* ✅ chỉ chiếm 37% chiều ngang */
+  flex: 0 0 45%;          /* ✅ tăng chiều dài thêm 20% so với bản 37% trước */
   margin: 0;
   padding: 0;
   border: 1px solid #4a69ad;
   border-top: none;
   border-left: none;
-  height: 28px; /* ✅ bằng chính xác nút danh mục */
+  height: 28px;           /* ✅ bằng chính xác nút danh mục */
   box-sizing: border-box;
-  background: #fff; /* luôn trắng */
+  background: #fff;
 }
 
 .search-tab input {
@@ -475,7 +475,7 @@ header {
   outline: none;
   padding: 0 8px;
   font-size: 14px;
-  line-height: 1;  /* ✅ tránh phình cao */
+  line-height: 1;          /* ✅ tránh chữ làm phình ô */
   color: #4a69ad;
   background: #fff;
   box-sizing: border-box;
@@ -487,5 +487,5 @@ header {
 }
 
 .search-tab input:focus {
-  background: #fff; /* ✅ không đổi màu khi bấm */
+  background: #fff;        /* ✅ không đổi màu khi bấm */
 }
