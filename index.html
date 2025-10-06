@@ -95,16 +95,16 @@
     <h2 id="table-title"></h2>
   </div>
 
-  <!-- Ô tìm + các tab cùng hàng -->
-  <div class="category-search-bar">
-    <div class="search-wrap">
-      <input id="menu-search" type="text" placeholder="🔍 Nhập món cần tìm..." class="search-input" />
+  <!-- Các tab danh mục + ô tìm kiếm cùng 1 hàng -->
+  <div id="category-bar" class="category-bar">
+    <!-- Ô tìm kiếm giống như 1 tab -->
+    <div class="search-tab">
+      <input id="menu-search" type="text" placeholder="🔍 Nhập món cần tìm..." />
     </div>
-    <div id="category-bar" class="category-bar"></div>
+    <!-- Các tab danh mục (Cà phê, Trà sữa…) sẽ render ở đây -->
   </div>
 
   <div id="menu-list" class="menu-list" style="display:none"></div>
-
       <section class="cart-section">
         <h3>Hóa đơn</h3>
         <ul id="cart-list" class="cart-list"></ul>
