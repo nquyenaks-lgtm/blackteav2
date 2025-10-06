@@ -554,13 +554,23 @@ function renderCategories() {
       searchInput.id = 'menu-search';
       searchInput.type = 'text';
       searchInput.placeholder = 'Nhập món cần tìm...'; // bỏ icon 🔍
-      
+
+      // Khi click vào ô tìm kiếm => bỏ chọn nút danh mục
+      searchInput.addEventListener('focus', () => {
+        if (activeCategory !== "Tìm kiếm") {
+          activeCategory = "Tìm kiếm";
+          renderCategories(); // ✅ làm trắng lại nút đang chọn
+        }
+      });
+
+      // Khi gõ => chỉ lọc menu, không re-render thanh
       searchInput.addEventListener('input', (e) => {
-        activeCategory = "Tìm kiếm";   // ✅ luôn chuyển về tab Tìm kiếm khi gõ
         searchKeyword = e.target.value;
         renderMenuList();
-        renderCategories();            // ✅ cập nhật lại thanh danh mục → nút cũ trắng lại
       });
+
+      // Giữ lại nội dung ô tìm kiếm đã gõ (nếu đang ở tab Tìm kiếm)
+      searchInput.value = (activeCategory === "Tìm kiếm") ? searchKeyword : '';
 
       searchTab.appendChild(searchInput);
       bar.appendChild(searchTab);
@@ -571,6 +581,8 @@ function renderCategories() {
       b.className = 'category-btn' + (cat === activeCategory ? ' active' : '');
       b.innerText = cat;
       b.onclick = () => { 
+        // Khi bấm danh mục mới => xoá chữ tìm kiếm
+        searchKeyword = '';  
         activeCategory = cat; 
         renderMenuList(); 
         renderCategories(); 
