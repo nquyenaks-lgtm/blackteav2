@@ -117,7 +117,7 @@ let GUEST_CNT = 0;
 let currentTable = null;
 let createdFromMain = false;
 let activeCategory = 'Cà phê';
-
+let searchKeyword = "";
 // helpers
 function showCustomAlert(msg) {
   document.getElementById("customAlertMessage").innerText = msg;
