@@ -15,7 +15,7 @@ const FIXED_TABLES = [
   "T4","G4","N4"
 ];
 
-let MENU = JSON.parse(localStorage.getItem(KEY_MENU)) || [
+let MENU =  [
   // --- Cà phê ---
   { id: 1, name: "Cà phê sữa nóng (Pha phin)", price: 15000, cat: "Cà phê" },
   { id: 2, name: "Cà phê sữa đá (Pha phin)", price: 15000, cat: "Cà phê" },
@@ -40,19 +40,6 @@ let MENU = JSON.parse(localStorage.getItem(KEY_MENU)) || [
   { id: 19, name: "Trà sữa socola (Size L)", price: 25000, cat: "Trà sữa" },
   { id: 20, name: "Chân châu đường đen (Size M)", price: 20000, cat: "Trà sữa" },
   { id: 21, name: "Chân châu đường đen (Size L)", price: 25000, cat: "Trà sữa" },
-  { id: 22, name: "Trà đào (Size M)", price: 20000, cat: "Trà sữa" },
-  { id: 23, name: "Trà đào (Size L)", price: 25000, cat: "Trà sữa" },
-  { id: 24, name: "Trà đào cam sả (Size M)", price: 20000, cat: "Trà sữa" },
-  { id: 25, name: "Trà đào cam sả (Size L)", price: 25000, cat: "Trà sữa" },
-  { id: 26, name: "Trà vải (Size M)", price: 15000, cat: "Trà sữa" },
-  { id: 27, name: "Trà vải (Size L)", price: 20000, cat: "Trà sữa" },
-  { id: 28, name: "Trà gừng (Size M)", price: 15000, cat: "Trà sữa" },
-  { id: 29, name: "Trà gừng (Size L)", price: 20000, cat: "Trà sữa" },
-  { id: 30, name: "Trà lipton ngũ sắc (Size M)", price: 20000, cat: "Trà sữa" },
-  { id: 31, name: "Trà lipton ngũ sắc (Size L)", price: 25000, cat: "Trà sữa" },
-  { id: 32, name: "Trà thảo mộc (Size M)", price: 20000, cat: "Trà sữa" },
-  { id: 33, name: "Trà thảo mộc (Size L)", price: 25000, cat: "Trà sữa" },
-  { id: 34, name: "Trà tắc sỉ muối", price: 15000, cat: "Trà sữa" },
 
   // --- Sinh tố ---
   { id: 35, name: "Sinh tố Dứa", price: 25000, cat: "Sinh tố" },
@@ -110,8 +97,8 @@ let MENU = JSON.parse(localStorage.getItem(KEY_MENU)) || [
   { id: 78, name: "Kem lăng dừa", price: 15000, cat: "Topping" }
 ];
 
-let CATEGORIES = JSON.parse(localStorage.getItem(KEY_CATS)) || ["Cà phê","Trà sữa","Sinh tố","Sữa chua","Giải khát","Trà & Nước ép","Matcha","Ăn vặt","Topping"];
-let TABLES = JSON.parse(localStorage.getItem(KEY_TABLES)) || [];
+let CATEGORIES = ["Cà phê","Trà sữa","Sinh tố","Sữa chua","Giải khát","Trà & Nước ép","Matcha","Ăn vặt","Topping"];
+let TABLES = [];
 
 // ✅ Migration: đảm bảo mỗi item trong cart có locked và baseQty
 TABLES = TABLES.map(t => ({
@@ -124,8 +111,8 @@ TABLES = TABLES.map(t => ({
                : (it.locked ? it.qty : 0)
   }))
 }));
-let HISTORY = JSON.parse(localStorage.getItem(KEY_HISTORY)) || [];
-let GUEST_CNT = parseInt(localStorage.getItem(KEY_GUEST) || '0');
+let HISTORY = [];
+let GUEST_CNT = 0;
 
 let currentTable = null;
 let createdFromMain = false;
@@ -169,8 +156,71 @@ function displayDateFromISO(iso){
   const year = parts[0];
   return `${day}/${month}/${year}`;
 }
-function saveAll(){ localStorage.setItem(KEY_MENU, JSON.stringify(MENU)); localStorage.setItem(KEY_CATS, JSON.stringify(CATEGORIES)); localStorage.setItem(KEY_TABLES, JSON.stringify(TABLES)); localStorage.setItem(KEY_HISTORY, JSON.stringify(HISTORY)); localStorage.setItem(KEY_GUEST, String(GUEST_CNT)); }
+async function saveAll(){ 
+  try {
+    await db.collection("pos").doc("menu").set({ data: MENU });
+    await db.collection("pos").doc("categories").set({ data: CATEGORIES });
+    await db.collection("pos").doc("tables").set({ data: TABLES });
+    await db.collection("pos").doc("history").set({ data: HISTORY });
+    await db.collection("pos").doc("guest").set({ value: GUEST_CNT });
+  } catch (err) {
+    console.error("❌ Lỗi lưu online:", err); 
+  }
+}
 
+
+function listenAll(){
+  try {
+    // --- Menu ---
+    db.collection("pos").doc("menu").onSnapshot((snap)=>{
+      if(snap.exists) {
+        MENU = snap.data().data || [];
+        localStorage.setItem(KEY_MENU, JSON.stringify(MENU));   // ✅ đồng bộ tất cả client
+        renderMenuSettings();
+        renderMenuList();
+      }
+    });
+
+    // --- Categories ---
+    db.collection("pos").doc("categories").onSnapshot((snap)=>{
+      if(snap.exists) {
+        CATEGORIES = snap.data().data || [];
+        localStorage.setItem(KEY_CATS, JSON.stringify(CATEGORIES));  // ✅
+        renderCategories();
+        populateCatSelect();
+      }
+    });
+
+    // --- Tables ---
+    db.collection("pos").doc("tables").onSnapshot((snap)=>{
+      if(snap.exists) {
+        TABLES = snap.data().data || [];
+        localStorage.setItem(KEY_TABLES, JSON.stringify(TABLES)); // ✅
+        renderTables();
+      }
+    });
+
+    // --- History ---
+    db.collection("pos").doc("history").onSnapshot((snap)=>{
+      if(snap.exists) {
+        HISTORY = snap.data().data || [];
+        localStorage.setItem(KEY_HISTORY, JSON.stringify(HISTORY)); // ✅
+        renderHistory();
+      }
+    });
+
+    // --- Guest counter ---
+    db.collection("pos").doc("guest").onSnapshot((snap)=>{
+      if(snap.exists) {
+        GUEST_CNT = snap.data().value || 0;
+        localStorage.setItem(KEY_GUEST, GUEST_CNT); // ✅
+      }
+    });
+    
+  } catch (err) {
+    console.error("❌ Lỗi đồng bộ trực tuyến:", err);
+  }
+}
 // render tables (sắp xếp: L = 4 cột, NT = 2 cột, T/G/N = mỗi bàn 1 hàng dọc, khác = Bàn tạm)
 function renderTables(){
   const div = $('tables');
@@ -288,15 +338,7 @@ function makeTableCard(t){
 }
 // add guest
 function addGuest() {
-  const today = new Date().toISOString().split('T')[0];
-  let savedData = localStorage.getItem('LAST_TAKEAWAY_INFO');
-  let lastInfo = savedData ? JSON.parse(savedData) : { date: today, num: 0 };
-
-  if (lastInfo.date !== today) {
-    lastInfo = { date: today, num: 0 };
-  }
-
-  // Xóa bàn trống
+  // Xóa bàn trống (chưa gọi món) nếu có
   const emptyGuests = TABLES.filter(
     t => t.name.startsWith('Khách mang đi') && (!t.cart || t.cart.length === 0)
   );
@@ -305,19 +347,30 @@ function addGuest() {
     saveAll();
   }
 
-  // Tìm số tiếp theo
+  // ===== Tính số tiếp theo =====
+  // Lấy số lớn nhất từ bàn hiện tại
   const takeawayTables = TABLES.filter(t => t.name.startsWith('Khách mang đi'));
-  const maxNum = takeawayTables.reduce((max, t) => {
+  const maxNumTable = takeawayTables.reduce((max, t) => {
     const m = t.name.match(/\d+/);
     return m ? Math.max(max, parseInt(m[0])) : max;
   }, 0);
 
-  const nextNum = Math.max(maxNum, lastInfo.num) + 1;
+  // Lấy số lớn nhất từ lịch sử trong ngày hôm nay
+  const today = isoDateKey(new Date());
+  const takeawayHistory = HISTORY.filter(h => h.table.startsWith('Khách mang đi') && h.iso === today);
+  const maxNumHistory = takeawayHistory.reduce((max, h) => {
+    const m = h.table.match(/\d+/);
+    return m ? Math.max(max, parseInt(m[0])) : max;
+  }, 0);
 
+  // Số tiếp theo = max của Table và History + 1
+  const nextNum = Math.max(maxNumTable, maxNumHistory) + 1;
+
+  // ===== Tạo bàn mới =====
   const id = Date.now();
   const name = 'Khách mang đi ' + nextNum;
-
   const tableObj = { id, name, cart: [], createdAt: Date.now() };
+
   TABLES.push(tableObj);
   saveAll();
   renderTables();
@@ -326,6 +379,7 @@ function addGuest() {
   openTable(currentTable.id);
   addMore(); // mở luôn menu order
 }
+
 
 function addGuestVisit(){
   GUEST_CNT += 1;
@@ -423,33 +477,13 @@ function openTable(id){
 }
 // back
 function backToTables() {
-  // 🧠 --- Thêm logic xử lý bàn "Khách mang đi" ---
-  const today = new Date().toISOString().split('T')[0];
-  let savedData = localStorage.getItem('LAST_TAKEAWAY_INFO');
-  let lastInfo = savedData ? JSON.parse(savedData) : { date: today, num: 0 };
-
-  if (lastInfo.date !== today) {
-    lastInfo = { date: today, num: 0 };
-  }
-
   if (currentTable && currentTable.name.startsWith('Khách mang đi')) {
-    // Nếu bàn trống (chưa order gì) → xoá bàn, không lưu số
     if (!currentTable.cart || currentTable.cart.length === 0) {
       TABLES = TABLES.filter(t => t.id !== currentTable.id);
       saveAll();
-    } 
-    // Nếu bàn có món (tức đã order hoặc thanh toán xong) → cập nhật số bàn mới nhất
-    else {
-      const m = currentTable.name.match(/\d+/);
-      const currentNum = m ? parseInt(m[0]) : 0;
-      if (currentNum > lastInfo.num) {
-        lastInfo = { date: today, num: currentNum };
-        localStorage.setItem('LAST_TAKEAWAY_INFO', JSON.stringify(lastInfo));
-      }
     }
   }
 
-  // 👇 --- Phần UI bạn đang có (giữ nguyên hoàn toàn) ---
   $('table-screen').style.display = 'block';
   $('menu-screen').style.display = 'none';
   $('settings-screen').style.display = 'none';
@@ -458,10 +492,10 @@ function backToTables() {
   $('history-screen').style.display = 'none';
   $('payment-screen').style.display = 'none';
 
-  // 👉 trả header về mặc định
   $('header-buttons').style.display = 'flex';  
   $('order-info').classList.add('hidden');
 }
+
 
 function goBack(){
   if (!currentTable) {
@@ -537,7 +571,7 @@ function changeQty(id, delta){
   if(it){ 
     if(it.locked){ 
       // ✅ Nếu là món đã order, không cho giảm thấp hơn baseQty
-      if(delta < 0 && it.qty <= it.baseQty) return;  
+      if(delta < 0 && it.qty <= (it.baseQty ?? 0)) return;  
     }
 
     it.qty += delta; 
@@ -562,6 +596,7 @@ function changeQty(id, delta){
   renderCart(); 
 }
 
+
 // cart
 function renderCart(){ const ul = $('cart-list'); ul.innerHTML = ''; if(!currentTable || !currentTable.cart.length){ ul.innerHTML = '<div class="small">Chưa có món</div>'; $('total').innerText='0'; return; } let total=0; currentTable.cart.forEach(it=>{ total += it.price*it.qty; const li=document.createElement('li'); li.innerHTML = '<div><div style="font-weight:700">'+it.name+'</div><div class="small">'+fmtV(it.price)+' x '+it.qty+'</div></div><div style="font-weight:700">'+fmtV(it.price*it.qty)+'</div>'; ul.appendChild(li); }); $('total').innerText = fmtV(total); }
 
@@ -579,7 +614,7 @@ function saveOrder() {
   currentTable.cart = currentTable.cart.map(it => ({
     ...it,
     locked: true,
-    baseQty: (typeof it.baseQty === 'number') ? it.baseQty : it.qty
+    baseQty: (typeof it.baseQty === 'number' && it.baseQty > 0) ? it.baseQty : it.qty
   }));
 
   const idx = TABLES.findIndex(t => t.id === currentTable.id);
@@ -601,12 +636,14 @@ function saveOrder() {
   backToTables && backToTables();
 }
 
+
+
 // table actions
 function addMore(){ 
   if(!currentTable) return; 
 
-  // 👉 Lưu bản sao giỏ hàng cũ
-  currentTable._oldCart = JSON.parse(JSON.stringify(currentTable.cart));
+  // 👉 Lưu bản sao giỏ hàng cũ (giữ locked & baseQty)
+  currentTable._oldCart = currentTable.cart.map(it => ({ ...it }));
 
   $('menu-list').style.display='block'; 
   createdFromMain = true; 
@@ -710,15 +747,20 @@ function confirmPayment() {
     iso: isoDateKey(new Date())
   });
 
-  localStorage.setItem(KEY_HISTORY, JSON.stringify(HISTORY));
-
+  // Nếu là "Khách mang đi" thì xoá hẳn bàn khỏi TABLES
+if (currentTable.name.startsWith("Khách mang đi")) {
+  TABLES = TABLES.filter(t => t.id !== currentTable.id);
+} else {
   currentTable.cart = [];
-  saveAll();
-  renderTables();
-  hideOrderInfo();
-  backToTables();
-  showPopup("Xuất đơn hàng thành công");
 }
+
+saveAll();
+renderTables();
+hideOrderInfo();
+backToTables();
+showPopup("Xuất đơn hàng thành công");
+}
+
 function hideOrderInfo(){
   if ($('header-buttons')) $('header-buttons').style.display = 'flex';
   if ($('order-info')) $('order-info').classList.add('hidden');
@@ -763,10 +805,6 @@ function printFinalBill(rec){
   }, 500);
 }
 
-// Settings screens
-function openSettings(){ $('table-screen').style.display='none'; $('menu-screen').style.display='none'; $('history-screen').style.display='none'; $('settings-screen').style.display='block'; }
-function openMenuSettings(){ $('settings-screen').style.display='none'; $('menu-settings-screen').style.display='block'; renderCategoriesList(); renderMenuSettings(); populateCatSelect(); }
-function openPrinterSettings(){ $('settings-screen').style.display='none'; $('printer-settings-screen').style.display='block'; populatePrinterSettings(); }
 
 // menu settings
 function renderCategoriesList(){ const ul=$('categories-list'); ul.innerHTML=''; CATEGORIES.forEach((c,i)=>{ const li=document.createElement('li'); li.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center"><div>'+c+'</div>' + (i>0? '<div><button class="btn btn-secondary" onclick="deleteCategory('+i+')">Xóa</button></div>':'') + '</div>'; ul.appendChild(li); }); }
@@ -1009,12 +1047,79 @@ function openTableModal() {
 
   document.body.appendChild(list);
 }
+async function syncData() {
+  try {
+    // 🧹 Xóa localStorage
+    localStorage.clear();
+
+    // 🧹 Xóa IndexedDB (Firestore cache)
+    if (window.indexedDB) {
+      const dbs = await window.indexedDB.databases();
+      for (const db of dbs) {
+        window.indexedDB.deleteDatabase(db.name);
+      }
+    }
+
+    // 🧹 Xóa Service Worker cache (nếu có)
+    if ('caches' in window) {
+      const keys = await caches.keys();
+      for (const key of keys) {
+        await caches.delete(key);
+      }
+    }
+
+    // ✅ Hiện thông báo trước khi reload
+    showCustomAlert("Đồng bộ thành công");
+
+    // ⏳ Đợi 1.5s cho user thấy thông báo rồi reload
+    setTimeout(() => {
+      location.reload(true);
+    }, 1500);
+
+  } catch (err) {
+    console.error("Lỗi đồng bộ:", err);
+    showCustomAlert("Không thể đồng bộ, vui lòng thử lại.");
+  }
+}
+// Phần cài đặt
+function openSettings(){ $('table-screen').style.display='none'; $('menu-screen').style.display='none'; $('history-screen').style.display='none'; $('settings-screen').style.display='block'; }
+function openPrinterSettings(){ $('settings-screen').style.display='none'; $('printer-settings-screen').style.display='block'; populatePrinterSettings(); }
 
 
+function openMenuSettings(){
+  // Ẩn tất cả trước
+  $('settings-screen').style.display = 'none';
+  $('category-settings-screen').style.display = 'none';
+  $('item-settings-screen').style.display = 'none';
+  $('printer-settings-screen').style.display = 'none';
 
+  // Hiện màn hình cài đặt menu
+  $('menu-settings-screen').style.display = 'block';
+}
 
+function openCategorySettings(){
+  // Ẩn tất cả trước
+  $('menu-settings-screen').style.display = 'none';
+  $('item-settings-screen').style.display = 'none';
+  $('settings-screen').style.display = 'none';
+
+  // Hiện quản lý danh mục
+  $('category-settings-screen').style.display = 'block';
+  renderCategoriesList();
+}
+
+function openItemSettings(){
+  // Ẩn tất cả trước
+  $('menu-settings-screen').style.display = 'none';
+  $('category-settings-screen').style.display = 'none';
+  $('settings-screen').style.display = 'none';
+
+  // Hiện quản lý món
+  $('item-settings-screen').style.display = 'block';
+  renderMenuSettings();
+}
 // init
-window.addEventListener('load', ()=>{
+window.addEventListener('load', () => {
   if($('guest-btn')) $('guest-btn').addEventListener('click', addGuest);
   if($('guest-visit-btn')) $('guest-visit-btn').addEventListener('click', openTableModal);
   if($('cancel-order-btn')) $('cancel-order-btn').addEventListener('click', cancelOrder);
@@ -1022,9 +1127,13 @@ window.addEventListener('load', ()=>{
   if($('addmore-btn')) $('addmore-btn').addEventListener('click', addMore);
   if($('pay-btn')) $('pay-btn').addEventListener('click', payTable);
   if($('history-date')) $('history-date').addEventListener('change', ()=> renderHistory());
-  const brand = document.getElementById('brand'); if (brand) brand.addEventListener('click', ()=>{
-  hideOrderInfo();   // ✅ ẩn nút X và phần tiêu đề đơn
-  backToTables();    // quay về màn hình chính
-});
-  renderTables(); renderCategories(); populateCatSelect(); renderMenuSettings(); saveAll();
+
+  const brand = document.getElementById('brand');
+  if (brand) brand.addEventListener('click', ()=>{
+    hideOrderInfo();   // ẩn nút X và phần tiêu đề đơn
+    backToTables();    // quay về màn hình chính
+  });
+
+  // 🔥 chỉ cần gọi realtime, không render thủ công ngay khi load
+  listenAll();  
 });
