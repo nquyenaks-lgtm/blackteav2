@@ -457,13 +457,13 @@ header {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-grow: 1;
+  flex: 0 0 35%; /* ✅ chỉ chiếm 35% chiều ngang */
   margin: 0;
   padding: 0;
   border: 1px solid #4a69ad;
   border-top: none;
   border-left: none;
-  height: 32px; /* cùng chiều cao với nút danh mục */
+  height: 30px; /* ✅ hạ thấp cho bằng nút danh mục */
   box-sizing: border-box;
   background: #fff; /* luôn trắng, không đổi màu */
 }
@@ -473,10 +473,10 @@ header {
   height: 100%;
   border: none;
   outline: none;
-  padding: 0 10px;
+  padding: 0 8px;
   font-size: 14px;
   color: #4a69ad;
-  background: #fff; /* nền trắng tĩnh */
+  background: #fff;
   box-sizing: border-box;
 }
 
@@ -485,7 +485,6 @@ header {
   font-style: italic;
 }
 
-/* Khi focus không đổi màu */
 .search-tab input:focus {
   background: #fff;
 }
