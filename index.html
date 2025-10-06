@@ -91,11 +91,17 @@
     </main>
 
     <main id="menu-screen" style="display:none">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-     <h2 id="table-title"></h2>
-      </div>
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+    <h2 id="table-title"></h2>
+  </div>
 
-      <div id="category-bar" class="category-bar"></div>
+  <!-- Ô tìm kiếm (đưa lên trên tabs) -->
+  <div class="search-wrap" style="margin:8px auto; width:60%;">
+    <input id="menu-search" type="text" placeholder="🔍 Nhập món cần tìm ..." class="search-input" />
+  </div>
+
+  <!-- Các tab danh mục -->
+  <div id="category-bar" class="category-bar"></div>
 
 <!-- Ô tìm kiếm -->
 <div style="margin:8px 0;">
