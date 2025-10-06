@@ -469,3 +469,27 @@ header {
 #guestAtShop:hover {
   background-color: #3d5b99 !important;  /* 💙 đậm hơn chút khi hover */
 }
+
+/* // menu group có biến thể */
+.menu-group {
+  font-weight: bold;
+  padding: 6px 8px;
+  background: #f0f0f0;
+  border-bottom: 1px solid #ddd;
+}
+
+.menu-variants {
+  padding-left: 10px;
+}
+
+.menu-variant {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 8px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+}
+
+.menu-variant:hover {
+  background: #eaf4ff;
+}
