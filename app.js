@@ -1176,3 +1176,13 @@ window.addEventListener('load', () => {
   // 🔥 chỉ cần gọi realtime, không render thủ công ngay khi load
   listenAll();  
 });
+// Tìm kiếm
+document.addEventListener('DOMContentLoaded', () => {
+  const searchInput = document.getElementById('menu-search');
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      searchKeyword = e.target.value;
+      renderMenuList();
+    });
+  }
+});
