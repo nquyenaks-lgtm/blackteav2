@@ -592,7 +592,7 @@ function renderMenuList(category = activeCategory) {
 }
 function getQty(id){ if(!currentTable) return 0; const it = currentTable.cart.find(c=>c.id===id); return it ? it.qty : 0; }
 
-function changeQty(id, delta){ 
+function changeQty(id, price, name, delta){ 
   if(!currentTable) return; 
   const item = findMenuItemById(id);   
   if(!item) return; 
@@ -625,7 +625,6 @@ function changeQty(id, delta){
   renderMenuList(); 
   renderCart(); 
 }
-
 
 // cart
 function renderCart(){ const ul = $('cart-list'); ul.innerHTML = ''; if(!currentTable || !currentTable.cart.length){ ul.innerHTML = '<div class="small">Chưa có món</div>'; $('total').innerText='0'; return; } let total=0; currentTable.cart.forEach(it=>{ total += it.price*it.qty; const li=document.createElement('li'); li.innerHTML = '<div><div style="font-weight:700">'+it.name+'</div><div class="small">'+fmtV(it.price)+' x '+it.qty+'</div></div><div style="font-weight:700">'+fmtV(it.price*it.qty)+'</div>'; ul.appendChild(li); }); $('total').innerText = fmtV(total); }
