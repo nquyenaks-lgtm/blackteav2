@@ -392,9 +392,9 @@ header {
   background: #fff;
   color: #4a69ad;
   border: 1px solid #4a69ad;
-  border-left: none;  /* liền hàng ngang */
-  border-top: none;   /* liền hàng dọc */
-  padding: 4px 10px;
+  border-left: none;
+  border-top: none;
+  padding: 2px 8px;       /* ✅ giảm padding cho ô thấp hơn */
   font-size: 14px;
   font-weight: 500;
   text-align: center;
@@ -402,11 +402,15 @@ header {
   transition: background 0.15s, color 0.15s;
   user-select: none;
   border-radius: 0;
-  line-height: 1.3;
+  line-height: 1.2;
   margin: 0;
   flex-grow: 1;
   min-width: max-content;
-  height: 30px; /* thêm để cố định chiều cao đồng nhất */
+  height: 26px;           /* ✅ hạ chiều cao từ 30 xuống 26 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
 }
 
 /* Hover */
@@ -434,13 +438,13 @@ header {
   border-bottom: 1px solid #4a69ad;
 }
 
-/* ===== Ô tìm kiếm nằm chung hàng ===== */
+/* ===== Ô tìm kiếm ===== */
 .search-tab {
-  flex: 0 0 40%;            /* ✅ chiếm 40% chiều ngang */
+  flex: 0 0 40%;
   border: 1px solid #4a69ad;
   border-left: none;
   border-top: none;
-  height: 30px;             /* ✅ cùng chiều cao nút danh mục */
+  height: 26px;           /* ✅ cùng chiều cao với nút danh mục */
   box-sizing: border-box;
   background: #fff;
   display: flex;
@@ -453,7 +457,7 @@ header {
   height: 100%;
   border: none;
   outline: none;
-  padding: 0 8px;
+  padding: 0 6px;          /* ✅ giảm padding để chữ sát hơn */
   font-size: 14px;
   color: #4a69ad;
   background: #fff;
@@ -469,7 +473,11 @@ header {
 @media (max-width: 768px) {
   .category-btn {
     font-size: 13px;
-    padding: 3px 8px;
+    padding: 2px 6px;
+    height: 24px;
+  }
+  .search-tab {
+    height: 24px;
   }
 }
 /* 💙 Nút khách mang đi & khách ghé quán */
