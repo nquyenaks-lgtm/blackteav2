@@ -96,7 +96,7 @@ let MENU =  [
   { id: 77, name: "Kem lăng", price: 5000, cat: "Topping" },
   { id: 78, name: "Kem lăng dừa", price: 15000, cat: "Topping" }
 ];
-
+let TABLES = [];
 let CATEGORIES = ["Tìm kiếm","Cà phê","Trà sữa","Sinh tố","Sữa chua","Giải khát","Trà & Nước ép","Matcha","Ăn vặt","Topping"];
 
 // ✅ Migration: đảm bảo mỗi item trong cart có locked và baseQty
