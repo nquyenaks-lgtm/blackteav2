@@ -167,8 +167,17 @@ async function saveAll(){
     console.error("❌ Lỗi lưu online:", err); 
   }
 }
+// Hàm tìm kiếm
+function removeVietnameseTones(str) {
+  return str
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "") // bỏ dấu
+    .replace(/đ/g, "d").replace(/Đ/g, "D")
+    .replace(/\s+/g, "")             // bỏ khoảng trắng
+    .toLowerCase();
+}
 
-
+// Cloud fare
 function listenAll(){
   try {
     // --- Menu ---
