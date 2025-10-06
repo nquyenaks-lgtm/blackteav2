@@ -557,11 +557,16 @@ function renderMenuList(){
   list.innerHTML = '';
 
   const items = MENU.filter(m => {
-    const matchCat = activeCategory === 'Tất cả' ? true : m.cat === activeCategory;
     const normalizedName = removeVietnameseTones(m.name);
     const normalizedSearch = removeVietnameseTones(searchKeyword);
-    const matchSearch = !normalizedSearch || normalizedName.includes(normalizedSearch);
-    return matchCat && matchSearch;
+
+    if (normalizedSearch) {
+      // Có nhập từ khóa -> tìm toàn bộ menu, bỏ qua category
+      return normalizedName.includes(normalizedSearch);
+    } else {
+      // Không nhập -> lọc theo category như cũ
+      return activeCategory === 'Tất cả' ? true : m.cat === activeCategory;
+    }
   });
 
   items.forEach(item => {
@@ -570,7 +575,10 @@ function renderMenuList(){
 
     const left = document.createElement('div');
     left.className = 'menu-left';
-    left.innerHTML = '<div class="menu-name">'+item.name+'</div><div class="menu-price">'+fmtV(item.price)+' VND</div>';
+    left.innerHTML = `
+      <div class="menu-name">${item.name}</div>
+      <div class="menu-price">${fmtV(item.price)} VND</div>
+    `;
 
     const controls = document.createElement('div');
     controls.className = 'qty-controls';
@@ -578,7 +586,10 @@ function renderMenuList(){
     const minus = document.createElement('button');
     minus.className = 'btn btn-secondary';
     minus.innerText = '-';
-    minus.onclick = (e) => { e.stopPropagation(); changeQty(item.id,-1); };
+    minus.onclick = (e) => { 
+      e.stopPropagation(); 
+      changeQty(item.id, -1); 
+    };
 
     const qty = document.createElement('span');
     qty.id = 'qty-'+item.id;
@@ -587,7 +598,10 @@ function renderMenuList(){
     const plus = document.createElement('button');
     plus.className = 'btn btn-secondary';
     plus.innerText = '+';
-    plus.onclick = (e) => { e.stopPropagation(); changeQty(item.id,1); };
+    plus.onclick = (e) => { 
+      e.stopPropagation(); 
+      changeQty(item.id, 1); 
+    };
 
     controls.appendChild(minus);
     controls.appendChild(qty);
