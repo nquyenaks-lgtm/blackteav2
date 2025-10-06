@@ -586,11 +586,12 @@ function renderMenuList(){
     const normalizedName = removeVietnameseTones(m.name);
     const normalizedSearch = removeVietnameseTones(searchKeyword);
 
-    if (normalizedSearch) {
-      // Có nhập từ khóa -> tìm toàn bộ menu, bỏ qua category
-      return normalizedName.includes(normalizedSearch);
+    if (activeCategory === "Tìm kiếm") {
+      // Nếu đang ở tab Tìm kiếm
+      if (!searchKeyword.trim()) return true; // chưa nhập -> hiện toàn bộ menu
+      return normalizedName.includes(normalizedSearch); // có nhập -> lọc theo tên
     } else {
-      // Không nhập -> lọc theo category như cũ
+      // Các danh mục khác giữ nguyên như cũ
       return activeCategory === 'Tất cả' ? true : m.cat === activeCategory;
     }
   });
