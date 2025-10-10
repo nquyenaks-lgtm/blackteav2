@@ -198,7 +198,7 @@ input,select{padding:8px;border:1px solid #ccc;border-radius:6px}
 /* Reset margin */
 body {
   margin: 0;
-  padding: 70px 12px 12px 12px; /* chừa chỗ cho header */
+  padding: 120px 12px 12px 12px; /* chừa chỗ cho header */
   font-family: 'Roboto', Arial, sans-serif;
   background: #f6f7fb;
   color: #222;
