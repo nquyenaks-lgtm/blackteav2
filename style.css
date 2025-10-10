@@ -676,26 +676,3 @@ header {
   margin-left: 4px;
   display: inline-block;
 }
-
-/* ====== AUTO SCALE GIỮ NGUYÊN TỈ LỆ GIAO DIỆN GỐC (OPPO A5 2020) ====== */
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  background: #f6f7fb;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* Khung cố định theo kích thước gốc Oppo A5 */
-.app {
-  width: 360px;
-  height: 760px;
-  transform-origin: top left;
-  transition: transform 0.25s ease;
-  background: #fff;
-  overflow: hidden;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
