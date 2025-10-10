@@ -4,7 +4,7 @@
   margin: 0 auto;
 
   /* 👇 thêm dòng này để đẩy toàn bộ nội dung xuống dưới header */
-  padding-top: 30px;
+  padding-top: 50px;
   box-sizing: border-box;
 }
 header{padding:50px 0}
