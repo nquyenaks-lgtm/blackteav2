@@ -702,7 +702,16 @@ function renderMenuList(){
 const star = document.createElement('button');
 star.className = 'star-btn btn';
 star.dataset.id = item.id;
-star.innerText = item.star ? '★' : '☆';
+
+// Hiển thị đúng trạng thái hiện tại
+if (item.star) {
+  star.innerText = '★';
+  star.classList.add('active'); // ⭐ giữ màu vàng khi render lại
+} else {
+  star.innerText = '☆';
+  star.classList.remove('active');
+}
+
 
 // Kiểm tra số lượng món, nếu = 0 thì khóa nút sao
 const currentQty = getQty(item.id);
@@ -884,7 +893,21 @@ function changeQty(id, delta){
 
     // ✅ Chỉ xoá nếu là món mới và qty <= 0
     if(!it.locked && it.qty <= 0) {
+      // 🧹 Xóa món khỏi giỏ
       currentTable.cart = currentTable.cart.filter(c=>c.id!==id); 
+
+      // 🔄 Đồng thời reset ghi chú & sao (nếu có)
+      const menuItem = MENU.find(m => m.id === id);
+      if (menuItem) {
+        menuItem.star = false;         // tắt sao
+        menuItem.note = '';            // xóa ghi chú
+        menuItem.sugarLevel = 2;       // reset về "bình thường"
+        menuItem.iceLevel = 2;
+      }
+
+      // 🧩 Nếu popup ghi chú đang mở, đóng lại để tránh hiển thị lơ lửng
+      const existingPopup = document.querySelector('.popup-note');
+      if (existingPopup) existingPopup.remove();
     }
   } else if(delta > 0){ 
     // ✅ Món mới thêm
@@ -898,9 +921,11 @@ function changeQty(id, delta){
     }); 
   } 
 
+  // 🔁 Cập nhật lại giao diện
   renderMenuList(); 
   renderCart(); 
 }
+
 
 
 // cart
