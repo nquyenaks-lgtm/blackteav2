@@ -1,16 +1,16 @@
 {
   "hosting": {
-    "public": "public",
+    "public": ".",
     "ignore": [
       "firebase.json",
+      ".firebaserc",
       "**/.*",
-      "**/node_modules/**"
+      "**/node_modules/**",
+      "README.md",
+      ".github/**"
     ],
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
+    "rewrites":[
+      { "source":"**", "destination":"/index.html" }
     ]
   }
 }
