@@ -677,3 +677,15 @@ header {
   display: inline-block;
 }
 
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #f6f7fb;
+  display: flex;
+  justify-content: center;
+}
+
+.app {
+  transform-origin: top center;
+  transition: transform 0.2s ease;
+}
