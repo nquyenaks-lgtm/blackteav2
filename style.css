@@ -683,21 +683,19 @@ html, body {
   padding: 0;
   height: 100%;
   background: #f6f7fb;
+  overflow: hidden;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  overflow-x: hidden;
-  transition: zoom 0.25s ease; /* hiệu ứng phóng mượt */
+  align-items: center;
 }
 
-:root {
-  --base-width: 720; /* Oppo A5 2020 width gốc (720px) */
-}
-
-/* Phần chứa toàn bộ giao diện */
+/* Khung cố định theo kích thước gốc Oppo A5 */
 .app {
-  width: var(--base-width)px;
-  margin: 0 auto;
-  background-color: #fff;
-  transform-origin: top center;
+  width: 360px;
+  height: 760px;
+  transform-origin: top left;
+  transition: transform 0.25s ease;
+  background: #fff;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
