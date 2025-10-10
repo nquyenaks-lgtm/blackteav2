@@ -1,3 +1,4 @@
+
 {
   "hosting": {
     "public": ".",
@@ -9,8 +10,16 @@
       "README.md",
       ".github/**"
     ],
-    "rewrites":[
-      { "source":"**", "destination":"/index.html" }
+    "headers": [
+      {
+        "source": "**/*.@(html|css|js)",
+        "headers": [
+          { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
+        ]
+      }
+    ],
+    "rewrites": [
+      { "source": "**", "destination": "/index.html" }
     ]
   }
 }
