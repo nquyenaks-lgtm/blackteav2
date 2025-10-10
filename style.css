@@ -420,6 +420,16 @@ header {
   justify-content: center;
   box-sizing: border-box;
 }
+/* ===== Giới hạn khung chứa các nút danh mục ===== */
+.category-bar {
+  width: 100%;
+  max-width: 980px;   /* 👈 bằng với .app để không phình ngang */
+  margin: 0 auto;     /* 👈 căn giữa khung */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  box-sizing: border-box;
+}
 
 /* Hover */
 .category-btn:hover {
