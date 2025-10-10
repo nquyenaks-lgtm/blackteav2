@@ -420,21 +420,7 @@ header {
   justify-content: center;
   box-sizing: border-box;
 }
-/* ===== Giới hạn vùng danh mục để không vượt quá khung chính ===== */
-.category-bar {
-  position: relative;      /* ép nó nằm trong luồng của .app */
-  width: 100%;
-  max-width: 980px;        /* bằng .app */
-  margin: 0 auto;
-  left: 0;
-  right: 0;
-  background: #fff;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  box-sizing: border-box;
-  overflow-x: auto;        /* tránh tràn khi nhiều nút */
-}
+
 
 /* Hover */
 .category-btn:hover {
