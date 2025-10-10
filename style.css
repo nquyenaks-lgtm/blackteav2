@@ -373,18 +373,19 @@ header {
 .category-bar {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-evenly;
+  justify-content: center;        /* ✅ canh đều giữa, không ép giãn */
   align-items: center;
   margin: 10px 0;
-  padding: 0;
+  padding: 2px;                   /* ✅ chừa viền nhẹ cho cân đối */
   gap: 0;
-  transform: scale(1.1);
-  transform-origin: top center;
   width: 100%;
   box-sizing: border-box;
-  border: 1px solid #4a69ad; /* viền bao ngoài */
-  border-bottom: none;        /* bỏ viền dưới — tránh đúp với hàng cuối */
+  border: 1px solid #4a69ad;
+  border-bottom: none;
   overflow: hidden;
+
+  /* ✅ bỏ transform scale để không tràn khung */
+  transform: none;
 }
 
 /* ===== Nút danh mục ===== */
