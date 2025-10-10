@@ -348,26 +348,32 @@
 </div>
 
 <script>
-  // ====== TỰ ĐỘNG PHÓNG / THU THEO KÍCH THƯỚC MÀN HÌNH ======
   function autoScale() {
-    const baseWidth = 720; // gốc Oppo A5 2020
-    const screenWidth = window.innerWidth;
+    const baseWidth = 720; // chiều rộng gốc Oppo A5 2020
+    const currentWidth = window.innerWidth;
 
-    // Tính tỉ lệ scale so với kích thước gốc
-    let scale = screenWidth / baseWidth;
+    // Nếu màn hình nhỏ hơn gốc => thu nhỏ, nếu lớn hơn => phóng to
+    let scale = currentWidth / baseWidth;
 
-    // Giới hạn để không quá to hoặc quá nhỏ
-    if (scale > 2) scale = 2;
-    if (scale < 0.5) scale = 0.5;
+    // Nhưng nếu nằm trong khoảng “gần gốc” (tức là điện thoại Oppo A5, 700–760px)
+    // thì ép về đúng 1 để không bị thu nhỏ hoặc méo
+    if (currentWidth >= 700 && currentWidth <= 760) {
+      scale = 1;
+    }
 
-    // Áp dụng scale cho toàn bộ ứng dụng
+    // Giới hạn phóng / thu
+    if (scale > 2.5) scale = 2.5;  // đủ cho iPad 12.9"
+    if (scale < 0.7) scale = 0.7;  // không thu nhỏ quá mức
+
+    // Áp dụng
     const app = document.querySelector('.app');
     if (app) {
       app.style.transform = `scale(${scale})`;
+      app.style.transformOrigin = 'top center';
+      app.style.margin = '0 auto';
     }
   }
 
-  // Gọi khi load và khi resize
   window.addEventListener('load', autoScale);
   window.addEventListener('resize', autoScale);
 </script>
