@@ -856,17 +856,14 @@ function renderCart() {
     const sugarLabel = ['Không đường', 'Ít đường', '', 'Thêm ít đường', 'Thêm nhiều đường'][sugar] || '';
     const iceLabel   = ['Không đá', 'Đá ít', 'Đá vừa', ''][ice] || '';
 
-    // ✅ Gộp text ghi chú (ẩn "Bình thường")
-    let noteText = '';
-    if (sugarLabel || iceLabel) {
-      const combined = [sugarLabel, iceLabel].filter(x => x).join(', ');
-      noteText = ` <span style="color:#666; font-size:12px;">(${combined})</span>`; // 🌿 Nhạt hơn
-    }
+    // ✅ Gộp ghi chú (ẩn "Bình thường")
+    const noteText = [sugarLabel, iceLabel].filter(x => x).join(', ');
+    const noteHtml = noteText ? `<span class="item-note">(${noteText})</span>` : '';
 
     const li = document.createElement('li');
     li.innerHTML = `
       <div>
-        <div style="font-weight:700">${it.name}${noteText}</div>
+        <div style="font-weight:700">${it.name} ${noteHtml}</div>
         <div class="small">${fmtV(it.price)} x ${it.qty}</div>
       </div>
       <div style="font-weight:700">${fmtV(it.price * it.qty)}</div>
