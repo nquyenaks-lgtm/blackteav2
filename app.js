@@ -554,22 +554,29 @@ function renderMenuList(){
     const normalizedSearch = removeVietnameseTones(searchKeyword);
 
     if (activeCategory === "Tìm kiếm") {
-      // Nếu đang ở tab Tìm kiếm
-      if (!searchKeyword.trim()) return true; // chưa nhập -> hiện toàn bộ menu
-      // ✅Hỗ trợ viết tắt như "tstc" cho "Trà sữa trân châu"
-const words = normalizedName.split('');
-const initials = normalizedName
-  .split(/[^a-zA-Z0-9]/) // tách theo ký tự không phải chữ/số
-  .filter(Boolean)
-  .map(w => w[0])
-  .join('');
+  // Nếu đang ở tab Tìm kiếm
+  if (!searchKeyword.trim()) return true; // chưa nhập -> hiện toàn bộ menu
 
-return normalizedName.includes(normalizedSearch) || initials.includes(normalizedSearch);
- // có nhập -> lọc theo tên
-    } else {
-      // Các danh mục khác giữ nguyên như cũ
-      return activeCategory === 'Tất cả' ? true : m.cat === activeCategory;
-    }
+  // ✅ Hỗ trợ viết tắt như "tstc" cho "Trà sữa trân châu"
+  const nameForInitials = m.name
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // bỏ dấu
+    .replace(/đ/g, 'd')
+    .replace(/Đ/g, 'D')
+    .toLowerCase();
+
+  const initials = nameForInitials
+    .split(/\s+/)       // tách theo khoảng trắng
+    .filter(Boolean)
+    .map(w => w[0])     // lấy chữ cái đầu
+    .join('');
+
+  // ✅ tìm theo tên (cũ) hoặc viết tắt (mới)
+  return normalizedName.includes(normalizedSearch) || initials.includes(normalizedSearch);
+} else {
+  // Các danh mục khác giữ nguyên như cũ
+  return activeCategory === 'Tất cả' ? true : m.cat === activeCategory;
+}
   });
 
   items.forEach(item => {
