@@ -1,12 +1,4 @@
 *{box-sizing:border-box;margin:0;padding:0}
-.app {
-  max-width: 980px;
-  margin: 0 auto;
-
-  /* 👇 thêm dòng này để đẩy toàn bộ nội dung xuống dưới header */
-  padding-top: 50px;
-  box-sizing: border-box;
-}
 header{padding:50px 0}
 h1{font-size:18px}
 h2,h3,h4{margin:0 0 6px 0}
@@ -697,13 +689,17 @@ html, body {
   align-items: flex-start; /* 👈 thay vì center, để sát trên */
 }
 
-/* Khung giao diện gốc Oppo A5 */
+/* khung giao diện và fhanh head */
 .app {
   width: 360px;
-  height: 716px; /* đúng kích thước đo được */
+  height: 716px;
   background: #fff;
   transform-origin: top left;
   transition: transform 0.25s ease-out;
   overflow: hidden;
   box-shadow: 0 0 10px rgba(0,0,0,0.08);
+
+  /* ✅ Giữ dòng này để đẩy nội dung xuống dưới header */
+  padding-top: 50px;
+  box-sizing: border-box;
 }
