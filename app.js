@@ -1327,6 +1327,18 @@ function openItemSettings(){
   $('item-settings-screen').style.display = 'block';
   renderMenuSettings();
 }
+// ✅ Tự ẩn popup ghi chú khi menu bị ẩn
+const menuScreen = document.getElementById('menu-screen');
+if (menuScreen) {
+  const observer = new MutationObserver(() => {
+    if (menuScreen.style.display === 'none') {
+      const popup = document.querySelector('.popup-note');
+      if (popup) popup.remove();
+    }
+  });
+  observer.observe(menuScreen, { attributes: true, attributeFilter: ['style'] });
+}
+
 // init
 window.addEventListener('load', () => {
   if($('guest-btn')) $('guest-btn').addEventListener('click', addGuest);
