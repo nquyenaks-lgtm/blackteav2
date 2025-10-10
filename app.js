@@ -531,6 +531,7 @@ function openTable(id){
   if ($('backBtn')) $('backBtn').classList.remove('hidden');
 
   // render danh mục, menu, giỏ hàng
+  resetMenuNotes();
   renderCategories && renderCategories();
   renderMenuList && renderMenuList();
   renderCart && renderCart();
@@ -665,6 +666,16 @@ function renderCategories() {
     }
   });
 }
+// Reset trạng thái sao và ghi chú khi tạo đơn mới
+function resetMenuNotes() {
+  MENU.forEach(m => {
+    m.star = false;
+    m.note = '';
+    m.sugarLevel = 2;
+    m.iceLevel = 2;
+  });
+}
+
 // menu list
 function renderMenuList(){
   const list = $('menu-list');
