@@ -348,26 +348,24 @@
 </div>
 
 <script>
-  function autoScale() {
-    const baseWidth = 720; // Giao diện gốc Oppo A5 2020
-    const currentWidth = window.innerWidth;
-    let scale = currentWidth / baseWidth;
+function autoScale() {
+  const baseWidth  = 360;  // chiều rộng gốc Oppo A5
+  const baseHeight = 760;  // chiều cao gốc Oppo A5
 
-    // Giữ nguyên tỉ lệ cho Oppo A5 (720 ± 60px)
-    if (currentWidth >= 660 && currentWidth <= 780) {
-      scale = 1;
-    }
+  const screenWidth  = window.innerWidth;
+  const screenHeight = window.innerHeight;
 
-    // Giới hạn phóng to / thu nhỏ hợp lý
-    if (scale > 2.5) scale = 2.5;
-    if (scale < 0.7) scale = 0.7;
+  // Tính tỉ lệ scale để vừa khít cả chiều ngang và dọc
+  const scale = Math.min(screenWidth / baseWidth, screenHeight / baseHeight);
 
-    // Áp dụng cho toàn bộ trang (html)
-    document.documentElement.style.zoom = scale;
+  const app = document.querySelector('.app');
+  if (app) {
+    app.style.transform = `scale(${scale})`;
   }
+}
 
-  window.addEventListener('load', autoScale);
-  window.addEventListener('resize', autoScale);
+window.addEventListener('load', autoScale);
+window.addEventListener('resize', autoScale);
 </script>
 </body>
 </html>
