@@ -2,7 +2,7 @@
 .app{max-width:980px;margin:0 auto}
 header{padding:8px 0}
 h1{font-size:18px}
-h2,h3,h4{margin:0 0 8px 0}
+h2,h3,h4{margin:0 0 6px 0}
 .table-grid{display:flex;flex-direction:column;gap:8px;margin-top:8px}
 .table-card{background:#fff;border:1px solid #e6e9ef;padding:10px;border-radius:8px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
 .table-info{display:flex;flex-direction:column}
