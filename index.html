@@ -348,24 +348,46 @@
 </div>
 
 <script>
+function getViewportSize() {
+  // Ưu tiên visualViewport vì nó trừ đúng thanh đen & URL bar
+  if (window.visualViewport) {
+    return {
+      width: window.visualViewport.width,
+      height: window.visualViewport.height
+    };
+  }
+  // fallback
+  return {
+    width: window.innerWidth,
+    height: window.innerHeight
+  };
+}
+
 function autoScale() {
-  const baseWidth  = 360;  // chiều rộng gốc Oppo A5
-  const baseHeight = 760;  // chiều cao gốc Oppo A5
+  const baseWidth = 360;  // Oppo A5 gốc
+  const baseHeight = 760; // Oppo A5 gốc (hiển thị phần trắng thực tế)
 
-  const screenWidth  = window.innerWidth;
-  const screenHeight = window.innerHeight;
-
-  // Tính tỉ lệ scale để vừa khít cả chiều ngang và dọc
-  const scale = Math.min(screenWidth / baseWidth, screenHeight / baseHeight);
+  const vp = getViewportSize();
+  const scale = Math.min(vp.width / baseWidth, vp.height / baseHeight);
 
   const app = document.querySelector('.app');
   if (app) {
     app.style.transform = `scale(${scale})`;
+    // Căn giữa trang
+    const offsetX = (vp.width - baseWidth * scale) / 2;
+    const offsetY = (vp.height - baseHeight * scale) / 2;
+    app.style.position = 'absolute';
+    app.style.left = `${offsetX}px`;
+    app.style.top = `${offsetY}px`;
   }
 }
 
 window.addEventListener('load', autoScale);
 window.addEventListener('resize', autoScale);
+// visualViewport cũng cần lắng nghe vì khi thanh URL ẩn/hiện, chiều cao thay đổi
+if (window.visualViewport) {
+  window.visualViewport.addEventListener('resize', autoScale);
+}
 </script>
 </body>
 </html>
