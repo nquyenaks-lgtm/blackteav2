@@ -734,7 +734,7 @@ async function toggleNotePopup(item, btn) {
         btn.innerText = '★';
         btn.classList.add('active');
       }
-
+      item.star = !(Number(item.sugarLevel) === 2 && Number(item.iceLevel) === 3);
       popup.remove();
 
       // ✅ Cập nhật giao diện
