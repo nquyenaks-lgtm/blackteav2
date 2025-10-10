@@ -1,1 +1,360 @@
 
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>BlackTea POS v8</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ====== Style modal chọn bàn ====== */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+    }
+    .modal-content {
+      background-color: #fff;
+      margin: 5% auto;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 600px;
+      text-align: center;
+    }
+    .table-select-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+    .table-select-list button {
+      min-width: 80px;
+      min-height: 50px;
+      font-size: 16px;
+      background: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .table-select-list button:hover {
+      background: #0056b3;
+    }
+    .btn-danger {
+      background: #dc3545 !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    
+<header>
+  <!-- Bên trái: logo + tên bàn -->
+  <div class="header-left">
+    <h1 id="brand">BlackTea</h1>
+    <div id="order-info" class="hidden">
+      <span id="orderTitle"></span>
+    </div>
+  </div>
+
+  <!-- Bên phải: icon lịch sử, cài đặt (trang chính) + nút X (order) -->
+  <div class="header-right">
+    <div class="header-icons" id="header-buttons">
+      <span class="icon-btn" onclick="openHistory()" title="Lịch sử">🧾</span>
+      <span class="icon-btn" onclick="openSettings()" title="Cài đặt">⚙️</span>
+    </div>
+    <button id="backBtn" class="hidden" onclick="goBack()">❌</button>
+  </div>
+</header>
+
+
+    <main id="table-screen">
+      
+<div class="guest-buttons" style="display:flex; justify-content:center; gap:12px; margin:16px 0;">
+  <button id="guest-btn" class="btn btn-primary" style="flex:1; max-width:160px; padding:12px 0; font-size:15px;">
+    Khách mang đi
+  </button>
+  <button id="guest-visit-btn" class="btn btn-primary" style="flex:1; max-width:160px; padding:12px 0; font-size:15px;">
+    Khách ghé quán
+  </button>
+</div>
+
+<div class="section-bar">
+  📋 Bàn đang phục vụ
+</div>
+      <div id="tables" class="table-grid"></div>
+    </main>
+
+    <main id="menu-screen" style="display:none">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+    <h2 id="table-title"></h2>
+  </div>
+
+  <!-- Các tab danh mục + ô tìm kiếm cùng 1 hàng -->
+  <div id="category-bar" class="category-bar">
+    <!-- Ô tìm kiếm giống như 1 tab -->
+    <div class="search-tab">
+      <input id="menu-search" type="text" placeholder="🔍 Nhập món cần tìm..." />
+    </div>
+    <!-- Các tab danh mục (Cà phê, Trà sữa…) sẽ render ở đây -->
+  </div>
+
+  <div id="menu-list" class="menu-list" style="display:none"></div>
+      <section class="cart-section">
+        <h3>Hóa đơn</h3>
+        <ul id="cart-list" class="cart-list"></ul>
+        <div class="cart-summary">
+          <div>Tổng: <span id="total">0</span> VND</div>
+          <div class="cart-actions" id="primary-actions" style="display:none">
+  	    <button id="cancel-order-btn" class="btn btn-action" data-context="new">Đặt lại</button>
+            <button id="save-btn" class="btn btn-action primary">Lưu đơn</button>
+          </div>
+
+          <div class="cart-actions" id="table-actions" style="display:none">
+            <button id="addmore-btn" class="btn btn-action">Thêm món</button>
+            <button id="pay-btn" class="btn btn-action primary">Thanh toán</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <main id="payment-screen" style="display:none">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <h2>Thanh toán - <span id="pay-table-name"></span></h2>
+    <button class="btn btn-light" onclick="closePayment()">← Quay lại</button>
+  </div>
+
+  <div id="pay-bill" style="margin-top:8px"></div>
+
+  <!-- Form chiết khấu + tổng -->
+  <div style="margin-top:8px; display:flex; flex-direction:column; gap:8px; max-width:520px;">
+    <div style="display:flex; align-items:center; justify-content:flex-start; gap:12px;">
+      <label for="discount-input" style="font-weight:700; min-width:86px; margin-bottom:0;">Chiết khấu:</label>
+      <input id="discount-input" type="number" value="0"
+             style="width:140px; text-align:right; padding:8px; border-radius:8px; border:1px solid #ccc;"
+             placeholder="Nhập chiết khấu" />
+    </div>
+
+    <div>
+      <small><i>
+        Gõ từ 0–100 thì giảm theo % tổng đơn.<br>
+        Từ 1000 trở lên thì giảm theo số tiền
+      </i></small>
+    </div>
+
+    <div style="margin-top:8px;font-weight:700">
+      Tổng sau chiết khấu: <span id="pay-final-total">0</span> VND
+    </div>
+
+    <div style="margin-top:12px;display:flex;gap:8px">
+      <button class="btn btn-secondary" onclick="closePayment()">Quay lại</button>
+      <button class="btn btn-primary" onclick="confirmPayment()">Xuất hóa đơn</button>
+    </div>
+  </div>
+
+  <script>
+  (function(){
+    const inputDiscount = document.getElementById('discount');
+    const finalTotalSpan = document.getElementById('pay-final-total');
+
+    // Lấy subtotal từ #total (nếu app bạn render tạm tính ở #total)
+    function getSubtotal() {
+      const el = document.querySelector('#total');
+      if (el && el.textContent.trim()) {
+        // loại bỏ ký tự không phải số
+        const raw = el.textContent.replace(/[^\d]/g, '');
+        return parseInt(raw, 10) || 0;
+      }
+      // fallback: tìm số trong #pay-bill nếu có chữ "Tạm tính: ..." ở đó
+      const pb = document.getElementById('pay-bill');
+      if (pb) {
+        const m = pb.textContent.match(/(\d[\d.,\s]*)/);
+        if (m) {
+          const raw = m[1].replace(/[.,\s]/g,'');
+          return parseInt(raw, 10) || 0;
+        }
+      }
+      return 0;
+    }
+
+    function roundToThousands(n) {
+      const r = n % 1000;
+      return r >= 500 ? (n - r + 1000) : (n - r);
+    }
+
+    function updateTotal() {
+      const subtotal = getSubtotal();
+      let val = parseInt(inputDiscount.value, 10);
+      if (!Number.isFinite(val)) val = 0;
+
+      let discount = 0;
+      if (val >= 0 && val <= 100) {
+        discount = Math.round(subtotal * val / 100);
+      } else if (val >= 1000) {
+        discount = val;
+      }
+
+      let finalTotal = subtotal - discount;
+      if (finalTotal < 0) finalTotal = 0;
+
+      finalTotal = roundToThousands(finalTotal);
+
+      finalTotalSpan.textContent = finalTotal.toLocaleString('vi-VN');
+    }
+
+    // Cập nhật khi nhập chiết khấu
+    inputDiscount.addEventListener('input', updateTotal);
+
+    // Nếu subtotal (#total) thay đổi do app, chúng ta quan sát và cập nhật lại
+    const watchTarget = document.querySelector('#total') || document.getElementById('pay-bill');
+    if (watchTarget) {
+      const mo = new MutationObserver(() => {
+        updateTotal();
+      });
+      mo.observe(watchTarget, { childList: true, characterData: true, subtree: true });
+    }
+
+    // Hiển thị ban đầu
+    updateTotal();
+  })();
+  </script>
+</main>
+
+    <main id="settings-screen" style="display:none">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h2>Cài đặt</h2>
+        <button class="btn btn-light" onclick="backToTables()">← Quay lại</button>
+      </div>
+      <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px">
+        <button class="settings-line btn btn-secondary" onclick="syncData()">🔄 Đồng bộ dữ liệu</button>
+        <button class="settings-line btn btn-secondary" onclick="openMenuSettings()">📋 Cài đặt Menu</button>
+        <button class="settings-line btn btn-secondary" onclick="openPrinterSettings()">🖨️ Cài đặt Máy in</button>
+      </div>
+    </main>
+
+    <main id="menu-settings-screen" style="display:none">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <h2>Cài đặt Menu</h2>
+    <button class="btn btn-light" onclick="openSettings()">← Quay lại</button>
+  </div>
+  <div style="margin-top:20px;display:flex;flex-direction:column;gap:12px">
+    <button class="btn btn-primary" onclick="openCategorySettings()">📂 Quản lý Danh mục</button>
+    <button class="btn btn-primary" onclick="openItemSettings()">🍜 Quản lý Món</button>
+  </div>
+</main>
+
+    
+<main id="category-settings-screen" style="display:none">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <h2>Quản lý Danh mục</h2>
+    <button class="btn btn-light" onclick="openMenuSettings()">← Quay lại</button>
+  </div>
+  <div style="margin-top:12px">
+    <input id="new-cat-name" placeholder="Tên danh mục" />
+    <button class="btn btn-secondary" onclick="addCategory()">Thêm</button>
+  </div>
+  <ul id="categories-list" class="cart-list" style="margin-top:8px"></ul>
+</main>
+
+<main id="item-settings-screen" style="display:none">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <h2>Quản lý Món</h2>
+    <button class="btn btn-light" onclick="openMenuSettings()">← Quay lại</button>
+  </div>
+  <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap">
+    <select id="cat-select"></select>
+    <input id="new-item-name" placeholder="Tên món" />
+    <input id="new-item-price" type="number" placeholder="Giá" />
+    <button class="btn btn-primary" onclick="addMenuItem()">Thêm món</button>
+  </div>
+  <ul id="menu-settings-list" class="cart-list" style="margin-top:8px"></ul>
+</main>
+
+    <main id="printer-settings-screen" style="display:none">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h2>Cài đặt Máy in</h2>
+        <button class="btn btn-light" onclick="openSettings()">← Quay lại</button>
+      </div>
+      <div style="margin-top:8px">
+        <label>Khổ giấy:
+          <select id="paper-size">
+            <option value="58">58mm</option>
+            <option value="80">80mm</option>
+          </select>
+        </label><br/>
+        <label><input type="checkbox" id="print-name" checked> In tên quán</label><br/>
+        <button class="btn btn-primary" onclick="printTest()">In thử</button>
+      </div>
+    </main>
+
+    <main id="history-screen" style="display:none">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h2>Lịch sử</h2>
+        <div style="display:flex;gap:8px;align-items:center">
+          <input type="date" id="history-date" />
+          <button class="btn btn-secondary" onclick="clearDateFilter()">Xóa</button>
+          <button class="btn btn-light" onclick="backToTables()">← Quay lại</button>
+        </div>
+      </div>
+      <div id="history-container" style="margin-top:8px"></div>
+    </main>
+  </div>
+
+  <!-- Modal chọn bàn -->
+  <div id="tableModal" class="modal">
+    <div class="modal-content">
+      <h3>Chọn bàn</h3>
+      <div class="table-select-list" id="tableList"></div>
+      <button class="btn btn-danger" onclick="closeTableModal()">Đóng</button>
+    </div>
+  </div>
+  <!-- Firebase -->
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  import { getFirestore } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyBZfopSx2eVLyEe1iD8TAm8En81mDy1OKo",
+    authDomain: "blacktea-a4171.firebaseapp.com",
+    projectId: "blacktea-a4171",
+    storageBucket: "blacktea-a4171.firebasestorage.app",
+    messagingSenderId: "550144295087",
+    appId: "1:550144295087:web:44024fa4622243fe6ad45a"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  window.db = getFirestore(app);
+</script>
+
+<script src="menu.js"></script>
+<script src="app.js"></script>
+
+  <script src="menu.js"></script>
+  <script src="app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', ()=>{
+      const b = document.getElementById('brand');
+      if(b) b.addEventListener('click', ()=>{ backToTables(); });
+    });
+  </script>
+<!-- Custom Alert -->
+<div id="customAlert" class="custom-alert">
+  <div class="custom-alert-box">
+    <p id="customAlertMessage">Thông báo</p>
+    <button onclick="closeCustomAlert()">Xác nhận</button>
+  </div>
+</div>
+
+
+
+</body>
+</html>
