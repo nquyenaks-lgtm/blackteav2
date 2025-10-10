@@ -348,26 +348,28 @@
 </div>
 
 <script>
+  // ====== TỰ ĐỘNG PHÓNG / THU THEO KÍCH THƯỚC MÀN HÌNH ======
   function autoScale() {
-    const baseWidth = 720; // kích thước chuẩn theo Oppo A5
-    const currentWidth = window.innerWidth;
-    let scale = currentWidth / baseWidth;
+    const baseWidth = 720; // gốc Oppo A5 2020
+    const screenWidth = window.innerWidth;
 
-    if (scale > 2) scale = 2;  // giới hạn phóng to
-    if (scale < 0.5) scale = 0.5;  // giới hạn thu nhỏ
+    // Tính tỉ lệ scale so với kích thước gốc
+    let scale = screenWidth / baseWidth;
 
-    // chỉ áp dụng cho phần .app, không toàn trang
+    // Giới hạn để không quá to hoặc quá nhỏ
+    if (scale > 2) scale = 2;
+    if (scale < 0.5) scale = 0.5;
+
+    // Áp dụng scale cho toàn bộ ứng dụng
     const app = document.querySelector('.app');
     if (app) {
       app.style.transform = `scale(${scale})`;
-      app.style.transformOrigin = 'top center';
-      app.style.margin = '0 auto';
     }
   }
 
-  window.addEventListener('resize', autoScale);
+  // Gọi khi load và khi resize
   window.addEventListener('load', autoScale);
+  window.addEventListener('resize', autoScale);
 </script>
-
 </body>
 </html>
