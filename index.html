@@ -313,6 +313,30 @@
       <button class="btn btn-danger" onclick="closeTableModal()">Đóng</button>
     </div>
   </div>
+  <!-- Firebase -->
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  import { getFirestore } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyBZfopSx2eVLyEe1iD8TAm8En81mDy1OKo",
+    authDomain: "blacktea-a4171.firebaseapp.com",
+    projectId: "blacktea-a4171",
+    storageBucket: "blacktea-a4171.firebasestorage.app",
+    messagingSenderId: "550144295087",
+    appId: "1:550144295087:web:44024fa4622243fe6ad45a"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  window.db = getFirestore(app);
+</script>
+
+<script src="menu.js"></script>
+<script src="app.js"></script>
+
   <script src="menu.js"></script>
   <script src="app.js"></script>
   <script>
