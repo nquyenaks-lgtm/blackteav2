@@ -676,3 +676,25 @@ header {
   margin-left: 4px;
   display: inline-block;
 }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: #f6f7fb;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Toàn bộ giao diện cố định trong khung gốc Oppo A5 2020 */
+.app {
+  width: 360px;
+  height: 716px; /* 👈 chuẩn kích thước viewport bạn vừa đo */
+  background: #fff;
+  transform-origin: top left;
+  transition: transform 0.25s ease-out;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0,0,0,0.08);
+}
