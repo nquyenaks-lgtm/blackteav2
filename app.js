@@ -698,26 +698,49 @@ function renderMenuList(){
     const controls = document.createElement('div');
     controls.className = 'qty-controls';
 
-    const minus = document.createElement('button');
-    minus.className = 'btn btn-secondary';
-    minus.innerText = '-';
-    minus.onclick = (e) => { 
-      e.stopPropagation(); 
-      changeQty(item.id, -1); 
-    };
+ // ⭐ Nút sao (ghi chú)
+const star = document.createElement('button');
+star.className = 'star-btn btn';
+star.dataset.id = item.id;
+star.innerText = item.star ? '★' : '☆';
 
-    const qty = document.createElement('span');
-    qty.id = 'qty-'+item.id;
-    qty.innerText = getQty(item.id);
+// Kiểm tra số lượng món, nếu = 0 thì khóa nút sao
+const currentQty = getQty(item.id);
+if (currentQty <= 0) {
+  star.disabled = true;
+  star.style.opacity = '0.4';
+}
 
-    const plus = document.createElement('button');
-    plus.className = 'btn btn-secondary';
-    plus.innerText = '+';
-    plus.onclick = (e) => { 
-      e.stopPropagation(); 
-      changeQty(item.id, 1); 
-    };
+star.onclick = (e) => {
+  e.stopPropagation();
+  // Nếu chưa chọn món thì không cho bấm
+  if (getQty(item.id) <= 0) return;
+  toggleNotePopup(item, star);
+};
 
+const minus = document.createElement('button');
+minus.className = 'btn btn-secondary';
+minus.innerText = '-';
+minus.onclick = (e) => { 
+  e.stopPropagation(); 
+  changeQty(item.id, -1); 
+};
+
+const qty = document.createElement('span');
+qty.id = 'qty-'+item.id;
+qty.innerText = getQty(item.id);
+
+const plus = document.createElement('button');
+plus.className = 'btn btn-secondary';
+plus.innerText = '+';
+plus.onclick = (e) => { 
+  e.stopPropagation(); 
+  changeQty(item.id, 1); 
+};
+
+
+    // thứ tự: ⭐ - số lượng -
+    controls.appendChild(star);
     controls.appendChild(minus);
     controls.appendChild(qty);
     controls.appendChild(plus);
@@ -727,6 +750,121 @@ function renderMenuList(){
     list.appendChild(row);
   });
 }
+
+function toggleNotePopup(item, btn) {
+  // Nếu popup đang mở, đóng lại
+  const existing = document.querySelector('.popup-note');
+  if (existing) existing.remove();
+
+  // Thiết lập mặc định 5 mức (0–4)
+  if (item.sugarLevel === undefined) item.sugarLevel = 2; // Bình thường
+  if (item.iceLevel === undefined) item.iceLevel = 2; // Bình thường
+
+  // Tạo popup
+  const popup = document.createElement('div');
+  popup.className = 'popup-note';
+  popup.innerHTML = `
+    <div class="popup-row">
+      <label>Đường:</label>
+      <input type="range" min="0" max="4" step="1" value="${item.sugarLevel}" class="slider" data-type="sugar">
+      <span class="slider-label">${['Không', 'Ít', 'Bình thường', 'Thêm ít', 'Thêm nhiều'][item.sugarLevel]}</span>
+    </div>
+    <div class="popup-row">
+      <label>Đá:</label>
+      <input type="range" min="0" max="4" step="1" value="${item.iceLevel}" class="slider" data-type="ice">
+      <span class="slider-label">${['Không', 'Ít', 'Bình thường', 'Thêm ít', 'Thêm nhiều'][item.iceLevel]}</span>
+    </div>
+    <div class="popup-actions">
+      <button class="cancel">✖</button>
+      <button class="confirm">✔</button>
+    </div>
+  `;
+
+  // Thêm popup ngay dưới món
+document.body.appendChild(popup);
+
+// Lấy vị trí thực của nút sao
+const rect = btn.getBoundingClientRect();
+const scrollTop = window.scrollY || document.documentElement.scrollTop;
+
+// Tính vị trí ban đầu (ngay dưới sao)
+let left = rect.left + rect.width / 2;
+let top = rect.bottom + scrollTop + 5;
+
+// Lấy kích thước popup và màn hình
+document.body.appendChild(popup); // cần gắn để đo kích thước thật
+const popupRect = popup.getBoundingClientRect();
+
+// ✅ Giữ popup không vượt khỏi khung hiển thị
+const screenWidth = window.innerWidth;
+if (left - popupRect.width / 2 < 5) {
+  left = popupRect.width / 2 + 5; // sát mép trái
+}
+if (left + popupRect.width / 2 > screenWidth - 5) {
+  left = screenWidth - popupRect.width / 2 - 5; // sát mép phải
+}
+
+// Đặt vị trí cuối cùng
+popup.style.position = "absolute";
+popup.style.top = `${top}px`;
+popup.style.left = `${left}px`;
+popup.style.transform = "translateX(-50%)";
+popup.style.zIndex = 1000;
+
+
+  // Sự kiện trong popup
+  popup.addEventListener('click', function (ev) {
+    if (ev.target.classList.contains('confirm')) {
+  // Kiểm tra nếu cả hai đều là mức bình thường (2)
+  const sugar = item.sugarLevel ?? 2;
+  const ice = item.iceLevel ?? 2;
+
+  if (sugar === 2 && ice === 2) {
+    item.star = false;
+    btn.innerText = '☆'; // Sao rỗng
+    btn.classList.remove('active');
+  } else {
+    item.star = true;
+    btn.innerText = '★'; // Sao sáng
+    btn.classList.add('active');
+  }
+
+  popup.remove();
+}
+
+  });
+
+  // Khi kéo thanh trượt
+  popup.querySelectorAll('.slider').forEach(slider => {
+    const labels = ['Không', 'Ít', 'Bình thường', 'Thêm ít', 'Thêm nhiều'];
+    const colors = ['#b7c7e6', '#7d9ad0', '#4a69ad', '#324f91', '#223a75'];
+
+    // Cập nhật màu mặc định khi mở popup
+    const level = parseInt(slider.value);
+    const title = slider.closest('.popup-row').querySelector('label');
+    const label = slider.nextElementSibling;
+    title.style.color = colors[level];
+    label.style.color = '#4a69ad'; // 👈 Chữ chú thích giữ nguyên màu xanh chuẩn
+
+    // Cập nhật khi kéo slider
+    slider.addEventListener('input', e => {
+      const level = parseInt(e.target.value);
+      const type = e.target.dataset.type;
+      const title = e.target.closest('.popup-row').querySelector('label');
+      const label = e.target.nextElementSibling;
+
+      title.style.color = colors[level]; // chỉ đổi màu tiêu đề
+      label.style.color = '#4a69ad'; // giữ nguyên màu chú thích
+      label.textContent = labels[level];
+
+      if (type === 'sugar') item.sugarLevel = level;
+      if (type === 'ice') item.iceLevel = level;
+    });
+  });
+}
+
+
+
 
 function getQty(id){ if(!currentTable) return 0; const it = currentTable.cart.find(c=>c.id===id); return it ? it.qty : 0; }
 

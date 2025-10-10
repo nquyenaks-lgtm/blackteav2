@@ -492,3 +492,148 @@ header {
   cursor: pointer;
   transition: 0.2s ease;
 }
+
+/* ===== Nút sao chọn ghi chú ===== */
+.star-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #ccc;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  margin-right: 6px;
+}
+.star-btn.active {
+  color: #f4c542; /* vàng khi đã ghi chú */
+}
+
+/* ===== Popup chọn lượng đường / đá ===== */
+.popup-note {
+  position: absolute;
+  background: #fff;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-top: 5px;
+  z-index: 1000;
+  width: 330px; /* 👈 tăng rộng lên để không cắt chữ */
+}
+
+/* ===== Hàng ngang: Đường / Đá ===== */
+.popup-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+/* Nhãn "Đường:" / "Đá:" */
+.popup-row label {
+  font-weight: 600;
+  white-space: nowrap;
+  min-width: 60px;
+  color: #333;
+  transition: color 0.2s ease;
+}
+
+/* ===== Thanh trượt 5 mức ===== */
+.slider {
+  flex: 1;
+  appearance: none;
+  height: 8px;
+  border-radius: 4px;
+  background: linear-gradient(to right, #b7c7e6, #7d9ad0, #4a69ad, #324f91, #223a75);
+  outline: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+/* ép trình duyệt canh giữa nút */
+.slider::-webkit-slider-runnable-track {
+  height: 8px;
+  border-radius: 4px;
+  background: transparent;
+}
+.slider::-moz-range-track {
+  height: 8px;
+  border-radius: 4px;
+  background: transparent;
+}
+
+/* --- Nút tròn chỉnh mức (căn giữa chuẩn & to hơn) --- */
+.slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #4a69ad;
+  cursor: pointer;
+  transition: 0.2s;
+  margin-top: -6px; /* 👈 đảm bảo canh giữa với thanh 8px */
+}
+.slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #4a69ad;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.slider::-webkit-slider-thumb:hover,
+.slider::-moz-range-thumb:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 6px rgba(74, 105, 173, 0.4);
+}
+
+/* Nhãn hiển thị mức (ví dụ: Bình thường / Thêm ít...) */
+.slider-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #4a69ad;
+  white-space: nowrap;
+  min-width: 85px; /* 👈 tăng thêm 5px cho chữ dài */
+  text-align: right;
+}
+
+/* ===== Nút xác nhận / hủy (nhỏ hơn và nằm bên phải popup) ===== */
+.popup-actions {
+  display: flex;
+  justify-content: flex-end; /* 👈 Đưa nút về bên phải */
+  gap: 8px;                 /* Giảm khoảng cách giữa hai nút */
+  margin-top: 8px;
+  margin-right: 6px;        /* 👈 Cách mép phải một chút */
+}
+
+.popup-actions button {
+  width: 26px;              /* 👈 nhỏ hơn */
+  height: 26px;
+  border: none;
+  border-radius: 6px;       /* 👈 bo nhẹ hơn cho cân */
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+.popup-actions .cancel {
+  background: #999;
+  color: #fff;
+}
+
+.popup-actions .confirm {
+  background: #4a69ad;
+  color: #fff;
+}
+
+.popup-actions button:hover {
+  opacity: 0.9;
+  transform: scale(1.05);
+}
