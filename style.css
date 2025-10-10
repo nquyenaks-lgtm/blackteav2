@@ -685,13 +685,13 @@ html, body {
   overflow: hidden;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start; /* 👈 thay vì center, để sát trên */
 }
 
-/* Toàn bộ giao diện cố định trong khung gốc Oppo A5 2020 */
+/* Khung giao diện gốc Oppo A5 */
 .app {
   width: 360px;
-  height: 716px; /* 👈 chuẩn kích thước viewport bạn vừa đo */
+  height: 716px; /* đúng kích thước đo được */
   background: #fff;
   transform-origin: top left;
   transition: transform 0.25s ease-out;
