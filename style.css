@@ -637,9 +637,25 @@ header {
   opacity: 0.9;
   transform: scale(1.05);
 }
-/* === Hiển thị nhãn Đơn có ghi chú === */
-/* ===== Hiển thị nhãn "Đơn có ghi chú" ===== */
-.has-note {
+/* ===== chỉnh phần meta cho bố cục hai bên ===== */
+.table-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: #444;
+  white-space: normal !important; /* cho phép xuống dòng nếu cần */
+}
+
+.table-meta .meta-left {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ===== style cho nhãn ghi chú ===== */
+.table-meta .meta-right.has-note {
   display: inline-block;
   background: #fff8c4;      /* vàng nhạt dễ thấy */
   color: #b58900;           /* vàng đậm */
@@ -647,13 +663,8 @@ header {
   border: 1px solid #f0d46b;
   border-radius: 6px;
   padding: 2px 6px;
-  margin-left: 6px;
+  margin-left: 8px;
   font-size: 12px;
   white-space: nowrap;
-}
-
-/* Cho phép meta xuống dòng nếu có nhãn ghi chú */
-.table-meta {
-  white-space: normal !important;
 }
 

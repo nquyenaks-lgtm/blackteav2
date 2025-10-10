@@ -248,7 +248,7 @@ function makeTableCard(t) {
       const d = new Date(t.createdAt);
       const hh = String(d.getHours()).padStart(2, '0');
       const mm = String(d.getMinutes()).padStart(2, '0');
-      timeStr = ` • ⏰ ${hh}:${mm}`;
+      timeStr = ` • ${hh}:${mm}`;
     }
 
     // ✅ Kiểm tra ghi chú: note có text hoặc đường/đá khác bình thường
