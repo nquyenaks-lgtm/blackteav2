@@ -676,14 +676,13 @@ async function toggleNotePopup(item, btn) {
   `;
   document.body.appendChild(popup);
 
-  // ✅ Popup tự điều chỉnh vị trí (không bị khuất)
+  // ✅ Popup thông minh
   const rect = btn.getBoundingClientRect();
   const popupRect = popup.getBoundingClientRect();
   const scrollTop = window.scrollY || document.documentElement.scrollTop;
   const screenHeight = window.innerHeight;
 
   let top = rect.bottom + scrollTop + 5;
-  // Nếu popup sẽ vượt khỏi mép dưới màn hình → hiển thị phía trên nút
   if (rect.bottom + popupRect.height > screenHeight - 10) {
     top = rect.top + scrollTop - popupRect.height - 5;
   }
@@ -700,7 +699,7 @@ async function toggleNotePopup(item, btn) {
   popup.style.transform = 'translateX(-50%)';
   popup.style.zIndex = 1000;
 
-  // (Phần còn lại giữ nguyên)
+  // ✅ Xử lý click
   popup.addEventListener('click', async function (ev) {
     ev.stopPropagation();
 
@@ -709,23 +708,25 @@ async function toggleNotePopup(item, btn) {
       const isNormalIce = Number(item.iceLevel) === 3;
 
       const idx = currentTable.cart.findIndex(it => it.id === item.id);
+
       if (idx >= 0) {
         if (isNormalSugar && isNormalIce) {
           currentTable.cart[idx].sugarLevel = 2;
           currentTable.cart[idx].iceLevel = 3;
           currentTable.cart[idx].star = false;
         } else {
+          // ✅ Giữ nguyên số lượng, chỉ thêm 1 bản ghi chú để hiển thị tách ở hóa đơn
           const newItem = JSON.parse(JSON.stringify(item));
           newItem.sugarLevel = item.sugarLevel;
           newItem.iceLevel = item.iceLevel;
           newItem.star = true;
-          newItem.qty = 1;
-          currentTable.cart[idx].qty -= 1;
-          if (currentTable.cart[idx].qty <= 0) currentTable.cart.splice(idx, 1);
+          newItem.qty = 0; // không ảnh hưởng đến tổng
+          newItem.isNoteOnly = true; // flag giúp hóa đơn hiển thị riêng
           currentTable.cart.push(newItem);
         }
       }
 
+      // Cập nhật sao
       if (isNormalSugar && isNormalIce) {
         btn.innerText = '☆';
         btn.classList.remove('active');
@@ -736,6 +737,7 @@ async function toggleNotePopup(item, btn) {
 
       popup.remove();
 
+      // ✅ Cập nhật giao diện
       const tableIdx = TABLES.findIndex(t => t.id === currentTable.id);
       if (tableIdx >= 0)
         TABLES[tableIdx] = JSON.parse(JSON.stringify(currentTable));
@@ -752,6 +754,7 @@ async function toggleNotePopup(item, btn) {
     if (ev.target.classList.contains('cancel')) popup.remove();
   });
 
+  // Xử lý kéo slider
   popup.querySelectorAll('.slider').forEach(slider => {
     const sugarLabels = ['Không','Ít','Bình thường','Thêm ít','Thêm nhiều'];
     const iceLabels = ['Không đá','Đá ít','Đá vừa','Bình thường'];
@@ -778,7 +781,6 @@ async function toggleNotePopup(item, btn) {
     { once: true }
   );
 }
-
 
 function getQty(id){ if(!currentTable) return 0; const it = currentTable.cart.find(c=>c.id===id); return it ? it.qty : 0; }
 
