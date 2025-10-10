@@ -846,8 +846,18 @@ function renderCart() {
   }
 
   let total = 0;
-  currentTable.cart.forEach(it => {
-    total += it.price * it.qty;
+  const cloneCart = JSON.parse(JSON.stringify(currentTable.cart)); // tránh ảnh hưởng dữ liệu thật
+
+  // ✅ Trừ ảo 1 món từ loại chính nếu có món ghi chú ảo
+  const noteItems = cloneCart.filter(it => it.isNoteOnly);
+  noteItems.forEach(note => {
+    const base = cloneCart.find(it => it.name === note.name && !it.isNoteOnly);
+    if (base && base.qty > 0) base.qty -= 1;
+  });
+
+  // ✅ Hiển thị danh sách
+  cloneCart.forEach(it => {
+    if (!it.isNoteOnly) total += it.price * it.qty;
 
     const sugar = (it.sugarLevel !== undefined) ? Number(it.sugarLevel) : 2;
     const ice   = (it.iceLevel !== undefined)   ? Number(it.iceLevel)   : 3;
@@ -855,19 +865,23 @@ function renderCart() {
     const sugarLabel = ['Không đường', 'Ít đường', '', 'Thêm ít đường', 'Thêm nhiều đường'][sugar] || '';
     const iceLabel   = ['Không đá', 'Đá ít', 'Đá vừa', ''][ice] || '';
 
-    // ✅ Gộp ghi chú (ẩn "Bình thường")
     const noteText = [sugarLabel, iceLabel].filter(x => x).join(', ');
     const noteHtml = noteText ? `<span class="item-note">(${noteText})</span>` : '';
 
-    const li = document.createElement('li');
-    li.innerHTML = `
-      <div>
-        <div style="font-weight:700">${it.name} ${noteHtml}</div>
-        <div class="small">${fmtV(it.price)} x ${it.qty}</div>
-      </div>
-      <div style="font-weight:700">${fmtV(it.price * it.qty)}</div>
-    `;
-    ul.appendChild(li);
+    const displayQty = it.isNoteOnly ? 1 : it.qty;
+    const displayTotal = it.isNoteOnly ? it.price : it.price * it.qty;
+
+    if (displayQty > 0) {
+      const li = document.createElement('li');
+      li.innerHTML = `
+        <div>
+          <div style="font-weight:700">${it.name} ${noteHtml}</div>
+          <div class="small">${fmtV(it.price)} x ${displayQty}</div>
+        </div>
+        <div style="font-weight:700">${fmtV(displayTotal)}</div>
+      `;
+      ul.appendChild(li);
+    }
   });
 
   $('total').innerText = fmtV(total);
