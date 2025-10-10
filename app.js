@@ -949,27 +949,50 @@ function payTable(){ if(!currentTable) return; if(!currentTable.cart.length){ re
 }
 
 // payment preview with discount input
-function renderPaymentPreview(){
-  const container = $('pay-bill'); container.innerHTML = '';
-  if(!currentTable) return;
+function renderPaymentPreview() {
+  const container = $('pay-bill');
+  container.innerHTML = '';
+  if (!currentTable) return;
+
   let total = 0;
-  const table = document.createElement('table'); table.className='payment-table';
+  const table = document.createElement('table');
+  table.className = 'payment-table';
+
   const thead = document.createElement('tr');
-  thead.innerHTML = '<th>Tên</th><th style="text-align:right">SL</th><th style="text-align:right">Thành</th>';
+  thead.innerHTML = `
+    <th>Tên</th>
+    <th style="text-align:right">SL</th>
+    <th style="text-align:right">Thành</th>
+  `;
   table.appendChild(thead);
-  currentTable.cart.forEach(it=>{
+
+  currentTable.cart.forEach(it => {
+    // ✅ Bỏ qua các món có số lượng = 0 (món ghi chú ảo)
+    if (it.qty <= 0) return;
+
     const tr = document.createElement('tr');
-    tr.innerHTML = '<td>'+it.name+'</td><td style="text-align:right">'+it.qty+'</td><td style="text-align:right">'+fmtV(it.price*it.qty)+'</td>';
+    tr.innerHTML = `
+      <td>${it.name}</td>
+      <td style="text-align:right">${it.qty}</td>
+      <td style="text-align:right">${fmtV(it.price * it.qty)}</td>
+    `;
     table.appendChild(tr);
-    total += it.price*it.qty;
+
+    total += it.price * it.qty;
   });
+
   container.appendChild(table);
-  // show subtotal and set final total
-  const sub = document.createElement('div'); sub.style.marginTop='8px'; sub.innerText = 'Tạm tính: ' + fmtV(total) + ' VND';
+
+  // ✅ Hiển thị tổng
+  const sub = document.createElement('div');
+  sub.style.marginTop = '8px';
+  sub.innerText = 'Tạm tính: ' + fmtV(total) + ' VND';
   container.appendChild(sub);
+
   $('discount-input').value = '0';
   updateFinalTotal();
 }
+
 
 // compute final total based on discount input
 function updateFinalTotal(){
