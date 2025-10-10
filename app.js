@@ -654,7 +654,7 @@ async function toggleNotePopup(item, btn) {
   const existing = document.querySelector('.popup-note');
   if (existing) existing.remove();
 
-  // Thiết lập mặc định
+  // Mặc định giá trị ban đầu
   if (item.sugarLevel === undefined) item.sugarLevel = 2; // Bình thường
   if (item.iceLevel === undefined) item.iceLevel = 3;     // Bình thường
 
@@ -679,38 +679,16 @@ async function toggleNotePopup(item, btn) {
   `;
   document.body.appendChild(popup);
 
-  // 🔧 Tính vị trí popup (fix bị khuất, tự đẩy lên khi gần cuối)
+  // Đặt vị trí popup
   const rect = btn.getBoundingClientRect();
   const scrollTop = window.scrollY || document.documentElement.scrollTop;
-  let left = rect.left + rect.width / 2;
-  let top = rect.bottom + scrollTop + 8;
-
-  popup.style.visibility = "hidden";
-  popup.style.position = "absolute";
-  document.body.appendChild(popup);
-
-  const popupRect = popup.getBoundingClientRect();
-  const screenWidth = window.innerWidth;
-  const screenHeight = window.innerHeight;
-
-  // Giữ popup trong khung ngang
-  if (left - popupRect.width / 2 < 5)
-    left = popupRect.width / 2 + 5;
-  if (left + popupRect.width / 2 > screenWidth - 5)
-    left = screenWidth - popupRect.width / 2 - 5;
-
-  // Nếu popup tràn ra khỏi màn hình dưới -> đẩy lên trên
-  if (rect.bottom + popupRect.height + 10 > screenHeight) {
-    top = rect.top + scrollTop - popupRect.height - 8;
-  }
-
-  popup.style.top = `${top}px`;
-  popup.style.left = `${left}px`;
-  popup.style.transform = "translateX(-50%)";
+  popup.style.position = 'absolute';
+  popup.style.top = `${rect.bottom + scrollTop + 5}px`;
+  popup.style.left = `${rect.left + rect.width / 2}px`;
+  popup.style.transform = 'translateX(-50%)';
   popup.style.zIndex = 1000;
-  popup.style.visibility = "visible";
 
-  // Xử lý click confirm/cancel
+  // Xử lý click trong popup
   popup.addEventListener('click', async function (ev) {
     ev.stopPropagation();
 
@@ -718,15 +696,32 @@ async function toggleNotePopup(item, btn) {
       const isNormalSugar = Number(item.sugarLevel) === 2;
       const isNormalIce = Number(item.iceLevel) === 3;
 
-      // Cập nhật vào cart gốc
-      const cartItem = currentTable.cart.find(it => it.id === item.id);
-      if (cartItem) {
-        cartItem.sugarLevel = item.sugarLevel;
-        cartItem.iceLevel = item.iceLevel;
-        cartItem.star = !(isNormalSugar && isNormalIce);
+      // ✅ Tìm món trong giỏ
+      const idx = currentTable.cart.findIndex(it => it.id === item.id);
+
+      if (idx >= 0) {
+        if (isNormalSugar && isNormalIce) {
+          // Nếu trở lại bình thường → chỉ cập nhật mức
+          currentTable.cart[idx].sugarLevel = 2;
+          currentTable.cart[idx].iceLevel = 3;
+          currentTable.cart[idx].star = false;
+        } else {
+          // ✅ Nếu khác → tách ra 1 món riêng
+          const newItem = JSON.parse(JSON.stringify(item));
+          newItem.sugarLevel = item.sugarLevel;
+          newItem.iceLevel = item.iceLevel;
+          newItem.star = true;
+          newItem.qty = 1;
+
+          // Trừ 1 món khỏi nhóm cũ
+          currentTable.cart[idx].qty -= 1;
+          if (currentTable.cart[idx].qty <= 0) currentTable.cart.splice(idx, 1);
+
+          currentTable.cart.push(newItem);
+        }
       }
 
-      // Đổi icon sao
+      // Cập nhật biểu tượng sao
       if (isNormalSugar && isNormalIce) {
         btn.innerText = '☆';
         btn.classList.remove('active');
@@ -737,24 +732,24 @@ async function toggleNotePopup(item, btn) {
 
       popup.remove();
 
-      // Cập nhật TABLES và Firestore
-      const idx = TABLES.findIndex(t => t.id === currentTable.id);
-      if (idx >= 0) TABLES[idx] = JSON.parse(JSON.stringify(currentTable));
+      // ✅ Cập nhật dữ liệu + giao diện
+      const tableIdx = TABLES.findIndex(t => t.id === currentTable.id);
+      if (tableIdx >= 0)
+        TABLES[tableIdx] = JSON.parse(JSON.stringify(currentTable));
 
       try {
         await saveAll();
         renderTables();
+        renderCart();
       } catch (err) {
         console.error('❌ Lỗi khi lưu ghi chú:', err);
       }
     }
 
-    if (ev.target.classList.contains('cancel')) {
-      popup.remove();
-    }
+    if (ev.target.classList.contains('cancel')) popup.remove();
   });
 
-  // Xử lý khi kéo slider
+  // Xử lý kéo slider
   popup.querySelectorAll('.slider').forEach(slider => {
     const sugarLabels = ['Không','Ít','Bình thường','Thêm ít','Thêm nhiều'];
     const iceLabels = ['Không đá','Đá ít','Đá vừa','Bình thường'];
@@ -767,8 +762,8 @@ async function toggleNotePopup(item, btn) {
       const label = e.target.nextElementSibling;
 
       title.style.color = colors[Math.min(lvl, colors.length-1)];
-      label.textContent = type === 'sugar' ? sugarLabels[lvl] : iceLabels[lvl];
       label.style.color = '#4a69ad';
+      label.textContent = type === 'sugar' ? sugarLabels[lvl] : iceLabels[lvl];
 
       if (type === 'sugar') item.sugarLevel = lvl;
       if (type === 'ice') item.iceLevel = lvl;
@@ -776,12 +771,15 @@ async function toggleNotePopup(item, btn) {
   });
 
   // Đóng khi click ra ngoài
-  document.addEventListener('click', function onDocClick() {
-    if (popup && popup.parentNode) popup.remove();
-    document.removeEventListener('click', onDocClick);
-  }, { once: true });
+  document.addEventListener(
+    'click',
+    function onDocClick() {
+      if (popup && popup.parentNode) popup.remove();
+      document.removeEventListener('click', onDocClick);
+    },
+    { once: true }
+  );
 }
-
 
 
 
@@ -839,7 +837,45 @@ function changeQty(id, delta){
 
 
 // cart
-function renderCart(){ const ul = $('cart-list'); ul.innerHTML = ''; if(!currentTable || !currentTable.cart.length){ ul.innerHTML = '<div class="small">Chưa có món</div>'; $('total').innerText='0'; return; } let total=0; currentTable.cart.forEach(it=>{ total += it.price*it.qty; const li=document.createElement('li'); li.innerHTML = '<div><div style="font-weight:700">'+it.name+'</div><div class="small">'+fmtV(it.price)+' x '+it.qty+'</div></div><div style="font-weight:700">'+fmtV(it.price*it.qty)+'</div>'; ul.appendChild(li); }); $('total').innerText = fmtV(total); }
+function renderCart() {
+  const ul = $('cart-list');
+  ul.innerHTML = '';
+  if (!currentTable || !currentTable.cart.length) {
+    ul.innerHTML = '<div class="small">Chưa có món</div>';
+    $('total').innerText = '0';
+    return;
+  }
+
+  let total = 0;
+  currentTable.cart.forEach(it => {
+    total += it.price * it.qty;
+
+    const sugar = (it.sugarLevel !== undefined) ? Number(it.sugarLevel) : 2;
+    const ice   = (it.iceLevel !== undefined)   ? Number(it.iceLevel)   : 3;
+
+    const sugarLabel = ['Không đường', 'Ít đường', '', 'Thêm ít đường', 'Thêm nhiều đường'][sugar] || '';
+    const iceLabel   = ['Không đá', 'Đá ít', 'Đá vừa', ''][ice] || '';
+
+    // ✅ Gộp text ghi chú (ẩn "Bình thường")
+    let noteText = '';
+    if (sugarLabel || iceLabel) {
+      const combined = [sugarLabel, iceLabel].filter(x => x).join(', ');
+      noteText = ` <span style="color:#666; font-size:12px;">(${combined})</span>`; // 🌿 Nhạt hơn
+    }
+
+    const li = document.createElement('li');
+    li.innerHTML = `
+      <div>
+        <div style="font-weight:700">${it.name}${noteText}</div>
+        <div class="small">${fmtV(it.price)} x ${it.qty}</div>
+      </div>
+      <div style="font-weight:700">${fmtV(it.price * it.qty)}</div>
+    `;
+    ul.appendChild(li);
+  });
+
+  $('total').innerText = fmtV(total);
+}
 
 // primary actions (new table)
 function cancelOrder(){ if(!currentTable) return; currentTable.cart=[]; renderMenuList(); renderCart(); }
