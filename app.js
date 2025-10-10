@@ -677,7 +677,16 @@ function renderMenuList(){
     if (activeCategory === "Tìm kiếm") {
       // Nếu đang ở tab Tìm kiếm
       if (!searchKeyword.trim()) return true; // chưa nhập -> hiện toàn bộ menu
-      return normalizedName.includes(normalizedSearch); // có nhập -> lọc theo tên
+      // ✅Hỗ trợ viết tắt như "tstc" cho "Trà sữa trân châu"
+const words = normalizedName.split('');
+const initials = normalizedName
+  .split(/[^a-zA-Z0-9]/) // tách theo ký tự không phải chữ/số
+  .filter(Boolean)
+  .map(w => w[0])
+  .join('');
+
+return normalizedName.includes(normalizedSearch) || initials.includes(normalizedSearch);
+ // có nhập -> lọc theo tên
     } else {
       // Các danh mục khác giữ nguyên như cũ
       return activeCategory === 'Tất cả' ? true : m.cat === activeCategory;
@@ -822,26 +831,21 @@ popup.style.zIndex = 1000;
 
 
   // Sự kiện trong popup
-  popup.addEventListener('click', function (ev) {
-    if (ev.target.classList.contains('confirm')) {
-  // Kiểm tra nếu cả hai đều là mức bình thường (2)
-  const sugar = item.sugarLevel ?? 2;
-  const ice = item.iceLevel ?? 2;
+popup.addEventListener('click', function (ev) {
+  ev.stopPropagation(); // ✅ Ngăn sự kiện lan ra ngoài làm mất focus popup
 
-  if (sugar === 2 && ice === 2) {
-    item.star = false;
-    btn.innerText = '☆'; // Sao rỗng
-    btn.classList.remove('active');
-  } else {
+  if (ev.target.classList.contains('confirm')) {
     item.star = true;
-    btn.innerText = '★'; // Sao sáng
+    btn.innerText = '★';
     btn.classList.add('active');
+    popup.remove();
   }
 
-  popup.remove();
-}
+  if (ev.target.classList.contains('cancel')) {
+    popup.remove();
+  }
+});
 
-  });
 
   // Khi kéo thanh trượt
   popup.querySelectorAll('.slider').forEach(slider => {
