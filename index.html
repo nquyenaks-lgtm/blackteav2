@@ -51,7 +51,6 @@
   </style>
 </head>
 <body>
-  <div class="viewport">
   <div class="app">
     
 <header>
@@ -347,67 +346,6 @@
     <button onclick="closeCustomAlert()">Xác nhận</button>
   </div>
 </div>
-  </div>
 
-<script>
-(function(){
-  const BASE_W = 360;   // base width (CSS px)
-  const BASE_H = 760;   // base height (CSS px)
-  const MIN_SCALE = 0.7;
-  const MAX_SCALE = 2.5;
-
-  // Lấy kích thước viewport thật (trừ thanh URL)
-  function getViewport() {
-    if (window.visualViewport) {
-      return { w: window.visualViewport.width, h: window.visualViewport.height };
-    }
-    return { w: window.innerWidth, h: window.innerHeight };
-  }
-
-  function autoScale() {
-    const vp = getViewport();
-    // Fit theo chiều ngang (recommend): đảm bảo .app không bị "nhỏ vào" ngang
-    let scale = vp.w / BASE_W;
-
-    // Nếu muốn khít cả width & height (không scroll dọc), dùng:
-    // let scale = Math.min(vp.w / BASE_W, vp.h / BASE_H);
-
-    // Khi gần bằng máy gốc (trường hợp thanh url ẩn/hiện), cố định =1
-    if (vp.w >= BASE_W - 30 && vp.w <= BASE_W + 30) scale = 1;
-
-    // clamp
-    if (scale < MIN_SCALE) scale = MIN_SCALE;
-    if (scale > MAX_SCALE) scale = MAX_SCALE;
-
-    // set transform và căn giữa .app bằng translate(-50%, -50%) sau khi scale
-    const app = document.querySelector('.app');
-    const viewport = document.querySelector('.viewport');
-    if (!app || !viewport) return;
-
-    // tính left/top để căn giữa chính xác (dùng transform translate)
-    // ta đặt app ở center bằng translate(-50%,-50%) trước scale
-    const scaledW = BASE_W * scale;
-    const scaledH = BASE_H * scale;
-
-    // đặt transform: translate(-50%,-50%) để căn vào center viewport
-    app.style.transform = `translate(-50%, -50%) scale(${scale})`;
-
-    // vị trí app (left:50% top:50%) đã đặt trong CSS; transform sẽ căn giữa.
-    // Ngoài ra, đảm bảo viewport cho phép scroll dọc nếu app scaledH > vp.h:
-    if (scaledH > vp.h) {
-      viewport.style.alignItems = 'flex-start';
-    } else {
-      viewport.style.alignItems = 'center';
-    }
-  }
-
-  window.addEventListener('load', autoScale);
-  window.addEventListener('resize', autoScale);
-  if (window.visualViewport) {
-    window.visualViewport.addEventListener('resize', autoScale);
-    window.visualViewport.addEventListener('scroll', autoScale);
-  }
-})();
-</script>
 </body>
 </html>
