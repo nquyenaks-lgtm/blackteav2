@@ -679,54 +679,75 @@ async function toggleNotePopup(item, btn) {
   `;
   document.body.appendChild(popup);
 
-  // Đặt vị trí popup
+  // 🔧 Tính vị trí popup (fix bị khuất, tự đẩy lên khi gần cuối)
   const rect = btn.getBoundingClientRect();
   const scrollTop = window.scrollY || document.documentElement.scrollTop;
-  popup.style.position = 'absolute';
-  popup.style.top = `${rect.bottom + scrollTop + 5}px`;
-  popup.style.left = `${rect.left + rect.width / 2}px`;
-  popup.style.transform = 'translateX(-50%)';
-  popup.style.zIndex = 1000;
+  let left = rect.left + rect.width / 2;
+  let top = rect.bottom + scrollTop + 8;
 
-  // Xử lý click confirm
+  popup.style.visibility = "hidden";
+  popup.style.position = "absolute";
+  document.body.appendChild(popup);
+
+  const popupRect = popup.getBoundingClientRect();
+  const screenWidth = window.innerWidth;
+  const screenHeight = window.innerHeight;
+
+  // Giữ popup trong khung ngang
+  if (left - popupRect.width / 2 < 5)
+    left = popupRect.width / 2 + 5;
+  if (left + popupRect.width / 2 > screenWidth - 5)
+    left = screenWidth - popupRect.width / 2 - 5;
+
+  // Nếu popup tràn ra khỏi màn hình dưới -> đẩy lên trên
+  if (rect.bottom + popupRect.height + 10 > screenHeight) {
+    top = rect.top + scrollTop - popupRect.height - 8;
+  }
+
+  popup.style.top = `${top}px`;
+  popup.style.left = `${left}px`;
+  popup.style.transform = "translateX(-50%)";
+  popup.style.zIndex = 1000;
+  popup.style.visibility = "visible";
+
+  // Xử lý click confirm/cancel
   popup.addEventListener('click', async function (ev) {
     ev.stopPropagation();
 
     if (ev.target.classList.contains('confirm')) {
-  const isNormalSugar = Number(item.sugarLevel) === 2;
-  const isNormalIce = Number(item.iceLevel) === 3;
+      const isNormalSugar = Number(item.sugarLevel) === 2;
+      const isNormalIce = Number(item.iceLevel) === 3;
 
-  // 🔥 Tìm và cập nhật lại item gốc trong currentTable.cart
-  const cartItem = currentTable.cart.find(it => it.id === item.id);
-  if (cartItem) {
-    cartItem.sugarLevel = item.sugarLevel;
-    cartItem.iceLevel = item.iceLevel;
-    cartItem.star = !(isNormalSugar && isNormalIce);
-  }
+      // Cập nhật vào cart gốc
+      const cartItem = currentTable.cart.find(it => it.id === item.id);
+      if (cartItem) {
+        cartItem.sugarLevel = item.sugarLevel;
+        cartItem.iceLevel = item.iceLevel;
+        cartItem.star = !(isNormalSugar && isNormalIce);
+      }
 
-  // 🔥 Cập nhật lại icon
-  if (isNormalSugar && isNormalIce) {
-    btn.innerText = '☆';
-    btn.classList.remove('active');
-  } else {
-    btn.innerText = '★';
-    btn.classList.add('active');
-  }
+      // Đổi icon sao
+      if (isNormalSugar && isNormalIce) {
+        btn.innerText = '☆';
+        btn.classList.remove('active');
+      } else {
+        btn.innerText = '★';
+        btn.classList.add('active');
+      }
 
-  popup.remove();
+      popup.remove();
 
-  // 🔥 Đồng bộ lại TABLES + render giao diện
-  const idx = TABLES.findIndex(t => t.id === currentTable.id);
-  if (idx >= 0) TABLES[idx] = JSON.parse(JSON.stringify(currentTable));
+      // Cập nhật TABLES và Firestore
+      const idx = TABLES.findIndex(t => t.id === currentTable.id);
+      if (idx >= 0) TABLES[idx] = JSON.parse(JSON.stringify(currentTable));
 
-  try {
-    await saveAll();
-    renderTables();
-  } catch (err) {
-    console.error('❌ Lỗi khi lưu ghi chú:', err);
-  }
-}
-
+      try {
+        await saveAll();
+        renderTables();
+      } catch (err) {
+        console.error('❌ Lỗi khi lưu ghi chú:', err);
+      }
+    }
 
     if (ev.target.classList.contains('cancel')) {
       popup.remove();
