@@ -212,7 +212,7 @@ function renderTables(){
 
 
 
-function makeTableCard(t){
+function makeTableCard(t) {
   const card = document.createElement('div');
   card.className = 'table-card';
 
@@ -232,10 +232,13 @@ function makeTableCard(t){
   name.innerText = displayName;
   info.appendChild(name);
 
-  // ===== dòng 2: số món + tổng tiền + giờ =====
-  if (t.cart && t.cart.length){
+  // ===== dòng 2: số món + tổng tiền + giờ + ghi chú =====
+  if (t.cart && t.cart.length) {
     let qty = 0, total = 0;
-    t.cart.forEach(it => { qty += it.qty; total += it.qty * it.price; });
+    t.cart.forEach(it => {
+      qty += it.qty;
+      total += it.qty * it.price;
+    });
 
     const meta = document.createElement('div');
     meta.className = 'table-meta';
@@ -243,12 +246,25 @@ function makeTableCard(t){
     let timeStr = '';
     if (t.createdAt) {
       const d = new Date(t.createdAt);
-      const hh = String(d.getHours()).padStart(2,'0');
-      const mm = String(d.getMinutes()).padStart(2,'0');
+      const hh = String(d.getHours()).padStart(2, '0');
+      const mm = String(d.getMinutes()).padStart(2, '0');
       timeStr = ` • ⏰ ${hh}:${mm}`;
     }
 
-    meta.innerText = qty + ' món • ' + fmtV(total) + ' VND' + timeStr;
+    // ✅ Kiểm tra ghi chú: note có text hoặc đường/đá khác bình thường
+    const hasNote = t.cart.some(it => {
+      const sugar = (it.sugarLevel !== undefined) ? Number(it.sugarLevel) : 2;
+      const ice = (it.iceLevel !== undefined) ? Number(it.iceLevel) : 3; // 3 = Bình thường
+      return (it.note && it.note.trim() !== '') || sugar !== 2 || ice !== 3;
+
+    });
+
+    // ✅ Hiển thị thêm nhãn nếu có ghi chú
+    meta.innerHTML = `
+      ${qty} món • ${fmtV(total)} VND${timeStr}
+      ${hasNote ? '<span class="has-note">📝 Đơn có ghi chú</span>' : ''}
+    `;
+
     info.appendChild(meta);
   }
 
@@ -260,9 +276,10 @@ function makeTableCard(t){
     card.classList.add('active');
     openTableFromMain(t.id);
   };
-
+   
   return card;
 }
+
 // add guest
 function addGuest() {
   // Xóa bàn trống (chưa gọi món) nếu có
@@ -631,14 +648,15 @@ plus.onclick = (e) => {
   });
 }
 
-function toggleNotePopup(item, btn) {
+// Hàm note 
+async function toggleNotePopup(item, btn) {
   // Nếu popup đang mở, đóng lại
   const existing = document.querySelector('.popup-note');
   if (existing) existing.remove();
 
   // Thiết lập mặc định
   if (item.sugarLevel === undefined) item.sugarLevel = 2; // Bình thường
-  if (item.iceLevel === undefined) item.iceLevel = 3; // ✅ Bình thường (vì max=3)
+  if (item.iceLevel === undefined) item.iceLevel = 3;     // Bình thường
 
   // Tạo popup
   const popup = document.createElement('div');
@@ -647,71 +665,66 @@ function toggleNotePopup(item, btn) {
     <div class="popup-row">
       <label>Đường:</label>
       <input type="range" min="0" max="4" step="1" value="${item.sugarLevel}" class="slider" data-type="sugar">
-      <span class="slider-label">${['Không', 'Ít', 'Bình thường', 'Thêm ít', 'Thêm nhiều'][item.sugarLevel]}</span>
+      <span class="slider-label">${['Không','Ít','Bình thường','Thêm ít','Thêm nhiều'][item.sugarLevel]}</span>
     </div>
     <div class="popup-row">
       <label>Đá:</label>
-      <!-- ✅ Chỉ 4 mức (0–3), tối đa Bình thường -->
       <input type="range" min="0" max="3" step="1" value="${item.iceLevel}" class="slider" data-type="ice">
-      <!-- ✅ Nhãn mới -->
-      <span class="slider-label">${['Không đá', 'Đá ít', 'Đá vừa', 'Bình thường'][item.iceLevel]}</span>
+      <span class="slider-label">${['Không đá','Đá ít','Đá vừa','Bình thường'][item.iceLevel]}</span>
     </div>
     <div class="popup-actions">
       <button class="cancel">✖</button>
       <button class="confirm">✔</button>
     </div>
   `;
-
-  // Thêm popup ngay dưới món
   document.body.appendChild(popup);
 
-  // Lấy vị trí thực của nút sao
+  // Đặt vị trí popup
   const rect = btn.getBoundingClientRect();
   const scrollTop = window.scrollY || document.documentElement.scrollTop;
-
-  // Tính vị trí ban đầu (ngay dưới sao)
-  let left = rect.left + rect.width / 2;
-  let top = rect.bottom + scrollTop + 5;
-
-  // Lấy kích thước popup và màn hình
-  document.body.appendChild(popup); // cần gắn để đo kích thước thật
-  const popupRect = popup.getBoundingClientRect();
-
-  // ✅ Giữ popup không vượt khỏi khung hiển thị
-  const screenWidth = window.innerWidth;
-  if (left - popupRect.width / 2 < 5) {
-    left = popupRect.width / 2 + 5;
-  }
-  if (left + popupRect.width / 2 > screenWidth - 5) {
-    left = screenWidth - popupRect.width / 2 - 5;
-  }
-
-  // Đặt vị trí cuối cùng
-  popup.style.position = "absolute";
-  popup.style.top = `${top}px`;
-  popup.style.left = `${left}px`;
-  popup.style.transform = "translateX(-50%)";
+  popup.style.position = 'absolute';
+  popup.style.top = `${rect.bottom + scrollTop + 5}px`;
+  popup.style.left = `${rect.left + rect.width / 2}px`;
+  popup.style.transform = 'translateX(-50%)';
   popup.style.zIndex = 1000;
 
-  // Sự kiện trong popup
-  popup.addEventListener('click', function (ev) {
+  // Xử lý click confirm
+  popup.addEventListener('click', async function (ev) {
     ev.stopPropagation();
 
     if (ev.target.classList.contains('confirm')) {
-  // ✅ Kiểm tra nếu cả 2 đều "Bình thường" thì không tô sao
-  const isNormalSugar = item.sugarLevel === 2;
-  const isNormalIce   = item.iceLevel === 3;
-  
+  const isNormalSugar = Number(item.sugarLevel) === 2;
+  const isNormalIce = Number(item.iceLevel) === 3;
+
+  // 🔥 Tìm và cập nhật lại item gốc trong currentTable.cart
+  const cartItem = currentTable.cart.find(it => it.id === item.id);
+  if (cartItem) {
+    cartItem.sugarLevel = item.sugarLevel;
+    cartItem.iceLevel = item.iceLevel;
+    cartItem.star = !(isNormalSugar && isNormalIce);
+  }
+
+  // 🔥 Cập nhật lại icon
   if (isNormalSugar && isNormalIce) {
-    item.star = false;
     btn.innerText = '☆';
     btn.classList.remove('active');
   } else {
-    item.star = true;
     btn.innerText = '★';
     btn.classList.add('active');
   }
+
   popup.remove();
+
+  // 🔥 Đồng bộ lại TABLES + render giao diện
+  const idx = TABLES.findIndex(t => t.id === currentTable.id);
+  if (idx >= 0) TABLES[idx] = JSON.parse(JSON.stringify(currentTable));
+
+  try {
+    await saveAll();
+    renderTables();
+  } catch (err) {
+    console.error('❌ Lỗi khi lưu ghi chú:', err);
+  }
 }
 
 
@@ -720,35 +733,33 @@ function toggleNotePopup(item, btn) {
     }
   });
 
-  // Khi kéo thanh trượt
+  // Xử lý khi kéo slider
   popup.querySelectorAll('.slider').forEach(slider => {
-    // ✅ Dùng nhãn riêng cho từng loại
-    const sugarLabels = ['Không', 'Ít', 'Bình thường', 'Thêm ít', 'Thêm nhiều'];
-    const iceLabels   = ['Không đá', 'Đá ít', 'Đá vừa', 'Bình thường']; // ✅ mới
-    const colors = ['#b7c7e6', '#7d9ad0', '#4a69ad', '#324f91', '#223a75'];
-
-    const level = parseInt(slider.value);
-    const title = slider.closest('.popup-row').querySelector('label');
-    const label = slider.nextElementSibling;
-    title.style.color = colors[level];
-    label.style.color = '#4a69ad';
+    const sugarLabels = ['Không','Ít','Bình thường','Thêm ít','Thêm nhiều'];
+    const iceLabels = ['Không đá','Đá ít','Đá vừa','Bình thường'];
+    const colors = ['#b7c7e6','#7d9ad0','#4a69ad','#324f91','#223a75'];
 
     slider.addEventListener('input', e => {
-      const level = parseInt(e.target.value);
+      const lvl = parseInt(e.target.value);
       const type = e.target.dataset.type;
       const title = e.target.closest('.popup-row').querySelector('label');
       const label = e.target.nextElementSibling;
 
-      title.style.color = colors[level];
+      title.style.color = colors[Math.min(lvl, colors.length-1)];
+      label.textContent = type === 'sugar' ? sugarLabels[lvl] : iceLabels[lvl];
       label.style.color = '#4a69ad';
-      label.textContent = type === 'sugar' ? sugarLabels[level] : iceLabels[level]; // ✅ đổi theo loại
 
-      if (type === 'sugar') item.sugarLevel = level;
-      if (type === 'ice') item.iceLevel = level;
+      if (type === 'sugar') item.sugarLevel = lvl;
+      if (type === 'ice') item.iceLevel = lvl;
     });
   });
-}
 
+  // Đóng khi click ra ngoài
+  document.addEventListener('click', function onDocClick() {
+    if (popup && popup.parentNode) popup.remove();
+    document.removeEventListener('click', onDocClick);
+  }, { once: true });
+}
 
 
 
