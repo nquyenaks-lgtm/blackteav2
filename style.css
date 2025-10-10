@@ -677,26 +677,3 @@ header {
   display: inline-block;
 }
 
-
-html, body {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-}
-
-/* 👇 Toàn bộ app */
-.app {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;      /* căn giữa theo chiều dọc */
-  justify-content: center;  /* căn giữa theo chiều ngang */
-}
-
-/* 👇 Toàn bộ nội dung bên trong (giữ tỉ lệ theo máy Oppo A5 2020) */
-.app > * {
-  transform-origin: top center;
-  transform: scale(calc(max(1, 100vw / 412))); /* 412px là chiều ngang chuẩn */
-}
