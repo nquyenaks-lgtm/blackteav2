@@ -677,3 +677,29 @@ header {
   display: inline-block;
 }
 
+/* ====== GIỮ NGUYÊN GIAO DIỆN THEO MÁY OPPO A5 2020 ====== */
+
+/* Căn giữa toàn bộ trang */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: #f6f7fb;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  overflow-x: hidden;
+}
+
+/* Thiết bị gốc:(chiều rộng ~720px) */
+:root {
+  --base-width: 720;  /* 👈 chỉnh theo độ rộng chuẩn bạn đang thiết kế */
+}
+
+/* Toàn bộ ứng dụng */
+.app {
+  width: var(--base-width, 720)px;
+  transform-origin: top center;
+  transform: scale(calc(100vw / var(--base-width)));
+  transition: transform 0.3s ease;
+}
