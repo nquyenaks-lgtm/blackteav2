@@ -523,7 +523,7 @@ function resetMenuNotes() {
     m.star = false;
     m.note = '';
     m.sugarLevel = 2;
-    m.iceLevel = 2;
+    m.iceLevel = 3;
   });
 }
 
@@ -636,9 +636,9 @@ function toggleNotePopup(item, btn) {
   const existing = document.querySelector('.popup-note');
   if (existing) existing.remove();
 
-  // Thiết lập mặc định 5 mức (0–4)
+  // Thiết lập mặc định
   if (item.sugarLevel === undefined) item.sugarLevel = 2; // Bình thường
-  if (item.iceLevel === undefined) item.iceLevel = 2; // Bình thường
+  if (item.iceLevel === undefined) item.iceLevel = 3; // ✅ Bình thường (vì max=3)
 
   // Tạo popup
   const popup = document.createElement('div');
@@ -651,8 +651,10 @@ function toggleNotePopup(item, btn) {
     </div>
     <div class="popup-row">
       <label>Đá:</label>
-      <input type="range" min="0" max="4" step="1" value="${item.iceLevel}" class="slider" data-type="ice">
-      <span class="slider-label">${['Không', 'Ít', 'Bình thường', 'Thêm ít', 'Thêm nhiều'][item.iceLevel]}</span>
+      <!-- ✅ Chỉ 4 mức (0–3), tối đa Bình thường -->
+      <input type="range" min="0" max="3" step="1" value="${item.iceLevel}" class="slider" data-type="ice">
+      <!-- ✅ Nhãn mới -->
+      <span class="slider-label">${['Không đá', 'Đá ít', 'Đá vừa', 'Bình thường'][item.iceLevel]}</span>
     </div>
     <div class="popup-actions">
       <button class="cancel">✖</button>
@@ -661,82 +663,92 @@ function toggleNotePopup(item, btn) {
   `;
 
   // Thêm popup ngay dưới món
-document.body.appendChild(popup);
+  document.body.appendChild(popup);
 
-// Lấy vị trí thực của nút sao
-const rect = btn.getBoundingClientRect();
-const scrollTop = window.scrollY || document.documentElement.scrollTop;
+  // Lấy vị trí thực của nút sao
+  const rect = btn.getBoundingClientRect();
+  const scrollTop = window.scrollY || document.documentElement.scrollTop;
 
-// Tính vị trí ban đầu (ngay dưới sao)
-let left = rect.left + rect.width / 2;
-let top = rect.bottom + scrollTop + 5;
+  // Tính vị trí ban đầu (ngay dưới sao)
+  let left = rect.left + rect.width / 2;
+  let top = rect.bottom + scrollTop + 5;
 
-// Lấy kích thước popup và màn hình
-document.body.appendChild(popup); // cần gắn để đo kích thước thật
-const popupRect = popup.getBoundingClientRect();
+  // Lấy kích thước popup và màn hình
+  document.body.appendChild(popup); // cần gắn để đo kích thước thật
+  const popupRect = popup.getBoundingClientRect();
 
-// ✅ Giữ popup không vượt khỏi khung hiển thị
-const screenWidth = window.innerWidth;
-if (left - popupRect.width / 2 < 5) {
-  left = popupRect.width / 2 + 5; // sát mép trái
-}
-if (left + popupRect.width / 2 > screenWidth - 5) {
-  left = screenWidth - popupRect.width / 2 - 5; // sát mép phải
-}
+  // ✅ Giữ popup không vượt khỏi khung hiển thị
+  const screenWidth = window.innerWidth;
+  if (left - popupRect.width / 2 < 5) {
+    left = popupRect.width / 2 + 5;
+  }
+  if (left + popupRect.width / 2 > screenWidth - 5) {
+    left = screenWidth - popupRect.width / 2 - 5;
+  }
 
-// Đặt vị trí cuối cùng
-popup.style.position = "absolute";
-popup.style.top = `${top}px`;
-popup.style.left = `${left}px`;
-popup.style.transform = "translateX(-50%)";
-popup.style.zIndex = 1000;
-
+  // Đặt vị trí cuối cùng
+  popup.style.position = "absolute";
+  popup.style.top = `${top}px`;
+  popup.style.left = `${left}px`;
+  popup.style.transform = "translateX(-50%)";
+  popup.style.zIndex = 1000;
 
   // Sự kiện trong popup
-popup.addEventListener('click', function (ev) {
-  ev.stopPropagation(); // ✅ Ngăn sự kiện lan ra ngoài làm mất focus popup
+  popup.addEventListener('click', function (ev) {
+    ev.stopPropagation();
 
-  if (ev.target.classList.contains('confirm')) {
+    if (ev.target.classList.contains('confirm')) {
+  // ✅ Kiểm tra nếu cả 2 đều "Bình thường" thì không tô sao
+  const isNormalSugar = item.sugarLevel === 2;
+  const isNormalIce   = item.iceLevel === 3;
+  
+  if (isNormalSugar && isNormalIce) {
+    item.star = false;
+    btn.innerText = '☆';
+    btn.classList.remove('active');
+  } else {
     item.star = true;
     btn.innerText = '★';
     btn.classList.add('active');
-    popup.remove();
   }
+  popup.remove();
+}
 
-  if (ev.target.classList.contains('cancel')) {
-    popup.remove();
-  }
-});
 
+    if (ev.target.classList.contains('cancel')) {
+      popup.remove();
+    }
+  });
 
   // Khi kéo thanh trượt
   popup.querySelectorAll('.slider').forEach(slider => {
-    const labels = ['Không', 'Ít', 'Bình thường', 'Thêm ít', 'Thêm nhiều'];
+    // ✅ Dùng nhãn riêng cho từng loại
+    const sugarLabels = ['Không', 'Ít', 'Bình thường', 'Thêm ít', 'Thêm nhiều'];
+    const iceLabels   = ['Không đá', 'Đá ít', 'Đá vừa', 'Bình thường']; // ✅ mới
     const colors = ['#b7c7e6', '#7d9ad0', '#4a69ad', '#324f91', '#223a75'];
 
-    // Cập nhật màu mặc định khi mở popup
     const level = parseInt(slider.value);
     const title = slider.closest('.popup-row').querySelector('label');
     const label = slider.nextElementSibling;
     title.style.color = colors[level];
-    label.style.color = '#4a69ad'; // 👈 Chữ chú thích giữ nguyên màu xanh chuẩn
+    label.style.color = '#4a69ad';
 
-    // Cập nhật khi kéo slider
     slider.addEventListener('input', e => {
       const level = parseInt(e.target.value);
       const type = e.target.dataset.type;
       const title = e.target.closest('.popup-row').querySelector('label');
       const label = e.target.nextElementSibling;
 
-      title.style.color = colors[level]; // chỉ đổi màu tiêu đề
-      label.style.color = '#4a69ad'; // giữ nguyên màu chú thích
-      label.textContent = labels[level];
+      title.style.color = colors[level];
+      label.style.color = '#4a69ad';
+      label.textContent = type === 'sugar' ? sugarLabels[level] : iceLabels[level]; // ✅ đổi theo loại
 
       if (type === 'sugar') item.sugarLevel = level;
       if (type === 'ice') item.iceLevel = level;
     });
   });
 }
+
 
 
 
@@ -768,7 +780,7 @@ function changeQty(id, delta){
         menuItem.star = false;         // tắt sao
         menuItem.note = '';            // xóa ghi chú
         menuItem.sugarLevel = 2;       // reset về "bình thường"
-        menuItem.iceLevel = 2;
+        menuItem.iceLevel = 3;
       }
 
       // 🧩 Nếu popup ghi chú đang mở, đóng lại để tránh hiển thị lơ lửng
