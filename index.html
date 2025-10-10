@@ -347,7 +347,24 @@
   </div>
 </div>
 
+<script>
+  // ====== TỰ ĐỘNG PHÓNG / THU TRANG THEO MÀN HÌNH ======
+  function autoScale() {
+    const baseWidth = 720; // chiều rộng gốc (Oppo A5 2020)
+    const currentWidth = window.innerWidth;
+    let scale = currentWidth / baseWidth;
 
+    // Giới hạn tỉ lệ phóng/thu
+    if (scale > 2) scale = 2;
+    if (scale < 0.5) scale = 0.5;
+
+    // Áp dụng zoom cho toàn trang
+    document.body.style.zoom = scale;
+  }
+
+  window.addEventListener('resize', autoScale);
+  window.addEventListener('load', autoScale);
+</script>
 
 </body>
 </html>
