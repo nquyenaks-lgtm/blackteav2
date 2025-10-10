@@ -349,7 +349,7 @@
 <script>
 (function() {
   const BASE_WIDTH = 360;
-  const BASE_HEIGHT = 716; 
+  const BASE_HEIGHT = 716;
 
   function autoScale() {
     const app = document.querySelector('.app');
@@ -358,14 +358,12 @@
     const screenW = window.innerWidth;
     const screenH = window.innerHeight;
 
-    // Giữ đúng tỉ lệ, không méo
-    const scaleX = screenW / BASE_WIDTH;
-    const scaleY = screenH / BASE_HEIGHT;
-    const scale = Math.min(scaleX, scaleY);
+    // Giữ đúng tỉ lệ gốc
+    const scale = Math.min(screenW / BASE_WIDTH, screenH / BASE_HEIGHT);
 
-    // Căn giữa app giữa màn hình
+    // 👉 Căn giữa ngang, sát trên (không bị che header)
     const offsetX = (screenW - BASE_WIDTH * scale) / 2;
-    const offsetY = (screenH - BASE_HEIGHT * scale) / 2;
+    const offsetY = 0;
 
     app.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
   }
