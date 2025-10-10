@@ -346,6 +346,33 @@
     <button onclick="closeCustomAlert()">Xác nhận</button>
   </div>
 </div>
+<script>
+(function() {
+  const BASE_WIDTH = 360;
+  const BASE_HEIGHT = 716; 
 
+  function autoScale() {
+    const app = document.querySelector('.app');
+    if (!app) return;
+
+    const screenW = window.innerWidth;
+    const screenH = window.innerHeight;
+
+    // Giữ đúng tỉ lệ, không méo
+    const scaleX = screenW / BASE_WIDTH;
+    const scaleY = screenH / BASE_HEIGHT;
+    const scale = Math.min(scaleX, scaleY);
+
+    // Căn giữa app giữa màn hình
+    const offsetX = (screenW - BASE_WIDTH * scale) / 2;
+    const offsetY = (screenH - BASE_HEIGHT * scale) / 2;
+
+    app.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+  }
+
+  window.addEventListener('load', autoScale);
+  window.addEventListener('resize', autoScale);
+})();
+</script>
 </body>
 </html>
