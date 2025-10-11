@@ -688,16 +688,6 @@ header {
   display: inline-block;
 }
 
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  background: #f6f7fb;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start; /* 👈 thay vì center, để sát trên */
-}
 
 /* khung giao diện và fhanh head */
 .app {
@@ -714,10 +704,3 @@ html, body {
   box-sizing: border-box;
 }
 
-/* ✅ Fix cho vùng safe-area iPhone */
-body {
-  padding-top: env(safe-area-inset-top);
-  padding-bottom: env(safe-area-inset-bottom);
-  padding-left: env(safe-area-inset-left);
-  padding-right: env(safe-area-inset-right);
-}
