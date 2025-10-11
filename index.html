@@ -347,7 +347,7 @@
   </div>
 </div>
 <script>
-(function() {
+  (function() {
   const BASE_WIDTH = 360;
   const BASE_HEIGHT = 716;
 
@@ -355,16 +355,18 @@
     const app = document.querySelector('.app');
     if (!app) return;
 
-    const screenW = window.innerWidth;
-    const screenH = window.innerHeight;
+    // ✅ Dùng visualViewport nếu có (fix Safari / iPhone)
+    const vw = window.visualViewport ? window.visualViewport.width : window.innerWidth;
+    const vh = window.visualViewport ? window.visualViewport.height : window.innerHeight;
 
-    // Giữ đúng tỉ lệ gốc
-    const scale = Math.min(screenW / BASE_WIDTH, screenH / BASE_HEIGHT);
+    // ✅ Giữ đúng tỷ lệ khung gốc
+    const scale = Math.min(vw / BASE_WIDTH, vh / BASE_HEIGHT);
 
-    // 👉 Căn giữa ngang, sát trên (không bị che header)
-    const offsetX = (screenW - BASE_WIDTH * scale) / 2;
-    const offsetY = 0;
+    // ✅ Căn giữa ngang và dọc
+    const offsetX = (vw - BASE_WIDTH * scale) / 2;
+    const offsetY = (vh - BASE_HEIGHT * scale) / 2;
 
+    app.style.transformOrigin = 'top left';
     app.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
   }
 
