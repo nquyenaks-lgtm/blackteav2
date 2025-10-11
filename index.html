@@ -346,35 +346,5 @@
     <button onclick="closeCustomAlert()">Xác nhận</button>
   </div>
 </div>
-<script>
-  (function() {
-  const BASE_WIDTH = 360;
-  const BASE_HEIGHT = 716;
-
-  function autoScale() {
-    const app = document.querySelector('.app');
-    if (!app) return;
-
-    const vw = window.visualViewport ? window.visualViewport.width : window.innerWidth;
-    const vh = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-
-    // ✅ Tính scale theo chiều cao (luôn vừa màn hình)
-    const scaleH = vh / BASE_HEIGHT;
-    const scaledWidth = BASE_WIDTH * scaleH;
-
-    // ✅ Nếu chiều ngang thực tế còn trống => scale thêm để lấp kín
-    const scaleFinal = scaledWidth < vw ? vw / BASE_WIDTH : scaleH;
-
-    // ✅ Căn giữa ngang, top = 0 (không dư trên/dư dưới)
-    const offsetX = (vw - BASE_WIDTH * scaleFinal) / 2;
-
-    app.style.transformOrigin = 'top left';
-    app.style.transform = `translate(${offsetX}px, 0) scale(${scaleFinal})`;
-  }
-
-  window.addEventListener('load', autoScale);
-  window.addEventListener('resize', autoScale);
-})();
-</script>
 </body>
 </html>
