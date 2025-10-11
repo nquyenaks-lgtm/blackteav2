@@ -722,15 +722,28 @@ async function toggleNotePopup(item, btn) {
           currentTable.cart[idx].iceLevel = 3;
           currentTable.cart[idx].star = false;
         } else {
-          // ✅ Giữ nguyên số lượng, chỉ thêm 1 bản ghi chú để hiển thị tách ở hóa đơn
-          const newItem = JSON.parse(JSON.stringify(item));
-          newItem.sugarLevel = item.sugarLevel;
-          newItem.iceLevel = item.iceLevel;
-          newItem.star = true;
-          newItem.qty = 0; // không ảnh hưởng đến tổng
-          newItem.isNoteOnly = true; // flag giúp hóa đơn hiển thị riêng
-          currentTable.cart.push(newItem);
-        }
+  // ✅ Giới hạn số lần ghi chú = số lượng thật của món
+  const baseQty = currentTable.cart
+    .filter(it => it.id === item.id && !it.isNoteOnly)
+    .reduce((sum, it) => sum + (it.qty || 0), 0);
+
+  const noteCount = currentTable.cart
+    .filter(it => it.id === item.id && it.isNoteOnly)
+    .length;
+
+  if (noteCount >= baseQty) {
+    alert(`Đã ghi chú đủ ${baseQty} ly cho món "${item.name}"`);
+    return;
+  }
+
+  const newItem = JSON.parse(JSON.stringify(item));
+  newItem.sugarLevel = item.sugarLevel;
+  newItem.iceLevel = item.iceLevel;
+  newItem.star = true;
+  newItem.qty = 0; // không ảnh hưởng đến tổng
+  newItem.isNoteOnly = true; // flag giúp hóa đơn hiển thị riêng
+  currentTable.cart.push(newItem);
+}
       }
 
       // Cập nhật sao
