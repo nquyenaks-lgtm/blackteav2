@@ -891,7 +891,9 @@ function renderCart() {
     }
   });
 
-  $('total').innerText = fmtV(total);
+let realTotal = 0;
+currentTable.cart.forEach(it => realTotal += it.price * it.qty);
+$('total').innerText = fmtV(realTotal);
 }
 
 // primary actions (new table)
