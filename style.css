@@ -677,4 +677,13 @@ header {
   display: inline-block;
 }
 
+/* ✅ ĐỔI VIỀN POPUP THÀNH MÀU HEADER */
+.custom-alert-box {
+  border: 2px solid #4a69ad !important;
+}
 
+/* ✅ ĐỔI MÀU NÚT TRONG POPUP */
+.custom-alert-box button {
+  background-color: #4a69ad !important;
+  color: #fff !important;
+}
