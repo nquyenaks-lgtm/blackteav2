@@ -700,7 +700,7 @@ header {
   box-shadow: 0 0 10px rgba(0,0,0,0.08);
 
   /* ✅ Giữ dòng này để đẩy nội dung xuống dưới header */
-  padding-top: 50px;
+  padding-top: 20px;
   box-sizing: border-box;
 }
 
