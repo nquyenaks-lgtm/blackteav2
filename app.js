@@ -149,65 +149,27 @@ function listenAll(){
   }
 }
 // render tables (sắp xếp: L = 4 cột, NT = 2 cột, T/G/N = mỗi bàn 1 hàng dọc, khác = Bàn tạm)
-function renderTables(){
+function renderTables() {
   const div = $('tables');
   div.innerHTML = '';
 
   // Chỉ lấy bàn có món
-  const activeTables = TABLES.filter(t => t.cart && t.cart.length > 0);
+  const activeTables = TABLES
+    .filter(t => t.cart && t.cart.length > 0)
+    .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0)); // ✅ Sắp xếp theo thời gian mới nhất
 
   if (!activeTables.length) {
     div.innerHTML = '<div class="small">Chưa có bàn nào đang phục vụ</div>';
     return;
   }
 
-  // Nhóm L (4 cột)
-  const groupL = activeTables.filter(t => t.name.startsWith('L'))
-    .sort((a,b)=>(b.createdAt || 0) - (a.createdAt || 0));
-  if (groupL.length) {
+  // ✅ Render toàn bộ theo thứ tự thời gian, không chia nhóm
+  activeTables.forEach(t => {
     const row = document.createElement('div');
-    row.className = 'table-section table-section-4';
-    groupL.forEach(t=>row.appendChild(makeTableCard(t)));
+    row.className = 'table-section table-section-1'; // bạn có thể giữ layout 1 dòng hoặc đổi theo ý
+    row.appendChild(makeTableCard(t));
     div.appendChild(row);
-  }
-
-  // Nhóm NT (2 cột)
-  const groupNT = activeTables.filter(t => t.name.startsWith('NT'))
-    .sort((a,b)=>(b.createdAt || 0) - (a.createdAt || 0));
-  if (groupNT.length) {
-    const row = document.createElement('div');
-    row.className = 'table-section table-section-2';
-    groupNT.forEach(t=>row.appendChild(makeTableCard(t)));
-    div.appendChild(row);
-  }
-
-  // Nhóm T, G, N (mỗi bàn 1 hàng)
-  ['T','G','N'].forEach(prefix=>{
-    const g = activeTables.filter(t =>
-      t.name.startsWith(prefix) && !(prefix==='N' && t.name.startsWith('NT'))
-    ).sort((a,b)=>(b.createdAt || 0) - (a.createdAt || 0));
-    g.forEach(t=>{
-      const row = document.createElement('div');
-      row.className = 'table-section table-section-1';
-      row.appendChild(makeTableCard(t));
-      div.appendChild(row);
-    });
   });
-
-  // Nhóm khác
-  const others = activeTables.filter(t =>
-    !t.name.startsWith('L') &&
-    !t.name.startsWith('NT') &&
-    !t.name.startsWith('T') &&
-    !t.name.startsWith('G') &&
-    !t.name.startsWith('N')
-  ).sort((a,b)=>(b.createdAt || 0) - (a.createdAt || 0));
-  if (others.length) {
-    const row = document.createElement('div');
-    row.className = 'table-section table-section-others';
-    others.forEach(t=>row.appendChild(makeTableCard(t)));
-    div.appendChild(row);
-  }
 }
 
 
