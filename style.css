@@ -691,16 +691,13 @@ header {
 
 /* khung giao diện và fhanh head */
 .app {
-  width: 360px;
-  height: 716px;
   background: #fff;
-  transform-origin: top left;
   transition: transform 0.25s ease-out;
   overflow: hidden;
   box-shadow: 0 0 10px rgba(0,0,0,0.08);
 
   /* ✅ Giữ dòng này để đẩy nội dung xuống dưới header */
-  padding-top: 20px;
+  padding-top: 10px;
   box-sizing: border-box;
 }
 
