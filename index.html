@@ -355,19 +355,21 @@
     const app = document.querySelector('.app');
     if (!app) return;
 
-    // ✅ Dùng visualViewport nếu có (fix Safari / iPhone)
     const vw = window.visualViewport ? window.visualViewport.width : window.innerWidth;
     const vh = window.visualViewport ? window.visualViewport.height : window.innerHeight;
 
-    // ✅ Giữ đúng tỷ lệ khung gốc
-    const scale = Math.min(vw / BASE_WIDTH, vh / BASE_HEIGHT);
+    // ✅ Tính scale theo chiều cao (luôn vừa màn hình)
+    const scaleH = vh / BASE_HEIGHT;
+    const scaledWidth = BASE_WIDTH * scaleH;
 
-    // ✅ Căn giữa ngang và dọc
-    const offsetX = (vw - BASE_WIDTH * scale) / 2;
-    const offsetY = (vh - BASE_HEIGHT * scale) / 2;
+    // ✅ Nếu chiều ngang thực tế còn trống => scale thêm để lấp kín
+    const scaleFinal = scaledWidth < vw ? vw / BASE_WIDTH : scaleH;
+
+    // ✅ Căn giữa ngang, top = 0 (không dư trên/dư dưới)
+    const offsetX = (vw - BASE_WIDTH * scaleFinal) / 2;
 
     app.style.transformOrigin = 'top left';
-    app.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+    app.style.transform = `translate(${offsetX}px, 0) scale(${scaleFinal})`;
   }
 
   window.addEventListener('load', autoScale);
