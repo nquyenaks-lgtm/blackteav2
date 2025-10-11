@@ -732,7 +732,7 @@ async function toggleNotePopup(item, btn) {
     .length;
 
   if (noteCount >= baseQty) {
-    alert(`Đã ghi chú đủ ${baseQty} ly cho món "${item.name}"`);
+    showCustomAlert(`Đã ghi chú đủ ${baseQty} ly cho món "${item.name}"`);
     return;
   }
 
