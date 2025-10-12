@@ -720,21 +720,22 @@ header {
 /* ===== Style nhãn ===== */
 .status-badge,
 .has-note {
-  display: inline-flex;          /* dùng flex để canh giữa */
-  align-items: center;           /* icon + chữ giữa theo chiều dọc */
-  justify-content: center;       /* canh giữa ngang */
-  gap: 4px;                      /* tạo khoảng cách giữa icon và chữ */
-  padding: 3px 12px;
-  border-radius: 6px;
-  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 2px 8px;        /* ✅ nhỏ chiều dọc & ngang */
+  border-radius: 5px;      /* bo nhẹ hơn */
+  font-size: 11px;         /* ✅ nhỏ chữ 1 nấc */
   font-weight: 600;
-  line-height: 1.3;
+  line-height: 1.2;
   white-space: nowrap;
-  width: 125px;
+  width: 110px;            /* ✅ thu hẹp chiều ngang */
   text-align: center;
-  margin-left: 6px;
-  margin-right: 4px;
+  margin-left: 4px;
+  margin-right: 2px;
 }
+
 
 /* Màu xám cho Chờ phục vụ */
 .status-badge.waiting {
@@ -748,4 +749,12 @@ header {
   background: #fff7da;
   border: 1px solid #f5de89;
   color: #946c00;
+}
+.badge-group {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;           /* khoảng cách giữa 2 nhãn */
+  min-width: 270px;   /* ✅ cố định khung để không nở khi có 2 nhãn */
+  flex-shrink: 0;     /* không bị co lại khi ít nhãn */
 }
