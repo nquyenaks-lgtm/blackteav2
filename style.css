@@ -696,14 +696,26 @@ header {
   overflow: hidden;
 }
 
-/* ✅ Gom phần KHÔNG cuộn */
-#table-screen > .guest-buttons,
-#table-screen > .section-bar {
-  flex-shrink: 0;
+/* ✅ Cố định phần trên, chỉ cuộn phần danh sách đơn */
+#table-screen {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;  /* Chiếm đúng màn hình */
+  overflow: hidden;
 }
 
-/* ✅ Chỉ phần danh sách đơn (#tables) mới cuộn */
+/* ✅ Header + 2 nút + tiêu đề không bị cuộn */
+#table-screen header,
+#table-screen .guest-buttons,
+#table-screen .section-bar {
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+}
+
+/* ✅ Chỉ phần danh sách đơn cuộn */
 #tables {
   flex: 1;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch; /* Mượt trên mobile */
 }
