@@ -687,34 +687,3 @@ header {
   background-color: #4a69ad !important;
   color: #fff !important;
 }
-
-/* ===== Cố định nút + tiêu đề ở màn hình chính ===== */
-#table-screen {
-  display: flex;
-  flex-direction: column;
-  height: calc(100vh - 60px); /* trừ header */
-  overflow: hidden;
-}
-
-#table-screen .guest-buttons {
-  position: sticky;
-  top: 60px; /* ngay dưới header */
-  z-index: 10;
-  background: #f6f7fb;
-  /* giữ nguyên margin cũ trong inline style */
-}
-
-#table-screen .section-bar {
-  position: sticky;
-  top: 118px; /* vừa dưới hai nút */
-  z-index: 9;
-  background: #f6f7fb;
-  border-bottom: 1px solid #ddd;
-  /* không thêm padding, để giữ spacing gốc */
-}
-
-#tables {
-  flex: 1;
-  overflow-y: auto;
-  padding-bottom: 80px; /* tránh bị che */
-}
