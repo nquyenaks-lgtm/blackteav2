@@ -703,19 +703,22 @@ header {
   height: 100vh;  /* Chiếm đúng màn hình */
   overflow: hidden;
 }
-
-/* ✅ Header + 2 nút + tiêu đề không bị cuộn */
-#table-screen header,
-#table-screen .guest-buttons,
-#table-screen .section-bar {
-  flex-shrink: 0;
-  position: relative;
-  z-index: 10;
+/* ✅ Tổng thể phần màn hình danh sách bàn */
+#table-screen {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
 }
 
-/* ✅ Chỉ phần danh sách đơn cuộn */
+/* ✅ Gom phần KHÔNG cuộn */
+#table-screen > .guest-buttons,
+#table-screen > .section-bar {
+  flex-shrink: 0;
+}
+
+/* ✅ Chỉ phần danh sách đơn (#tables) mới cuộn */
 #tables {
   flex: 1;
   overflow-y: auto;
-  -webkit-overflow-scrolling: touch; /* Mượt trên mobile */
 }
