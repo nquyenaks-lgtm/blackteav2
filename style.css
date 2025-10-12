@@ -692,30 +692,29 @@ header {
 #table-screen {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 60px); /* trừ chiều cao header cố định */
+  height: calc(100vh - 60px); /* trừ header */
   overflow: hidden;
 }
 
 #table-screen .guest-buttons {
   position: sticky;
-  top: 60px; /* nằm ngay dưới header */
+  top: 60px; /* ngay dưới header */
   z-index: 10;
   background: #f6f7fb;
-  padding-top: 8px;
-  padding-bottom: 4px;
+  /* giữ nguyên margin cũ trong inline style */
 }
 
 #table-screen .section-bar {
   position: sticky;
-  top: 120px; /* nằm dưới 2 nút */
+  top: 118px; /* vừa dưới hai nút */
   z-index: 9;
   background: #f6f7fb;
   border-bottom: 1px solid #ddd;
-  padding: 4px 0;
+  /* không thêm padding, để giữ spacing gốc */
 }
 
 #tables {
   flex: 1;
   overflow-y: auto;
-  padding-bottom: 80px; /* tránh bị che bởi thanh tổng tiền nếu có */
+  padding-bottom: 80px; /* tránh bị che */
 }
