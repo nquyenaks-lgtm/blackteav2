@@ -1,6 +1,5 @@
 *{box-sizing:border-box;margin:0;padding:0}
 .app{max-width:980px;margin:0 auto}
-header{padding:8px 0}
 h1{font-size:18px}
 h2,h3,h4{margin:0 0 6px 0}
 .table-grid{display:flex;flex-direction:column;gap:8px;margin-top:8px}
@@ -218,6 +217,7 @@ header {
   left: 0;
   z-index: 1000;
   box-shadow: 0 4px 8px rgba(0,0,0,0.25); /* hiệu ứng nổi */
+  height: 54px;
 }
 
 header h1#brand {
