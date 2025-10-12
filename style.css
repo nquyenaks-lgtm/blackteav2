@@ -687,3 +687,36 @@ header {
   background-color: #4a69ad !important;
   color: #fff !important;
 }
+
+/* ===== View mode - hiển thị hóa đơn ===== */
+.cart-section.view-mode h3 {
+  text-align: center;
+  margin-bottom: 0;     /* 👈 sát xuống thời gian tạo */
+}
+
+.cart-section.view-mode .order-time-label {
+  text-align: center;
+  font-size: 13px;
+  font-style: italic;
+  color: #555;
+  margin-top: 0;
+  margin-bottom: 4px;   /* 👈 sát hơn với danh sách món */
+}
+
+/* Danh sách món - giữ nguyên 12 dòng */
+.cart-section.view-mode #cart-list {
+  max-height: calc(12 * 3rem);
+  overflow-y: auto;
+}
+
+/* Dòng tổng cuối hóa đơn */
+.cart-section.view-mode .cart-total-line {
+  background: none;      /* 👈 bỏ nền sáng */
+  border-top: none;      /* 👈 bỏ vạch ngang */
+  text-align: right;
+  font-weight: 700;
+  color: #111;
+  margin-top: 8px;       /* 👈 gần hơn một chút */
+  padding: 4px 8px;
+}
+

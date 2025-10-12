@@ -323,16 +323,14 @@ function getTableFullName(id){
   return id;
 }
 
-function openTable(id){
+function openTable(id) {
   // tìm xem bàn đã lưu trong TABLES chưa
   const savedIdx = TABLES.findIndex(t => t.id === id);
 
-  if (savedIdx >= 0){
-    // dùng object đã lưu (thao tác trực tiếp trên object trong TABLES)
+  if (savedIdx >= 0) {
     currentTable = TABLES[savedIdx];
     currentTable._isDraft = false;
   } else {
-    // tạo bản nháp (chưa push vào TABLES)
     currentTable = {
       id: id,
       name: getTableFullName(id) || id,
@@ -351,37 +349,93 @@ function openTable(id){
   $('history-screen').style.display = 'none';
   $('payment-screen').style.display = 'none';
 
-  // Nếu muốn hiển thị tên ở phần giao diện chi tiết (nếu có)
   if ($('table-title')) $('table-title').innerText = "";
-
-  // hiển thị nút X / ẩn header buttons (theo yêu cầu)
   if ($('header-buttons')) $('header-buttons').style.display = 'none';
   if ($('order-info')) $('order-info').classList.remove('hidden');
   if ($('orderTitle')) $('orderTitle').innerText = getTableFullName(currentTable.name || '');
   if ($('backBtn')) $('backBtn').classList.remove('hidden');
 
-  // render danh mục, menu, giỏ hàng
   resetMenuNotes();
   renderCategories && renderCategories();
   renderMenuList && renderMenuList();
   renderCart && renderCart();
 
-  // hiển thị primary actions (thêm món) / table actions theo flag createdFromMain nếu bạn dùng
+  // 🧩 Xóa class view-mode mặc định
+  const cartSection = document.querySelector('.cart-section');
+  if (cartSection) cartSection.classList.remove('view-mode');
+
   if (createdFromMain) {
+    // ✅ Khi tạo đơn mới hoặc thêm món
     if ($('primary-actions')) $('primary-actions').style.display = 'flex';
     if ($('table-actions')) $('table-actions').style.display = 'none';
     if ($('menu-list')) $('menu-list').style.display = 'block';
+    if ($('category-bar')) $('category-bar').style.display = 'flex';
+    if ($('cart-summary')) $('cart-summary').style.display = 'block';
+
+    const inlineTotal = $('inline-total');
+    if (inlineTotal) inlineTotal.remove();
+
+    const orderTimeLabel = $('order-time');
+    if (orderTimeLabel) orderTimeLabel.remove();
+
     if (isAddingMore) {
       if ($('cancel-order-btn')) $('cancel-order-btn').style.display = 'none';
     } else {
       if ($('cancel-order-btn')) $('cancel-order-btn').style.display = 'inline-block';
     }
+
   } else {
+    // ✅ Khi mở đơn có sẵn từ màn hình chính
     if ($('primary-actions')) $('primary-actions').style.display = 'none';
     if ($('table-actions')) $('table-actions').style.display = 'flex';
     if ($('menu-list')) $('menu-list').style.display = 'none';
+    if ($('category-bar')) $('category-bar').style.display = 'none';
+    if ($('cart-summary')) $('cart-summary').style.display = 'none';
+
+    // ✅ Thêm class chế độ xem hóa đơn
+    if (cartSection) cartSection.classList.add('view-mode');
+
+    const oldTotal = document.querySelector('.cart-summary div:not(.cart-actions)');
+    if (oldTotal) oldTotal.style.display = 'none';
+
+    // ✅ Hiển thị tổng ngay dưới hóa đơn
+    const cartList = $('cart-list');
+    if (cartList && !$('inline-total')) {
+      const totalDiv = document.createElement('div');
+      totalDiv.id = 'inline-total';
+      totalDiv.className = 'cart-total-line';
+      totalDiv.innerHTML = `Tổng: <span id="total">${$('total').innerText}</span> VND`;
+      cartList.insertAdjacentElement('afterend', totalDiv);
+    }
+
+    // ✅ Căn giữa 2 nút hành động
+    const actions = $('table-actions');
+    if (actions) actions.style.justifyContent = 'center';
+
+    // ✅ Hiển thị thời gian tạo đơn
+    if (!$('order-time')) {
+      const orderTime = document.createElement('div');
+      orderTime.id = 'order-time';
+      orderTime.className = 'order-time-label';
+
+      const createdAt = new Date(currentTable.createdAt);
+      const formattedTime = createdAt.toLocaleString('vi-VN', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+      });
+
+      orderTime.textContent = `Thời gian tạo: ${formattedTime}`;
+      const title = document.querySelector('.cart-section h3');
+      if (title) title.insertAdjacentElement('afterend', orderTime);
+    }
   }
 }
+
+
 // back
 function backToTables() {
   if (currentTable && currentTable.name.startsWith('Khách mang đi')) {
@@ -910,22 +964,44 @@ function saveOrder() {
 
 
 // table actions
-function addMore(){ 
-  if(!currentTable) return; 
+function addMore() { 
+  if (!currentTable) return; 
 
-  // 👉 Lưu bản sao giỏ hàng cũ (giữ locked & baseQty)
+  // 👉 Lưu bản sao giỏ hàng cũ 
   currentTable._oldCart = currentTable.cart.map(it => ({ ...it }));
 
-  $('menu-list').style.display='block'; 
-  createdFromMain = true; 
-  $('primary-actions').style.display='flex'; 
-  $('table-actions').style.display='none'; 
+  // 👉 Đánh dấu là đang thêm món
+  createdFromMain = true;
+  isAddingMore = true;
 
+  // ✅ Gỡ chế độ xem hóa đơn (view-mode)
+  const cartSection = document.querySelector('.cart-section');
+  if (cartSection) cartSection.classList.remove('view-mode');
+
+  // ✅ Ẩn tổng inline và thời gian tạo nếu đang hiện
+  const inlineTotal = $('inline-total');
+  if (inlineTotal) inlineTotal.remove();
+
+  const orderTime = $('order-time');
+  if (orderTime) orderTime.remove();
+
+  // ✅ Hiện lại giao diện chọn món
+  if ($('menu-list')) $('menu-list').style.display = 'block';
+  if ($('category-bar')) $('category-bar').style.display = 'flex';
+  if ($('cart-summary')) $('cart-summary').style.display = 'block';
+
+  if ($('primary-actions')) $('primary-actions').style.display = 'flex';
+  if ($('table-actions')) $('table-actions').style.display = 'none';
+
+  // ✅ Ẩn nút “Hủy đơn” nếu có
   const cancelBtn = $('cancel-order-btn');
   if (cancelBtn) cancelBtn.style.display = 'none';
 
+  // ✅ Render lại danh sách và giỏ hàng
   renderMenuList(); 
+  renderCart();
 }
+
 function payTable(){ if(!currentTable) return; if(!currentTable.cart.length){ return; } // open payment screen with bill preview
   $('menu-screen').style.display='none'; $('payment-screen').style.display='block';
   $('pay-table-name').innerText = currentTable.name;
