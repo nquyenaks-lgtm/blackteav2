@@ -637,36 +637,6 @@ header {
   opacity: 0.9;
   transform: scale(1.05);
 }
-/* ===== chỉnh phần meta cho bố cục hai bên ===== */
-.table-meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 13px;
-  color: #444;
-  white-space: normal !important; /* cho phép xuống dòng nếu cần */
-}
-
-.table-meta .meta-left {
-  flex: 1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* ===== style cho nhãn ghi chú ===== */
-.has-note {
-  display: inline-block !important;
-  background: #fff8c4 !important;      /* vàng nhạt dễ thấy */
-  color: #b58900 !important;           /* vàng đậm */
-  font-weight: 600 !important;
-  border: 1px solid #f0d46b !important;
-  border-radius: 6px !important;
-  padding: 2px 6px !important;
-  margin-left: 6px !important;
-  font-size: 12px !important;
-  white-space: nowrap !important;
-}
 /* ===== ghi chú trên hoá đơn===== */
 .item-note {
   color: #777;
@@ -719,4 +689,63 @@ header {
   margin-top: 8px;       /* 👈 gần hơn một chút */
   padding: 4px 8px;
 }
+/* ===== Hàng tên bàn và trạng thái ===== */
+.name-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2px;
+}
 
+/* ===== Hàng món + ghi chú ===== */
+.meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+}
+
+/* ===== Gộp nhãn vào chung 1 khối phải ===== */
+.name-row, .meta-row {
+  gap: 8px;
+}
+
+.name-row span:last-child,
+.meta-row span:last-child {
+  display: flex;
+  gap: 6px; /* khoảng cách giữa 2 nhãn nếu có */
+  align-items: center;
+}
+
+/* ===== Style nhãn ===== */
+.status-badge,
+.has-note {
+  display: inline-flex;          /* dùng flex để canh giữa */
+  align-items: center;           /* icon + chữ giữa theo chiều dọc */
+  justify-content: center;       /* canh giữa ngang */
+  gap: 4px;                      /* tạo khoảng cách giữa icon và chữ */
+  padding: 3px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.3;
+  white-space: nowrap;
+  width: 125px;
+  text-align: center;
+  margin-left: 6px;
+  margin-right: 4px;
+}
+
+/* Màu xám cho Chờ phục vụ */
+.status-badge.waiting {
+  background: #f1f3f5;
+  color: #666;
+  border: 1px solid #e4e6ea;
+}
+
+/* Màu vàng cho Đơn có ghi chú */
+.has-note {
+  background: #fff7da;
+  border: 1px solid #f5de89;
+  color: #946c00;
+}
