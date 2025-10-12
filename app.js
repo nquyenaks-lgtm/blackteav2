@@ -153,24 +153,37 @@ function renderTables() {
   const div = $('tables');
   div.innerHTML = '';
 
-  // Chỉ lấy bàn có món
+  // ✅ Chỉ hiển thị bàn có món (lọc và sắp xếp)
   const activeTables = TABLES
     .filter(t => t.cart && t.cart.length > 0)
-    .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0)); // ✅ Sắp xếp theo thời gian mới nhất
+    .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
 
   if (!activeTables.length) {
     div.innerHTML = '<div class="small">Chưa có bàn nào đang phục vụ</div>';
     return;
   }
 
-  // ✅ Render toàn bộ theo thứ tự thời gian, không chia nhóm
   activeTables.forEach(t => {
     const row = document.createElement('div');
-    row.className = 'table-section table-section-1'; // bạn có thể giữ layout 1 dòng hoặc đổi theo ý
+    row.className = 'table-section table-section-1';
     row.appendChild(makeTableCard(t));
     div.appendChild(row);
   });
 }
+
+// Tu động dọn bàn trống
+function autoCleanEmptyTables() {
+  const before = TABLES.length;
+  TABLES = TABLES.filter(t => {
+    // Xóa bàn "Khách mang đi" nếu không có món
+    if (t.name.startsWith('Khách mang đi')) {
+      return t.cart && t.cart.length > 0;
+    }
+    return true; // các bàn khác giữ nguyên
+  });
+  if (TABLES.length !== before) saveAll();
+}
+
 
 
 
@@ -282,8 +295,16 @@ function addGuest() {
   renderTables();
 
   currentTable = tableObj;
-  openTable(currentTable.id);
-  addMore(); // mở luôn menu order
+openTable(currentTable.id);
+addMore(); // mở luôn menu order
+
+// ✅ Bảo đảm luôn hiển thị đúng chế độ order mới
+isAddingMore = false;
+if ($('primary-actions')) $('primary-actions').style.display = 'flex';
+if ($('table-actions')) $('table-actions').style.display = 'none';
+if ($('cancel-order-btn')) $('cancel-order-btn').style.display = 'inline-block';
+
+
 }
 
 
@@ -295,6 +316,11 @@ function addGuestVisit(){
   saveAll();
   createdFromMain = true;
   openTable(id);
+  // ✅ Bảo đảm hiện nút “Đặt lại” + “Lưu đơn”
+isAddingMore = false;
+if ($('primary-actions')) $('primary-actions').style.display = 'flex';
+if ($('table-actions')) $('table-actions').style.display = 'none';
+if ($('cancel-order-btn')) $('cancel-order-btn').style.display = 'inline-block';
 }
 
 // add named table
@@ -395,9 +421,6 @@ function openTable(id) {
     // ✅ Thêm class chế độ xem hóa đơn
     if (cartSection) cartSection.classList.add('view-mode');
 
-    const oldTotal = document.querySelector('.cart-summary div:not(.cart-actions)');
-    if (oldTotal) oldTotal.style.display = 'none';
-
     // ✅ Hiển thị tổng ngay dưới hóa đơn
     const cartList = $('cart-list');
     if (cartList && !$('inline-total')) {
@@ -438,13 +461,10 @@ function openTable(id) {
 
 // back
 function backToTables() {
-  if (currentTable && currentTable.name.startsWith('Khách mang đi')) {
-    if (!currentTable.cart || currentTable.cart.length === 0) {
-      TABLES = TABLES.filter(t => t.id !== currentTable.id);
-      saveAll();
-    }
-  }
-
+  // ✅ Dọn bàn trống 
+  autoCleanEmptyTables();
+  renderTables();
+  // ✅ Chuyển màn hình
   $('table-screen').style.display = 'block';
   $('menu-screen').style.display = 'none';
   $('settings-screen').style.display = 'none';
@@ -455,43 +475,50 @@ function backToTables() {
 
   $('header-buttons').style.display = 'flex';  
   $('order-info').classList.add('hidden');
+
+  
 }
 
 
-function goBack(){
+
+function goBack() {
   if (!currentTable) {
     hideOrderInfo();
     backToTables();
     return;
   }
 
-  const idx = TABLES.findIndex(t => t.id === currentTable.id);
-
-  // 🧠 Nếu bàn mới hoặc chưa lưu -> xoá luôn
-  if (idx === -1 || currentTable._isDraft || !currentTable.cart || currentTable.cart.length === 0) {
-    if (idx >= 0) TABLES.splice(idx, 1);
-    currentTable = null;
+  // 🧩 Nếu đang ở chế độ "Thêm món"
+  if (isAddingMore) {
+    if (currentTable._oldCart) {
+      currentTable.cart = JSON.parse(JSON.stringify(currentTable._oldCart));
+      delete currentTable._oldCart;
+    }
+    isAddingMore = false;
     saveAll();
     hideOrderInfo();
-    renderTables();
     backToTables();
     return;
   }
 
-  const saved = TABLES[idx];
-
-  // 🧠 Nếu đang ở chế độ thêm món (có bản sao cũ) -> khôi phục lại giỏ cũ
-  if (currentTable._oldCart) {
-    saved.cart = JSON.parse(JSON.stringify(currentTable._oldCart));
-    delete currentTable._oldCart;
+  // 🧩 Nếu đang xem đơn từ màn hình chính (view mode)
+  if (!createdFromMain) {
+    hideOrderInfo();
+    backToTables();
+    return;
   }
 
-  // ✅ Không hỏi gì hết, chỉ quay về và lưu trạng thái
+  // ✅ Còn lại (chế độ order bình thường): đặt lại + thoát
+  currentTable.cart = [];
+  currentTable.discount = 0;
+  currentTable.note = '';
   saveAll();
-  renderTables();
+
   hideOrderInfo();
   backToTables();
 }
+
+
 // categories
 function renderCategories() {
   const bar = $('category-bar'); 
