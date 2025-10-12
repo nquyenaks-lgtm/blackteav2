@@ -687,18 +687,3 @@ header {
   background-color: #4a69ad !important;
   color: #fff !important;
 }
-
-/* ✅ Giới hạn chiều cao màn hình cho màn hình order */
-#menu-screen {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;       /* Chiếm đúng chiều cao màn hình */
-  overflow: hidden;    /* Không bị tràn */
-}
-
-/* ✅ Phần hiển thị danh sách món được cuộn khi dài */
-.cart-section {
-  flex: 1;
-  overflow-y: auto;    /* Nếu dài hơn thì cuộn */
-  padding-bottom: 100px; /* Tránh bị che bởi nút Thanh toán */
-}
