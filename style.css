@@ -687,3 +687,16 @@ header {
   background-color: #4a69ad !important;
   color: #fff !important;
 }
+
+/* ✅ Cố định phần phía trên, chỉ cho danh sách đơn cuộn */
+#table-screen {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Chiều cao khớp với màn hình */
+  overflow: hidden;
+}
+
+#tables {
+  flex: 1; 
+  overflow-y: auto; /* Cuộn nội dung nếu dài */
+}
