@@ -421,20 +421,6 @@ function openTable(id) {
     // ✅ Thêm class chế độ xem hóa đơn
     if (cartSection) cartSection.classList.add('view-mode');
 
-    // ✅ Hiển thị tổng ngay dưới hóa đơn
-    const cartList = $('cart-list');
-    if (cartList && !$('inline-total')) {
-      const totalDiv = document.createElement('div');
-      totalDiv.id = 'inline-total';
-      totalDiv.className = 'cart-total-line';
-      totalDiv.innerHTML = `Tổng: <span id="total">${$('total').innerText}</span> VND`;
-      cartList.insertAdjacentElement('afterend', totalDiv);
-    }
-
-    // ✅ Căn giữa 2 nút hành động
-    const actions = $('table-actions');
-    if (actions) actions.style.justifyContent = 'center';
-
     // ✅ Hiển thị thời gian tạo đơn
     if (!$('order-time')) {
       const orderTime = document.createElement('div');
