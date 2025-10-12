@@ -194,7 +194,7 @@ function makeTableCard(t) {
   const info = document.createElement('div');
   info.className = 'table-info';
 
-  // ===== dòng 1: tên bàn =====
+  // ===== dòng 1: tên bàn + trạng thái =====
   let displayName = t.name;
   if (t.name.startsWith('L'))       displayName = `Bàn trên lầu ${t.name}`;
   else if (t.name.startsWith('NT')) displayName = `Bàn ngoài trời ${t.name}`;
@@ -202,10 +202,22 @@ function makeTableCard(t) {
   else if (t.name.startsWith('G'))  displayName = `Bàn giữa ${t.name}`;
   else if (t.name.startsWith('N'))  displayName = `Bàn nệm ${t.name}`;
 
+  const nameRow = document.createElement('div');
+  nameRow.className = 'name-row';
+
   const name = document.createElement('div');
   name.className = 'table-name';
   name.innerText = displayName;
-  info.appendChild(name);
+
+  const waitingBadge = (t.served === false)
+    ? '<span class="status-badge waiting">☕ Chờ phục vụ</span>'
+    : '';
+
+  nameRow.innerHTML = `
+    <span class="table-name">${displayName}</span>
+    ${waitingBadge}
+  `;
+  info.appendChild(nameRow);
 
   // ===== dòng 2: số món + tổng tiền + giờ + ghi chú =====
   if (t.cart && t.cart.length) {
@@ -216,7 +228,7 @@ function makeTableCard(t) {
     });
 
     const meta = document.createElement('div');
-    meta.className = 'table-meta';
+    meta.className = 'meta-row';
 
     let timeStr = '';
     if (t.createdAt) {
@@ -226,18 +238,17 @@ function makeTableCard(t) {
       timeStr = ` • ${hh}:${mm}`;
     }
 
-    // ✅ Kiểm tra ghi chú: note có text hoặc đường/đá khác bình thường
     const hasNote = t.cart.some(it => {
       const sugar = (it.sugarLevel !== undefined) ? Number(it.sugarLevel) : 2;
-      const ice = (it.iceLevel !== undefined) ? Number(it.iceLevel) : 3; // 3 = Bình thường
+      const ice = (it.iceLevel !== undefined) ? Number(it.iceLevel) : 3;
       return (it.note && it.note.trim() !== '') || sugar !== 2 || ice !== 3;
-
     });
 
-    // ✅ Hiển thị thêm nhãn nếu có ghi chú
+    const hasNoteBadge = hasNote ? '<span class="has-note">📝 Đơn có ghi chú</span>' : '';
+
     meta.innerHTML = `
-      ${qty} món • ${fmtV(total)} VND${timeStr}
-      ${hasNote ? '<span class="has-note">📝 Đơn có ghi chú</span>' : ''}
+      <span>${qty} món • ${fmtV(total)} VND${timeStr}</span>
+      ${hasNoteBadge}
     `;
 
     info.appendChild(meta);
@@ -251,7 +262,7 @@ function makeTableCard(t) {
     card.classList.add('active');
     openTableFromMain(t.id);
   };
-   
+
   return card;
 }
 
@@ -954,7 +965,7 @@ function saveOrder() {
     locked: true,
     baseQty: (typeof it.baseQty === 'number' && it.baseQty > 0) ? it.baseQty : it.qty
   }));
-
+     currentTable.served = false; // trạng thái chờ phục vu 
   const idx = TABLES.findIndex(t => t.id === currentTable.id);
   if (idx >= 0) {
     // cập nhật bàn đã lưu
