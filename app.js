@@ -1530,14 +1530,23 @@ function openCategorySettings(){
   renderCategoriesList();
 }
 // === Nút kéo để xác nhận phục vụ đơn hàng ===
+// === Nút kéo để xác nhận phục vụ đơn hàng ===
 function nutphucvu() {
   const slider = document.getElementById("serveSlider");
   const btn = document.getElementById("slideBtn");
   const text = slider.querySelector(".slide-text");
+  const normalBtns = document.getElementById("table-actions");
   const maxMove = slider.offsetWidth - btn.offsetWidth;
   let isDown = false;
   let startX = 0;
 
+  if (!slider || !btn || !text || !normalBtns) return;
+
+  // Reset trạng thái
+  btn.style.left = "0px";
+  text.style.opacity = "1";
+
+  // --- Sự kiện kéo chuột ---
   btn.onmousedown = e => {
     isDown = true;
     startX = e.clientX;
@@ -1557,19 +1566,27 @@ function nutphucvu() {
     if (!isDown) return;
     isDown = false;
     const move = parseFloat(btn.style.left);
-    if (move >= maxMove * 0.95) {
-      // ✅ Hoàn tất kéo
+    if (move >= maxMove * 0.9) {
+      // ✅ Kéo xong
+      if (currentTable) {
+        currentTable.served = true;
+        saveAll && saveAll();
+      }
+
+      // Ẩn thanh kéo, hiện nút bình thường
       slider.style.display = "none";
-      document.getElementById("table-actions").style.display = "flex";
-      if (window.currentTable) currentTable.served = true;
+      normalBtns.style.display = "flex";
+
+      // ✅ Cập nhật lại danh sách bàn ngoài màn hình chính
+      if (typeof renderTables === "function") renderTables();
     } else {
-      // quay lại vị trí ban đầu
+      // Nếu chưa kéo hết → trả về vị trí ban đầu
       btn.style.left = "0px";
-      text.style.opacity = 1;
+      text.style.opacity = "1";
     }
   };
 
-  // Hỗ trợ cảm ứng
+  // --- Hỗ trợ cảm ứng ---
   btn.ontouchstart = e => {
     isDown = true;
     startX = e.touches[0].clientX;
@@ -1588,13 +1605,17 @@ function nutphucvu() {
     if (!isDown) return;
     isDown = false;
     const move = parseFloat(btn.style.left);
-    if (move >= maxMove * 0.95) {
+    if (move >= maxMove * 0.9) {
+      if (currentTable) {
+        currentTable.served = true;
+        saveAll && saveAll();
+      }
       slider.style.display = "none";
-      document.getElementById("table-actions").style.display = "flex";
-      if (window.currentTable) currentTable.served = true;
+      normalBtns.style.display = "flex";
+      if (typeof renderTables === "function") renderTables();
     } else {
       btn.style.left = "0px";
-      text.style.opacity = 1;
+      text.style.opacity = "1";
     }
   };
 }
