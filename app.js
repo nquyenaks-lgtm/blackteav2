@@ -1529,63 +1529,72 @@ function openCategorySettings(){
   $('category-settings-screen').style.display = 'block';
   renderCategoriesList();
 }
+// === Nút kéo để xác nhận phục vụ đơn hàng ===
 function nutphucvu() {
   const slider = document.getElementById("serveSlider");
-  const slideBtn = document.getElementById("slideBtn");
-  const normalBtns = document.getElementById("table-actions");
+  const btn = document.getElementById("slideBtn");
   const text = slider.querySelector(".slide-text");
+  const maxMove = slider.offsetWidth - btn.offsetWidth;
+  let isDown = false;
+  let startX = 0;
 
-  if (!slider || !slideBtn || !normalBtns) return;
-
-  // Reset ban đầu
-  slider.style.display = "block";
-  normalBtns.style.display = "none";
-  text.innerText = "Xác nhận phục vụ đơn hàng";
-  text.style.opacity = "1";
-  slideBtn.style.left = "0px";
-
-  let isDown = false, startX = 0;
-
-  slideBtn.onmousedown = (e) => {
+  btn.onmousedown = e => {
     isDown = true;
     startX = e.clientX;
+    e.preventDefault();
+  };
+
+  document.onmousemove = e => {
+    if (!isDown) return;
+    let move = e.clientX - startX;
+    if (move < 0) move = 0;
+    if (move > maxMove) move = maxMove;
+    btn.style.left = move + "px";
+    text.style.opacity = 1 - move / maxMove;
   };
 
   document.onmouseup = () => {
     if (!isDown) return;
     isDown = false;
-    const max = slider.offsetWidth - slideBtn.offsetWidth - 5;
-    const left = parseInt(slideBtn.style.left);
-
-    if (left >= max * 0.9) {
-      // ✅ Kéo hết: mở khoá
-      slideBtn.style.left = max + "px";
-      text.style.opacity = "0";
-
-      if (currentTable) {
-        currentTable.served = true;
-        saveAll && saveAll();
-      }
-
-      // Ẩn slide, hiện 2 nút
-      setTimeout(() => {
-        slider.style.display = "none";
-        normalBtns.style.display = "flex";
-      }, 500);
+    const move = parseFloat(btn.style.left);
+    if (move >= maxMove * 0.95) {
+      // ✅ Hoàn tất kéo
+      slider.style.display = "none";
+      document.getElementById("table-actions").style.display = "flex";
+      if (window.currentTable) currentTable.served = true;
     } else {
-      slideBtn.style.left = "0px";
-      text.style.opacity = "1";
+      // quay lại vị trí ban đầu
+      btn.style.left = "0px";
+      text.style.opacity = 1;
     }
   };
 
-  document.onmousemove = (e) => {
+  // Hỗ trợ cảm ứng
+  btn.ontouchstart = e => {
+    isDown = true;
+    startX = e.touches[0].clientX;
+  };
+
+  document.ontouchmove = e => {
     if (!isDown) return;
-    const diff = e.clientX - startX;
-    const max = slider.offsetWidth - slideBtn.offsetWidth - 5;
-    if (diff >= 0 && diff <= max) {
-      slideBtn.style.left = diff + "px";
-      // 🔥 Hiệu ứng chữ mờ dần khi kéo
-      text.style.opacity = 1 - diff / max;
+    let move = e.touches[0].clientX - startX;
+    if (move < 0) move = 0;
+    if (move > maxMove) move = maxMove;
+    btn.style.left = move + "px";
+    text.style.opacity = 1 - move / maxMove;
+  };
+
+  document.ontouchend = () => {
+    if (!isDown) return;
+    isDown = false;
+    const move = parseFloat(btn.style.left);
+    if (move >= maxMove * 0.95) {
+      slider.style.display = "none";
+      document.getElementById("table-actions").style.display = "flex";
+      if (window.currentTable) currentTable.served = true;
+    } else {
+      btn.style.left = "0px";
+      text.style.opacity = 1;
     }
   };
 }
