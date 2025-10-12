@@ -688,37 +688,34 @@ header {
   color: #fff !important;
 }
 
-/* ✅ Tổng thể phần màn hình danh sách bàn */
+/* ===== Cố định nút + tiêu đề ở màn hình chính ===== */
 #table-screen {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: calc(100vh - 60px); /* trừ chiều cao header cố định */
   overflow: hidden;
 }
 
-/* ✅ Cố định phần trên, chỉ cuộn phần danh sách đơn */
-#table-screen {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;  /* Chiếm đúng màn hình */
-  overflow: hidden;
-}
-/* ✅ Tổng thể phần màn hình danh sách bàn */
-#table-screen {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  overflow: hidden;
+#table-screen .guest-buttons {
+  position: sticky;
+  top: 60px; /* nằm ngay dưới header */
+  z-index: 10;
+  background: #f6f7fb;
+  padding-top: 8px;
+  padding-bottom: 4px;
 }
 
-/* ✅ Gom phần KHÔNG cuộn */
-#table-screen > .guest-buttons,
-#table-screen > .section-bar {
-  flex-shrink: 0;
+#table-screen .section-bar {
+  position: sticky;
+  top: 120px; /* nằm dưới 2 nút */
+  z-index: 9;
+  background: #f6f7fb;
+  border-bottom: 1px solid #ddd;
+  padding: 4px 0;
 }
 
-/* ✅ Chỉ phần danh sách đơn (#tables) mới cuộn */
 #tables {
   flex: 1;
   overflow-y: auto;
+  padding-bottom: 80px; /* tránh bị che bởi thanh tổng tiền nếu có */
 }
