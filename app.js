@@ -209,9 +209,10 @@ function makeTableCard(t) {
   name.className = 'table-name';
   name.innerText = displayName;
 
-  const waitingBadge = (t.served === false)
-    ? '<span class="status-badge waiting">☕ Chờ phục vụ</span>'
-    : '';
+const waitingBadge = (t.served === false)
+  ? '<span class="status-badge waiting">☕ Chờ phục vụ</span>'
+  : (t.served === true ? '<span class="status-badge serving">☕ Đang phục vụ</span>' : '');
+
 
   nameRow.innerHTML = `
     <span class="table-name">${displayName}</span>
@@ -346,8 +347,29 @@ function addNamed(){
   openTable(id);
 }
 
-// open from main
-function openTableFromMain(id){ createdFromMain = false; openTable(id); }
+// chế độ phục vụ
+function openTableFromMain(id) {
+  createdFromMain = false;
+  openTable(id);
+
+  // ✅ Chỉ hiện slide phục vụ nếu là chế độ xem đơn (viewmode)
+  const slider = document.getElementById("serveSlider");
+  const normalBtns = document.getElementById("table-actions");
+
+  if (slider && normalBtns) {
+    // Nếu đơn chưa phục vụ thì hiện slide, ẩn nút thêm món
+    if (!currentTable?.served) {
+      slider.style.display = "block";
+      normalBtns.style.display = "none";
+      nutphucvu();
+    } else {
+      // Nếu đã phục vụ rồi -> ẩn slide, hiện nút bình thường
+      slider.style.display = "none";
+      normalBtns.style.display = "flex";
+    }
+  }
+}
+
 
 // Tên bàn mang đi
 function getTableFullName(id){
@@ -965,17 +987,22 @@ function saveOrder() {
     locked: true,
     baseQty: (typeof it.baseQty === 'number' && it.baseQty > 0) ? it.baseQty : it.qty
   }));
-     currentTable.served = false; // trạng thái chờ phục vu 
+
+  // ✅ Gán trạng thái mặc định là "Chờ phục vụ"
+  if (currentTable.served === undefined) {
+    currentTable.served = false;
+  }
+
   const idx = TABLES.findIndex(t => t.id === currentTable.id);
   if (idx >= 0) {
     // cập nhật bàn đã lưu
-    TABLES[idx] = { ...currentTable, _isDraft: false };
+    TABLES[idx] = { ...currentTable, _isDraft: false, served: currentTable.served };
   } else {
     // thêm bàn mới (từ draft -> lưu)
-    TABLES.push({ ...currentTable, _isDraft: false });
+    TABLES.push({ ...currentTable, _isDraft: false, served: currentTable.served });
   }
 
-  saveAll && saveAll();   // hàm lưu localStorage (giữ nguyên)
+  saveAll && saveAll();   // lưu localStorage
   renderTables && renderTables();
 
   // ẩn order-info + hiện lại header buttons + ẩn X
@@ -984,6 +1011,7 @@ function saveOrder() {
   // về màn hình chính
   backToTables && backToTables();
 }
+
 
 
 
@@ -1500,6 +1528,66 @@ function openCategorySettings(){
   // Hiện quản lý danh mục
   $('category-settings-screen').style.display = 'block';
   renderCategoriesList();
+}
+function nutphucvu() {
+  const slider = document.getElementById("serveSlider");
+  const slideBtn = document.getElementById("slideBtn");
+  const normalBtns = document.getElementById("table-actions");
+  const text = slider.querySelector(".slide-text");
+
+  if (!slider || !slideBtn || !normalBtns) return;
+
+  // Reset ban đầu
+  slider.style.display = "block";
+  normalBtns.style.display = "none";
+  text.innerText = "Xác nhận phục vụ đơn hàng";
+  text.style.opacity = "1";
+  slideBtn.style.left = "0px";
+
+  let isDown = false, startX = 0;
+
+  slideBtn.onmousedown = (e) => {
+    isDown = true;
+    startX = e.clientX;
+  };
+
+  document.onmouseup = () => {
+    if (!isDown) return;
+    isDown = false;
+    const max = slider.offsetWidth - slideBtn.offsetWidth - 5;
+    const left = parseInt(slideBtn.style.left);
+
+    if (left >= max * 0.9) {
+      // ✅ Kéo hết: mở khoá
+      slideBtn.style.left = max + "px";
+      text.style.opacity = "0";
+
+      if (currentTable) {
+        currentTable.served = true;
+        saveAll && saveAll();
+      }
+
+      // Ẩn slide, hiện 2 nút
+      setTimeout(() => {
+        slider.style.display = "none";
+        normalBtns.style.display = "flex";
+      }, 500);
+    } else {
+      slideBtn.style.left = "0px";
+      text.style.opacity = "1";
+    }
+  };
+
+  document.onmousemove = (e) => {
+    if (!isDown) return;
+    const diff = e.clientX - startX;
+    const max = slider.offsetWidth - slideBtn.offsetWidth - 5;
+    if (diff >= 0 && diff <= max) {
+      slideBtn.style.left = diff + "px";
+      // 🔥 Hiệu ứng chữ mờ dần khi kéo
+      text.style.opacity = 1 - diff / max;
+    }
+  };
 }
 
 function openItemSettings(){

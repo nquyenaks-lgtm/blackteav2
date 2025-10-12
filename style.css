@@ -740,8 +740,14 @@ header {
 /* Màu xám cho Chờ phục vụ */
 .status-badge.waiting {
   background: #f1f3f5;
-  color: #888;
+  color: #666;
   border: 1px solid #e4e6ea;
+}
+/* Màu xanh cho Đơn đang phục vụ */
+.status-badge.serving {
+  background: #d1f7d6;
+  border: 1px solid #7edb8a;
+  color: #137a1f;
 }
 
 /* Màu vàng cho Đơn có ghi chú */
@@ -757,4 +763,112 @@ header {
   gap: 6px;           /* khoảng cách giữa 2 nhãn */
   min-width: 270px;   /* ✅ cố định khung để không nở khi có 2 nhãn */
   flex-shrink: 0;     /* không bị co lại khi ít nhãn */
+}
+
+/* ===== Nút kéo để phục vụ (nằm góc phải, cùng hàng với thanh nút) ===== */
+.slide-container {
+  position: absolute;
+  right: 10px;                  /* nằm sát mép phải */
+  bottom: 10px;                 /* cùng hàng với thanh nút */
+  width: 210px;                 /* dài hơn nút bình thường */
+  height: 38px;                 /* bằng nút Thêm món / Thanh toán */
+  background: #4a69ad;
+  border-radius: 50px;
+  overflow: hidden;
+  cursor: pointer;
+  user-select: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  display: none;                /* ẩn mặc định, chỉ hiện khi cần */
+}
+
+.slide-text {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  line-height: 38px;
+  font-weight: 600;
+  font-size: 13px;
+  color: white;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.slide-button {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 38px;
+  height: 38px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  transition: transform 0.2s ease;
+}
+
+.slide-button:active {
+  transform: scale(1.05);
+}
+.order-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;                /* khoảng cách giữa slide và các nút */
+  padding: 10px;
+  position: relative;
+}
+
+/* Hai nút hành động */
+.cart-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* ==== Nút kéo xác nhận phục vụ đơn hàng ==== */
+.order-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.slide-container {
+  position: relative;
+  width: 200px;                /* dài vừa phải */
+  height: 36px;                /* cao bằng nút Thêm món / Thanh toán */
+  background: #4a69ad;         /* màu xanh dương chính */
+  border-radius: 50px;
+  overflow: hidden;
+  cursor: pointer;
+  user-select: none;
+  display: none;               /* ẩn mặc định, chỉ hiện khi cần */
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.slide-text {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  line-height: 36px;
+  font-weight: 600;
+  font-size: 13px;
+  color: white;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.slide-button {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 36px;
+  height: 36px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+  transition: transform 0.2s ease;
+}
+
+.slide-button:active {
+  transform: scale(1.05);
 }
