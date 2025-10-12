@@ -688,15 +688,22 @@ header {
   color: #fff !important;
 }
 
-/* ✅ Cố định phần phía trên, chỉ cho danh sách đơn cuộn */
+/* ✅ Tổng thể phần màn hình danh sách bàn */
 #table-screen {
   display: flex;
   flex-direction: column;
-  height: 100vh; /* Chiều cao khớp với màn hình */
+  height: 100vh;
   overflow: hidden;
 }
 
+/* ✅ Gom phần KHÔNG cuộn */
+#table-screen > .guest-buttons,
+#table-screen > .section-bar {
+  flex-shrink: 0;
+}
+
+/* ✅ Chỉ phần danh sách đơn (#tables) mới cuộn */
 #tables {
-  flex: 1; 
-  overflow-y: auto; /* Cuộn nội dung nếu dài */
+  flex: 1;
+  overflow-y: auto;
 }
