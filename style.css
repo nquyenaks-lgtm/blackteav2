@@ -872,3 +872,20 @@ header {
 .slide-button:active {
   transform: scale(1.05);
 }
+/* khối giá tiền và lưu đơn */
+
+.cart-summary {
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.cart-total {
+  margin-right: auto;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.cart-actions {
+  justify-content: flex-end;
+  gap: 8px;
+}
