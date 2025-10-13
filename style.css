@@ -872,26 +872,7 @@ header {
 .slide-button:active {
   transform: scale(1.05);
 }
-/* khối giá tiền và lưu đơn */
-
-.cart-summary {
-  display: flex;
-  justify-content: space-between; /* tổng trái - nút phải */
-  align-items: center;
-  padding: 10px 16px 10px 12px;   /* chỉnh padding phải nhỏ lại */
-  gap: 8px;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.cart-total {
-  font-weight: 700;
-  font-size: 16px;
-}
-
-.cart-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-  flex-shrink: 0; /* giữ nút sát mép phải, không bị co */
+.slide-text {
+  padding-left: 40px;
+  text-align: center;
 }
