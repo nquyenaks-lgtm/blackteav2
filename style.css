@@ -876,19 +876,22 @@ header {
 
 .cart-summary {
   display: flex;
-  justify-content: space-between; /* trái - phải rõ ràng */
+  justify-content: space-between; /* tổng trái - nút phải */
   align-items: center;
-  gap: 12px;
+  padding: 10px 16px 10px 12px;   /* chỉnh padding phải nhỏ lại */
+  gap: 8px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .cart-total {
   font-weight: 700;
   font-size: 16px;
-  margin-left: 8px; /* nhẹ nhàng tránh sát mép */
 }
 
 .cart-actions {
   display: flex;
   justify-content: flex-end;
   gap: 8px;
+  flex-shrink: 0; /* giữ nút sát mép phải, không bị co */
 }
