@@ -495,9 +495,14 @@ function backToTables() {
   $('header-buttons').style.display = 'flex';  
   $('order-info').classList.add('hidden');
 
-  
+  // ✅ Reset lại slider phục vụ khi quay về màn hình chính
+  const slider = document.getElementById("serveSlider");
+  const btn = document.getElementById("slideBtn");
+  if (slider && btn) {
+    slider.style.display = "none";
+    btn.style.left = "0px";
+  }
 }
-
 
 
 function goBack() {
