@@ -745,9 +745,9 @@ header {
 }
 /* Màu xanh cho Đơn đang phục vụ */
 .status-badge.serving {
-  background: #d1f7d6;
-  border: 1px solid #7edb8a;
-  color: #137a1f;
+  background: #e3e9f8;
+  border: 1px solid #4a69ad;
+  color: #4a69ad;
 }
 
 /* Màu vàng cho Đơn có ghi chú */
