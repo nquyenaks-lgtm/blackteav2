@@ -875,17 +875,20 @@ header {
 /* khối giá tiền và lưu đơn */
 
 .cart-summary {
-  justify-content: flex-end;
+  display: flex;
+  justify-content: space-between; /* trái - phải rõ ràng */
+  align-items: center;
   gap: 12px;
 }
 
 .cart-total {
-  margin-right: auto;
   font-weight: 700;
   font-size: 16px;
+  margin-left: 8px; /* nhẹ nhàng tránh sát mép */
 }
 
 .cart-actions {
+  display: flex;
   justify-content: flex-end;
   gap: 8px;
 }
