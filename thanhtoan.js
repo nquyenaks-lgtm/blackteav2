@@ -200,20 +200,25 @@ async function hienThiLichSuThanhToan() {
       return;
     }
 
-    const danhSach = [...filtered].reverse();
-    container.innerHTML = danhSach
-      .map((d, i) => `
-      <div class="lichsu-item">
-        <div>
-          <strong>${d.name}</strong>
-          (${new Date(d.paidAt).toLocaleString("vi-VN")})<br>
-          ${d.cart.length} món • Tổng: ${d.cart.reduce((a, m) => a + m.price * m.soluong, 0).toLocaleString()}đ<br>
-          Hình thức: ${d.paymentType || "Không rõ"}
-        </div>
-        <button class="btn-primary btn-xemlai hieuung-noi" data-index="${i}">👁️ Xem lại</button>
-      </div><hr>`
-      )
-      .join("");
+const danhSach = [...filtered].reverse();
+container.innerHTML = danhSach
+  .map((d, i) => `
+    <div class="lichsu-item" style="display:flex; justify-content:space-between; align-items:center; gap:8px; padding:6px 0;">
+      <div style="flex:1;">
+        <strong>${d.name}</strong><br>
+        <small>${new Date(d.paidAt).toLocaleString("vi-VN")}</small><br>
+        ${d.cart.length} món • <strong>${d.cart
+          .reduce((a, m) => a + m.price * m.soluong, 0)
+          .toLocaleString()}đ</strong> • ${d.paymentType || "Không rõ"}
+      </div>
+      <button class="btn-primary btn-xemlai hieuung-noi" data-index="${i}" style="white-space:nowrap; min-width:90px;">
+        👁️ Xem lại
+      </button>
+    </div>
+    <hr>`
+  )
+  .join("");
+
 
     document.querySelectorAll(".btn-xemlai").forEach((btn) => {
       btn.addEventListener("click", (e) => {
