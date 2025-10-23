@@ -119,113 +119,42 @@ async function xuLyThanhToan(don, kieuThanhToan = "") {
 
 
 // ================================
-// 📜 Lịch sử Thanh Toán (Firestore + offline fallback)
+// ✅ Xử lý thanh toán thật sự (Firestore + đồng bộ orders, không thông báo)
 // ================================
-async function hienThiLichSuThanhToan() {
-  let data = [];
+async function xuLyThanhToan(don, kieuThanhToan = "") {
+  if (!don) return;
+  const xacNhan = confirm(`Xác nhận thanh toán "${don.name}" (${kieuThanhToan})?`);
+  if (!xacNhan) return;
+
+  don.status = "done";
+  don.paidAt = new Date().toISOString();
+  don.paymentType = kieuThanhToan;
 
   try {
     if (!db) throw new Error("Firestore chưa sẵn sàng");
-
-    const snap = await db.collection("history").orderBy("paidAt", "desc").get();
-    data = snap.docs.map((d) => d.data());
-    console.log("📦 Đã tải lịch sử từ Firestore:", data.length, "đơn");
+    await db.collection("history").doc(String(don.id)).set(don);
+    await db.collection("orders").doc(String(don.id)).delete();
   } catch (err) {
-    console.warn("⚠️ Không thể tải từ Firestore, dùng cache local:", err);
-    data = JSON.parse(localStorage.getItem("BT_LICHSU_THANHTOAN") || "[]");
+    // 🔸 Nếu mất mạng → lưu tạm offline
+    const lichSu = JSON.parse(localStorage.getItem("BT_LICHSU_THANHTOAN") || "[]");
+    lichSu.push(don);
+    localStorage.setItem("BT_LICHSU_THANHTOAN", JSON.stringify(lichSu));
+
+    const queue = JSON.parse(localStorage.getItem("BT_OFFLINE_DONE") || "[]");
+    queue.push(don);
+    localStorage.setItem("BT_OFFLINE_DONE", JSON.stringify(queue));
   }
 
-  const main = document.querySelector(".main-container");
-  const header = document.querySelector("header");
+  if (typeof hoaDonChinh !== "undefined" && Array.isArray(hoaDonChinh)) {
+    hoaDonChinh = hoaDonChinh.filter((d) => d.id !== don.id);
+  }
 
-  header.innerHTML = `
-    <h1>Lịch sử thanh toán</h1>
-    <div class="header-icons">
-      <button id="btnBack" class="btn-close-order" title="Quay lại">×</button>
-    </div>
-  `;
+  capNhatHoaDon();
+  renderTables();
 
-  // 🔹 Giao diện lọc + danh sách
-  main.innerHTML = `
-    <div class="filter-bar">
-      <input type="date" id="filterDate">
-      <select id="filterType">
-        <option value="all">Tất cả</option>
-        <option value="Chuyển khoản">Chuyển khoản</option>
-        <option value="Tiền mặt">Tiền mặt</option>
-      </select>
-    </div>
-    <div id="historyList"></div>
-    <div id="popupChiTiet" class="popup hidden">
-      <div class="popup-content">
-        <button id="btnDongPopup" class="popup-close">×</button>
-        <div id="popupNoiDung"></div>
-        <div class="popup-actions">
-          <button id="btnThoatPopup" class="btn-secondary hieuung-nhat">Thoát</button>
-          <button id="btnInLai" class="btn-primary hieuung-noi">🖨️ In lại</button>
-        </div>
-      </div>
-    </div>
-  `;
-
-  const renderList = () => {
-    const dateVal = document.getElementById("filterDate").value;
-    const typeVal = document.getElementById("filterType").value;
-    const container = document.getElementById("historyList");
-
-    let filtered = [...data];
-
-    if (dateVal) {
-      filtered = filtered.filter((d) => {
-        const ngayThanhToan = new Date(d.paidAt).toLocaleDateString("vi-VN");
-        const ngayChon = new Date(dateVal).toLocaleDateString("vi-VN");
-        return ngayThanhToan === ngayChon;
-      });
-    }
-
-    if (typeVal !== "all") {
-      filtered = filtered.filter((d) => d.paymentType === typeVal);
-    }
-
-    if (!filtered.length) {
-      container.innerHTML = `<p>📭 Không có hóa đơn nào phù hợp.</p>`;
-      return;
-    }
-
-    container.innerHTML = filtered
-      .map(
-        (d, i) => `
-        <div class="lichsu-item">
-          <div>
-            <strong>${d.name}</strong>
-            (${new Date(d.paidAt).toLocaleString("vi-VN")})<br>
-            ${d.cart.length} món • Tổng: ${d.cart.reduce((a, m) => a + m.price * m.soluong, 0).toLocaleString()}đ<br>
-            Hình thức: ${d.paymentType || "Không rõ"}
-          </div>
-          <button class="btn-primary btn-xemlai hieuung-noi" data-index="${i}">👁️ Xem lại</button>
-        </div>
-        <hr>`
-      )
-      .join("");
-
-    document.querySelectorAll(".btn-xemlai").forEach((btn) => {
-      btn.addEventListener("click", (e) => {
-        const idx = e.target.dataset.index;
-        const don = filtered[idx];
-        moPopupChiTietDon(don);
-      });
-    });
-  };
-
-  renderList();
-
-  document.getElementById("filterDate").addEventListener("change", renderList);
-  document.getElementById("filterType").addEventListener("change", renderList);
-  document.getElementById("btnBack")?.addEventListener("click", () => {
-    khoiPhucHeaderMacDinh();
-    hienThiManHinhChinh();
-    renderTables();
-  });
+  khoiPhucHeaderMacDinh();
+  hienThiManHinhChinh();
+  renderTables();
 }
 
 
