@@ -1,35 +1,4 @@
 // ================================
-// 🔥 Cấu hình Firestore + Lưu tạm Offline
-// ================================
-let db;
-let hoaDonTamOffline = [];
-
-try {
-  db = firebase.firestore();
-  console.log("✅ Đã kết nối Firestore");
-} catch (err) {
-  console.warn("⚠️ Không khởi tạo được Firestore:", err);
-}
-
-// Khi có mạng trở lại, đồng bộ dữ liệu
-window.addEventListener("online", () => {
-  const list = JSON.parse(localStorage.getItem("BT_OFFLINE_QUEUE") || "[]");
-  if (list.length === 0) return;
-
-  console.log("🌐 Có mạng trở lại, đang đẩy dữ liệu lên Firestore...");
-  list.forEach(async (don) => {
-    try {
-      await db.collection("orders").doc(String(don.id)).set(don);
-      console.log("⬆️ Đã đẩy:", don.name);
-    } catch (e) {
-      console.error("❌ Lỗi khi đẩy:", e);
-    }
-  });
-  localStorage.removeItem("BT_OFFLINE_QUEUE");
-});
-
-
-// ================================
 // 📦 BlackTea POS v2.3 - app.js (đã chỉnh chọn bàn kiểu icon ghế)
 // ================================
 
@@ -41,6 +10,11 @@ window.addEventListener("load", () => {
   try {
     const saved = localStorage.getItem("BT_TABLES");
     if (saved) hoaDonChinh = JSON.parse(saved); // ✅ đổi TABLES → hoaDonChinh
+	// 🔥 Kích hoạt realtime Firestore khi mở trang
+  if (navigator.onLine && typeof khoiTaoRealtimeOrders === "function") {
+  khoiTaoRealtimeOrders();
+}
+
     loadDemMangDi();
 
     // Gọi render khi khởi động
@@ -519,6 +493,26 @@ function khoiTaoSliderConfirm(don) {
     }
   }
 }
+// ================================
+// 🔄 Realtime đồng bộ Firestore
+// ================================
+function khoiTaoRealtimeOrders() {
+  if (!db) return console.warn("⚠️ Firestore chưa sẵn sàng");
+
+  // Theo dõi collection "orders" realtime
+  db.collection("orders").onSnapshot((snapshot) => {
+    const ds = [];
+    snapshot.forEach((doc) => ds.push(doc.data()));
+
+    hoaDonChinh = ds; // cập nhật dữ liệu toàn cục
+    localStorage.setItem("BT_TABLES", JSON.stringify(ds)); // lưu tạm offline
+
+    if (typeof renderTables === "function") renderTables();
+  }, (err) => {
+    console.error("❌ Lỗi realtime Firestore:", err);
+  });
+}
+
 
 function autoLoadIcons() {
   const mauChinh = getComputedStyle(document.documentElement)
@@ -537,3 +531,5 @@ function autoLoadIcons() {
       });
   });
 }
+
+
