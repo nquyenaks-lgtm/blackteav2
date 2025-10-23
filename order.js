@@ -401,7 +401,7 @@ async function luuDon() {
   hoaDonTam = [];
   capNhatHoaDon();
 
-  hienThongBao("💾 Đã lưu đơn (sẽ tự đồng bộ nếu đang offline)");
+  hienThongBao(" Đã lưu đơn ");
 
   // 🔹 Trở về màn hình chính với header đồng bộ
   khoiPhucHeaderMacDinh();
@@ -513,6 +513,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setTimeout(kichHoatTimMon, 500);
   setTimeout(kichHoatTimMon, 1500);
 });
+
 
 
 
