@@ -1,0 +1,221 @@
+/* ================================
+   💫 HIỆU ỨNG NỔI TINH TẾ BLACKTEA POS
+   ================================ */
+
+/* 💙 Nút màu chính */
+button.hieuung-noi,
+.btn.hieuung-noi {
+  background: linear-gradient(145deg, #5479c1, #3e5e9c) !important;
+  color: #fff !important;
+  border-radius: 12px !important;
+  transition: all 0.25s ease !important;
+
+  /* Hiệu ứng nổi nhẹ */
+  box-shadow:
+    inset 1px 1px 2px rgba(255,255,255,0.25),
+    2px 2px 5px rgba(0,0,0,0.18) !important;
+}
+
+/* Hover: nổi rõ hơn một chút */
+button.hieuung-noi:hover,
+.btn.hieuung-noi:hover {
+  background: linear-gradient(145deg, #5d81c8, #3a5895) !important;
+  box-shadow:
+    inset 1px 1px 2px rgba(255,255,255,0.3),
+    3px 3px 6px rgba(0,0,0,0.22) !important;
+}
+
+/* Khi bấm: chìm nhẹ, không nháy */
+button.hieuung-noi:active,
+.btn.hieuung-noi:active {
+  background: linear-gradient(145deg, #4d6fb4, #3a5692) !important;
+  box-shadow:
+    inset 2px 2px 3px rgba(0,0,0,0.3),
+    inset -1px -1px 2px rgba(255,255,255,0.2) !important;
+  transform: none !important;
+}
+
+/* 🌤 Nút nền nhạt */
+button.hieuung-nhat,
+.btn.hieuung-nhat {
+  background: linear-gradient(145deg, #f1f5ff, #d9e4fa) !important;
+  color: #4A69AD !important;
+  border-radius: 12px !important;
+  transition: all 0.25s ease !important;
+
+  /* Hiệu ứng nổi nhẹ + bóng tinh tế */
+  box-shadow:
+    inset 1px 1px 2px rgba(255,255,255,0.7),
+    2px 2px 5px rgba(0,0,0,0.1) !important;
+}
+
+/* Hover: nổi rõ hơn */
+button.hieuung-nhat:hover,
+.btn.hieuung-nhat:hover {
+  background: linear-gradient(145deg, #e8efff, #cfdcf6) !important;
+  box-shadow:
+    inset 1px 1px 2px rgba(255,255,255,0.8),
+    3px 3px 6px rgba(0,0,0,0.12) !important;
+}
+
+/* Khi bấm: chìm nhẹ */
+button.hieuung-nhat:active,
+.btn.hieuung-nhat:active {
+  background: linear-gradient(145deg, #dbe6fb, #bfcdef) !important;
+  box-shadow:
+    inset 2px 2px 3px rgba(0,0,0,0.15),
+    inset -1px -1px 2px rgba(255,255,255,0.6) !important;
+  transform: none !important;
+}
+
+/* 🚫 Tắt toàn bộ hiệu ứng nháy focus trên mọi trình duyệt */
+button:focus,
+button:focus-visible,
+.btn:focus,
+.btn:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+  -webkit-tap-highlight-color: transparent !important; /* 🔥 đặc biệt quan trọng trên Android */
+}
+
+
+/* ================================
+   🌟 ẨN TOÀN BỘ THANH CUỘN (vẫn cuộn được)
+   ================================ */
+
+/* Ẩn trên toàn trang */
+html, body, * {
+  scrollbar-width: none !important;      /* Firefox */
+  -ms-overflow-style: none !important;   /* IE, Edge cũ */
+}
+
+/* Ẩn cho WebKit (Chrome, Safari, Opera) */
+::-webkit-scrollbar {
+  display: none !important;
+}
+
+
+/* =====================================
+   🎨 ICON ỨNG DỤNG (SVG tuỳ chỉnh)
+   ===================================== */
+.icon-app {
+  width: 40px;
+  height: 40px;
+  vertical-align: middle;
+  fill: currentColor;
+  color: currentColor; /* sẽ được override bằng style hoặc biến cục bộ */
+  transition: color 0.25s ease, transform 0.2s ease;
+}
+
+/* Hover nhẹ */
+.icon-app:hover {
+  transform: scale(1.1);
+  filter: brightness(1.1);
+}
+
+/* Hiệu ứng nổi */
+.hieuung-noi .icon-app {
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.15));
+}
+
+
+/* Slider container */
+#sliderConfirm {
+  position: relative;
+  width: 270px;
+  height: 54px;
+  background: linear-gradient(145deg, #e7ebf7, #cfd7ef);
+  border-radius: 28px;
+  box-shadow:
+    inset 1px 1px 4px rgba(255,255,255,0.8),
+    inset -2px -2px 6px rgba(0,0,0,0.08),
+    0 3px 8px rgba(0,0,0,0.05);
+  overflow: hidden;
+  cursor: grab;
+  touch-action: pan-x;          /* chỉ trượt ngang */
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Handle */
+#sliderConfirm .handle {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  width: 36px;
+  height: 36px;
+  background: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 3px 8px rgba(0,0,0,0.12),
+    inset 1px 1px 3px rgba(255,255,255,0.8);
+  transition: transform 0.1s ease;
+  will-change: transform;       /* GPU xử lý mượt */
+  user-select: none;
+}
+
+/* Icon bên trong handle */
+#sliderConfirm .handle img.slider-icon {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+/* Text giữa slider */
+#sliderConfirm .text {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  text-align: center;
+  font-weight: 600;
+  color: #4a69ad;
+  font-size: 14px;
+  pointer-events: none;
+}
+
+/* Khi xác nhận */
+#sliderConfirm.success .text {
+  color: #fff;
+}
+
+#sliderConfirm.success .handle {
+  transform: translateX(calc(100% - 36px)) scale(1.05);
+}
+
+
+/* Mở trượt từ trái sang phải */
+.slide-in-right {
+  position: absolute;      /* ❌ quan trọng: tránh đẩy layout xuống */
+  top: 0;
+  left: 0;
+  width: 100%;
+  transform: translateX(-100%);
+  opacity: 0;
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out; /* tăng thời gian cho mượt */
+  z-index: 1000;           /* ưu tiên hiển thị trên các phần khác */
+}
+.slide-in-right.active {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+/* Trượt ra khi đóng */
+.slide-out-left {
+  position: absolute;      /* ❌ tránh layout nhảy */
+  top: 0;
+  left: 0;
+  width: 100%;
+  transform: translateX(0);
+  opacity: 1;
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+  z-index: 1000;
+}
+.slide-out-left.active {
+  transform: translateX(-100%);
+  opacity: 0;
+}
