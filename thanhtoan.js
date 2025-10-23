@@ -119,7 +119,7 @@ async function xuLyThanhToan(don, kieuThanhToan = "") {
 
 
 // ================================
-// ✅ Xử lý thanh toán thật sự (Firestore + đồng bộ orders, không thông báo)
+// ✅ Xử lý thanh toán thật sự (Firestore + đồng bộ orders)
 // ================================
 async function xuLyThanhToan(don, kieuThanhToan = "") {
   if (!don) return;
@@ -132,31 +132,48 @@ async function xuLyThanhToan(don, kieuThanhToan = "") {
 
   try {
     if (!db) throw new Error("Firestore chưa sẵn sàng");
+
+    // ✅ 1. Lưu sang collection 'history'
     await db.collection("history").doc(String(don.id)).set(don);
+
+    // ✅ 2. Xóa khỏi 'orders' (đơn đã phục vụ)
     await db.collection("orders").doc(String(don.id)).delete();
+
+    console.log("💰 Đã chuyển đơn vào history và xoá khỏi orders:", don.name);
   } catch (err) {
-    // 🔸 Nếu mất mạng → lưu tạm offline
+    console.warn("⚠️ Mất mạng khi thanh toán, lưu tạm offline:", err);
+
+    // Lưu cache offline nếu Firestore không sẵn sàng
     const lichSu = JSON.parse(localStorage.getItem("BT_LICHSU_THANHTOAN") || "[]");
     lichSu.push(don);
     localStorage.setItem("BT_LICHSU_THANHTOAN", JSON.stringify(lichSu));
 
+    // Gắn cờ để sau này đồng bộ lại
     const queue = JSON.parse(localStorage.getItem("BT_OFFLINE_DONE") || "[]");
     queue.push(don);
     localStorage.setItem("BT_OFFLINE_DONE", JSON.stringify(queue));
   }
 
+  // ✅ 3. Xóa khỏi danh sách đang phục vụ trong bộ nhớ
   if (typeof hoaDonChinh !== "undefined" && Array.isArray(hoaDonChinh)) {
     hoaDonChinh = hoaDonChinh.filter((d) => d.id !== don.id);
   }
 
+  // ✅ 4. Gọi hàm render lại màn hình
   capNhatHoaDon();
   renderTables();
 
+  // ✅ 5. Thông báo
+  if (typeof hienThongBao === "function")
+    hienThongBao(`💰 Đã thanh toán ${don.name} (${kieuThanhToan})`);
+  else
+    alert(`💰 Đã thanh toán ${don.name} (${kieuThanhToan})`);
+
+  // 🔄 Quay về màn chính
   khoiPhucHeaderMacDinh();
   hienThiManHinhChinh();
   renderTables();
 }
-
 
 // 🔹 Popup xem chi tiết hóa đơn
 function moPopupChiTietDon(don) {

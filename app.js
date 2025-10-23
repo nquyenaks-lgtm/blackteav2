@@ -537,28 +537,3 @@ function autoLoadIcons() {
       });
   });
 }
-
-// ================================
-// 🔥 Realtime đồng bộ đơn hàng giữa nhiều thiết bị
-// ================================
-function batDongBoRealtime() {
-  if (!db) return;
-
-  db.collection("orders").onSnapshot((snapshot) => {
-    const arr = [];
-    snapshot.forEach((doc) => arr.push(doc.data()));
-
-    // Bỏ các đơn đã thanh toán
-    hoaDonChinh = arr.filter((d) => d.status !== "done");
-
-    // Cập nhật lại danh sách hiển thị ngoài màn hình chính
-    if (typeof renderTables === "function") {
-      renderTables();
-    }
-  });
-}
-
-// Gọi tự động khi trang load
-window.addEventListener("load", () => {
-  batDongBoRealtime();
-});
