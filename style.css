@@ -803,12 +803,6 @@ header h1 {
 /* ===============================
    🔘 Nút hành động
    =============================== */
-.popup-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-  margin-top: 6px;
-}
 
 .popup-actions button {
   border: none;
@@ -1348,12 +1342,6 @@ header h1 {
   font-size: 14px;
 }
 
-.popup-actions {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 12px;
-  gap: 10px;
-}
 
 @keyframes popupFade {
   from { opacity: 0; transform: translateY(10px); }
